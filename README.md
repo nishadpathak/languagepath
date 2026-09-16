@@ -40,6 +40,12 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000). You can complete a Spanish lesson with no login.
 
+```bash
+npm test
+npm run e2e    # headless Chrome; requires `npm run dev` and google-chrome
+npx tsx scripts/simulate-webhook.ts  # Checkout.session.completed → Pro on a local user
+```
+
 ### Environment
 
 | Variable | Purpose |

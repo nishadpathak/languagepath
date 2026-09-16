@@ -44,7 +44,7 @@ export function PathBoard() {
         })}
       </ol>
       <section className="rounded-[2rem] border border-[var(--rule)] bg-white/70 p-6">
-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">
+        <p className="text-sm text-[var(--muted)]">
           {course.name} Path · {progress.pathDaysRemaining} / {PATH_STARTING_DAYS} days
         </p>
         <h1 className="mt-2 font-serif text-4xl">Eastbound race</h1>
