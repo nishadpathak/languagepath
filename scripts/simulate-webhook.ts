@@ -1,6 +1,6 @@
 import { hash } from "bcryptjs";
 import type Stripe from "stripe";
-import { handleStripeEvent } from "../src/lib/billing.ts";
+import { checkoutCompletedEvent, handleStripeEvent } from "../src/lib/billing.ts";
 import { prisma } from "../src/lib/prisma.ts";
 
 async function main() {
@@ -13,34 +13,13 @@ async function main() {
     },
   });
 
-  const event = {
-    id: `evt_${Date.now()}`,
-    type: "checkout.session.completed",
-    data: {
-      object: {
-        object: "checkout.session",
-        client_reference_id: user.id,
-        customer: "cus_test_123",
-        metadata: { userId: user.id },
-        subscription: {
-          id: "sub_test_123",
-          status: "active",
-          customer: "cus_test_123",
-          items: {
-            data: [
-              {
-                current_period_end: 1_800_000_000,
-                price: { id: "price_year", recurring: { interval: "year" } },
-              },
-            ],
-          },
-        },
-      },
-    },
-  } as unknown as Stripe.Event;
-
-  const first = await handleStripeEvent(event);
-  const second = await handleStripeEvent(event);
+  const event = checkoutCompletedEvent({
+    userId: user.id,
+    interval: "year",
+    eventId: `evt_${Date.now()}`,
+  });
+  const first = await handleStripeEvent(event as unknown as Stripe.Event);
+  const second = await handleStripeEvent(event as unknown as Stripe.Event);
   const updated = await prisma.user.findUniqueOrThrow({ where: { id: user.id } });
   console.log(
     JSON.stringify(

@@ -7,9 +7,9 @@ export default function PricingPage() {
         <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Pro</p>
         <h1 className="font-serif text-5xl">Keep the core free. Back up the rest.</h1>
         <p className="mt-4 text-lg text-[var(--muted)]">
-          Lessons, Path, Intensive, streak, and XP work in the browser with no
-          account. Pro is optional: Stripe Checkout, a webhook that marks you
-          Pro, then cloud sync, streak backup, and a larger AI chat quota.
+          Pro is the only paid offer: Stripe Checkout (monthly or yearly), then a
+          webhook that turns on cloud progress sync, streak backup, and a larger
+          AI chat quota. Lessons, Path, and Intensive are never paywalled.
         </p>
       </div>
       <div className="grid gap-6 md:grid-cols-2">

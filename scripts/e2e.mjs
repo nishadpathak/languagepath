@@ -146,6 +146,19 @@ await step("intensive session timer", async () => {
   if (!/\d+:\d{2}/.test(text)) throw new Error("missing timer");
   const locked = await revealDisabled();
   if (locked !== true) throw new Error("intensive session reveal not locked");
+  await clickLabel("I said it aloud");
+  const unlocked = await revealDisabled();
+  if (unlocked !== false) throw new Error("intensive session reveal stayed locked");
+  await clickLabel("Reveal");
+  await waitForText("quiero café");
+  const nextReady = await page.evaluate(() => {
+    const button = [...document.querySelectorAll("button")].find(
+      (el) => el.textContent?.trim() === "Next sentence",
+    );
+    return button instanceof HTMLButtonElement && !button.disabled;
+  });
+  if (!nextReady) throw new Error("Next sentence should unlock after reveal");
+  await clickLabel("Next sentence");
   await shot("06-intensive-session");
 });
 
@@ -172,6 +185,42 @@ await step("chat reachable after account", async () => {
   await page.goto(`${BASE}/chat`, { waitUntil: "networkidle0" });
   await waitForText("conversation partner");
   await shot("09-chat");
+});
+
+await step("signup → pricing → webhook mock → Pro flag", async () => {
+  const mockStatus = await page.evaluate(async () => {
+    const probe = await fetch("/api/dev/simulate-checkout", { cache: "no-store" });
+    const body = await probe.json();
+    if (!body.enabled) return { enabled: false };
+    const granted = await fetch("/api/dev/simulate-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ interval: "month" }),
+    });
+    return granted.json();
+  });
+  if (!mockStatus.enabled && mockStatus.ok !== true) {
+    throw new Error(
+      "ALLOW_WEBHOOK_MOCK=1 is required for the Pro e2e. Add it to .env and restart next.",
+    );
+  }
+  if (mockStatus.pro !== true && mockStatus.plan !== "pro") {
+    throw new Error(`webhook mock did not grant Pro: ${JSON.stringify(mockStatus)}`);
+  }
+  await page.goto(`${BASE}/account`, { waitUntil: "networkidle0" });
+  await waitForText("cloud sync and streak backup are on");
+  const header = await page.evaluate(
+    () => document.querySelector("header")?.innerText.toLowerCase() || "",
+  );
+  if (!header.includes("pro")) throw new Error(`header missing Pro: ${header}`);
+  const sync = await page.evaluate(async () => {
+    const response = await fetch("/api/sync", { cache: "no-store" });
+    return { status: response.status, body: await response.json() };
+  });
+  if (sync.status !== 200) throw new Error(`sync should work for Pro, got ${sync.status}`);
+  await page.goto(`${BASE}/learn/es/es-want`, { waitUntil: "networkidle0" });
+  await waitForText("understand");
+  await shot("10-pro-account");
 });
 
 await browser.close();

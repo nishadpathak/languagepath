@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import { handleStripeEvent } from "@/lib/billing";
-import { getStripe } from "@/lib/stripe";
+import { verifyWebhookEvent, webhookSecretConfigured } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const secret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!secret || secret.includes("...")) {
+  if (!webhookSecretConfigured()) {
     return NextResponse.json(
       { error: "STRIPE_WEBHOOK_SECRET is not set." },
       { status: 500 },
@@ -22,7 +21,7 @@ export async function POST(request: Request) {
   const payload = await request.text();
   let event;
   try {
-    event = getStripe().webhooks.constructEvent(payload, signature, secret);
+    event = verifyWebhookEvent(payload, signature);
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Invalid signature." },

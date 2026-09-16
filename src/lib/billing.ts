@@ -38,6 +38,57 @@ type CheckoutLike = {
   metadata?: Record<string, string> | null;
 };
 
+export function planIntervalFrom(
+  value: string | null | undefined,
+): "month" | "year" | null {
+  return value === "year" || value === "month" ? value : null;
+}
+
+export function checkoutCompletedEvent(options: {
+  eventId?: string;
+  userId: string;
+  interval: "month" | "year";
+  customerId?: string;
+  subscriptionId?: string;
+}): {
+  id: string;
+  type: "checkout.session.completed";
+  data: { object: CheckoutLike & { object: "checkout.session" } };
+} {
+  const customerId = options.customerId ?? `cus_mock_${options.userId}`;
+  const subscriptionId = options.subscriptionId ?? `sub_mock_${options.userId}`;
+  const periodEnd = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60;
+  return {
+    id: options.eventId ?? `evt_mock_${Date.now()}`,
+    type: "checkout.session.completed",
+    data: {
+      object: {
+        object: "checkout.session",
+        client_reference_id: options.userId,
+        customer: customerId,
+        metadata: { userId: options.userId, interval: options.interval },
+        subscription: {
+          id: subscriptionId,
+          status: "active",
+          customer: customerId,
+          metadata: { userId: options.userId, interval: options.interval },
+          items: {
+            data: [
+              {
+                current_period_end: periodEnd,
+                price: {
+                  id: `price_mock_${options.interval}`,
+                  recurring: { interval: options.interval },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  };
+}
+
 export function customerIdOf(
   value: string | { id: string } | null | undefined,
 ): string | null {
@@ -75,24 +126,27 @@ export function billingPatchFromEvent(event: {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as CheckoutLike;
     if (!session.subscription) return null;
+    const metadataInterval = planIntervalFrom(session.metadata?.interval);
     const nested =
       typeof session.subscription === "string"
         ? null
         : planFromSubscription(session.subscription);
+    const fallback: BillingPatch = {
+      stripeCustomerId: customerIdOf(session.customer) ?? undefined,
+      stripeSubscriptionId:
+        typeof session.subscription === "string"
+          ? session.subscription
+          : session.subscription.id,
+      plan: "pro",
+      planInterval: metadataInterval,
+      planStatus: "active",
+      currentPeriodEnd: null,
+    };
+    if (nested && !nested.planInterval) nested.planInterval = metadataInterval;
     return {
       userId: resolveCheckoutUserId(session),
       customerId: customerIdOf(session.customer),
-      patch: nested ?? {
-        stripeCustomerId: customerIdOf(session.customer) ?? undefined,
-        stripeSubscriptionId:
-          typeof session.subscription === "string"
-            ? session.subscription
-            : session.subscription.id,
-        plan: "pro",
-        planInterval: null,
-        planStatus: "active",
-        currentPeriodEnd: null,
-      },
+      patch: nested ?? fallback,
     };
   }
 
@@ -139,10 +193,25 @@ export async function handleStripeEvent(event: Stripe.Event) {
   const derived = billingPatchFromEvent(event);
   let userId: string | null = derived?.userId ?? null;
 
+  if (event.type === "invoice.paid") {
+    const invoice = event.data.object as {
+      customer?: string | { id: string } | null;
+    };
+    const billed = await findUser(null, customerIdOf(invoice.customer));
+    if (billed) {
+      userId = billed.id;
+      await prisma.user.update({
+        where: { id: billed.id },
+        data: { aiMessagesUsed: 0, aiQuotaResetAt: new Date() },
+      });
+    }
+  }
+
   if (derived) {
     const user = await findUser(derived.userId, derived.customerId);
     if (user) {
       userId = user.id;
+      const becomingPro = derived.patch.plan === "pro" && user.plan !== "pro";
       await prisma.user.update({
         where: { id: user.id },
         data: {
@@ -153,6 +222,9 @@ export async function handleStripeEvent(event: Stripe.Event) {
           planInterval: derived.patch.planInterval,
           planStatus: derived.patch.planStatus,
           currentPeriodEnd: derived.patch.currentPeriodEnd,
+          ...(becomingPro
+            ? { aiMessagesUsed: 0, aiQuotaResetAt: new Date() }
+            : {}),
         },
       });
     }

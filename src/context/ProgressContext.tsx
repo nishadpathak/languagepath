@@ -32,6 +32,8 @@ type Me = PlanSnapshot & {
   aiMessagesUsed: number;
   aiQuotaResetAt: string | null;
   hasStripeCustomer: boolean;
+  remainingMessages?: number;
+  pro?: boolean;
 };
 
 type ProgressContextValue = {
@@ -67,6 +69,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const [me, setMe] = useState<Me | null>(null);
   const [ready, setReady] = useState(false);
   const skipNextSync = useRef(true);
+  const syncedProUser = useRef<string | null>(null);
 
   const persistLocal = useCallback((next: Progress) => {
     window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(next));
@@ -122,6 +125,27 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     }, 0);
     return () => window.clearTimeout(timer);
   }, [pathname, ready, refreshMe]);
+
+  useEffect(() => {
+    if (!ready) return;
+    if (!me || !isPro(me)) {
+      if (!me) syncedProUser.current = null;
+      return;
+    }
+    if (syncedProUser.current === me.id) return;
+    syncedProUser.current = me.id;
+    skipNextSync.current = true;
+    void (async () => {
+      const syncResponse = await fetch("/api/sync", { cache: "no-store" });
+      if (!syncResponse.ok) return;
+      const syncBody = (await syncResponse.json()) as { progress: unknown };
+      setProgress((local) => {
+        const merged = mergeProgress(local, parseProgress(syncBody.progress));
+        persistLocal(merged);
+        return merged;
+      });
+    })();
+  }, [me, persistLocal, ready]);
 
   useEffect(() => {
     if (!ready) return;

@@ -80,6 +80,23 @@ describe("checkout to pro mapping", () => {
     expect(derived?.patch.plan).toBe("pro");
     expect(derived?.patch.planInterval).toBe("year");
   });
+
+  it("uses Checkout metadata when Stripe sends the subscription as an id", () => {
+    const derived = billingPatchFromEvent({
+      type: "checkout.session.completed",
+      data: {
+        object: {
+          client_reference_id: "user_1",
+          customer: "cus_123",
+          metadata: { userId: "user_1", interval: "month" },
+          subscription: "sub_123",
+        },
+      },
+    });
+    expect(derived?.patch.plan).toBe("pro");
+    expect(derived?.patch.planInterval).toBe("month");
+    expect(derived?.patch.stripeSubscriptionId).toBe("sub_123");
+  });
 });
 
 describe("ai quota", () => {

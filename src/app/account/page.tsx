@@ -78,10 +78,13 @@ export default function AccountPage() {
       <IntensiveToggle />
       <p className="text-sm text-[var(--muted)]">
         {pro
-          ? "Cloud sync is on. Progress and streak backup to this account."
-          : "You are logged in, but sync stays local until a Checkout webhook marks you Pro."}
+          ? `Cloud sync and streak backup are on${me.planInterval ? ` (${me.planInterval}ly Pro)` : ""}. Chat quota: ${me.remainingMessages ?? "—"} messages left this month.`
+          : "You are logged in, but sync stays local until a Checkout webhook marks you Pro. Lessons stay free either way."}
       </p>
       <div className="flex flex-wrap gap-3">
+        <Link href="/learn" className="rounded-full border border-[var(--ink)] px-4 py-2 text-sm">
+          Continue lessons (always free)
+        </Link>
         {pro ? (
           <button
             type="button"
