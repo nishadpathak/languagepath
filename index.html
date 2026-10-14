@@ -8645,7 +8645,7 @@ function injectManifest(){
 }
 // register the service worker so the app works fully offline once hosted (https / localhost)
 function registerSW(){
-  try{ if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){ navigator.serviceWorker.register('sw.js').catch(()=>{}); } }catch(e){}
+  try{ if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){ navigator.serviceWorker.register('/sw.js').catch(()=>{}); } }catch(e){}
 }
 
 /* ============ USER NAME (fills the "my name is…" lessons) ============ */
@@ -8708,9 +8708,9 @@ function markActivation(){
     }
   }catch(e){}
 }
-function applyTheme(t){ document.documentElement.setAttribute("data-theme",t); try{localStorage.setItem("theme",t);}catch(e){} const b=document.getElementById("themeBtn"); if(b)b.textContent=(t==="light"?"🌙":"☀️"); const lo=document.querySelector("header .logo"); if(lo) lo.src=(t==="dark"?"logo-header-light.png":"logo-header.png"); }
+function applyTheme(t){ document.documentElement.setAttribute("data-theme",t); try{localStorage.setItem("theme",t);}catch(e){} const b=document.getElementById("themeBtn"); if(b)b.textContent=(t==="light"?"🌙":"☀️"); const lo=document.querySelector("header .logo"); if(lo) lo.src=(t==="dark"?"/logo-header-light.png":"/logo-header.png"); }
 function toggleTheme(){ const cur=document.documentElement.getAttribute("data-theme")||"dark"; applyTheme(cur==="light"?"dark":"light"); }
-function initTheme(){ const t=document.documentElement.getAttribute("data-theme")||"dark"; const b=document.getElementById("themeBtn"); if(b)b.textContent=(t==="light"?"🌙":"☀️"); const lo=document.querySelector("header .logo"); if(lo) lo.src=(t==="dark"?"logo-header-light.png":"logo-header.png"); }
+function initTheme(){ const t=document.documentElement.getAttribute("data-theme")||"dark"; const b=document.getElementById("themeBtn"); if(b)b.textContent=(t==="light"?"🌙":"☀️"); const lo=document.querySelector("header .logo"); if(lo) lo.src=(t==="dark"?"/logo-header-light.png":"/logo-header.png"); }
 function bootAnalytics(){
   if(CF_BEACON_TOKEN){ const s=document.createElement("script"); s.defer=true;
     s.src="https://static.cloudflareinsights.com/beacon.min.js";
