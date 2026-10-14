@@ -3458,6 +3458,10 @@ function parseRoute(){
 function pushRoute(view){
   const v=view||curView||"home";
   const seg=(v==="travel")?"travel":(v==="reallife")?"reallife":(v==="seeit")?"seeit":(v==="library")?"learn":(v==="voyage")?"path":(v==="join"||v==="request"||v==="admin")?v:((curTopic&&TOPIC_ALIAS[curTopic]===v)?curTopic:(v==="home"?"":v));
+  // Prerendered page (tools/prerender.js): keep its own URL + self-canonical for the view it was built for.
+  const _pre=document.documentElement.getAttribute("data-prerendered");
+  if(_pre && document.documentElement.getAttribute("data-view")===v && !window.__lpLeftPre){ try{ if(location.pathname!==_pre) history.replaceState(null,"",_pre); }catch(e){} updateMeta(v); try{ const can=document.querySelector('link[rel="canonical"]'); if(can) can.setAttribute("href",document.documentElement.getAttribute("data-canonical")); }catch(e){} return; }
+  if(_pre) window.__lpLeftPre=true;
   try{ history.replaceState(null,"","/"+activeLang+(seg?"/"+seg:"")); }catch(e){}
   updateMeta(v);
 }

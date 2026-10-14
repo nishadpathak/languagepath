@@ -1,0 +1,12 @@
+{
+  "name": "languagepath",
+  "private": true,
+  "description": "LanguagePath.org static PWA + build-time prerender",
+  "scripts": {
+    "build": "node tools/prerender.js",
+    "check": "node tools/check-no-secrets.js && node tools/check-noindex-routes.js && node tools/validate-sitemap.js && node tools/check-visual-path.js && node tools/check-prerender.js"
+  },
+  "devDependencies": {
+    "puppeteer": "^23.11.1"
+  }
+}

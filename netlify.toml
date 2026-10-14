@@ -1,8 +1,12 @@
-# SPA fallback so /spanish, /spanish/lessons etc. serve the app (client-side routing)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Build: tools/prerender.js writes one static HTML file per sitemap route into dist/,
+# plus dist/404.html and dist/_redirects (app-only views -> app shell).
+# There is deliberately NO "/* -> /index.html 200" catch-all any more: unknown URLs return a real 404.
+[build]
+  command = "npm ci && node tools/prerender.js"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
 
 # Trust: these intake/admin routes must never be indexed (server-enforced)
 [[headers]]
