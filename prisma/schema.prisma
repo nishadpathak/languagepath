@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  stripeCustomerId     String? @unique
+  stripeSubscriptionId String? @unique
+  plan                 String  @default("free")
+  planInterval         String?
+  planStatus           String?
+  currentPeriodEnd     DateTime?
+
+  intensiveMode  Boolean   @default(false)
+  aiMessagesUsed Int       @default(0)
+  aiQuotaResetAt DateTime?
+
+  streakCount     Int     @default(0)
+  lastStreakDate  String?
+  xp              Int     @default(0)
+  sentencesBuilt  Int     @default(0)
+  sentencesSpoken Int     @default(0)
+
+  pathCityIndex     Int @default(0)
+  pathDaysRemaining Int @default(80)
+  pathMisses        Int @default(0)
+
+  progressJson String @default("{}")
+
+  webhookEvents WebhookEvent[]
+}
+
+model WebhookEvent {
+  id          String   @id
+  type        String
+  processedAt DateTime @default(now())
+  payloadType String?
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+}
