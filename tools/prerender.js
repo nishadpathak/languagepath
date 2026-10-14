@@ -57,7 +57,7 @@ function build(route, m) {
     const re = new RegExp(`<section class="view" id="view-${m.view}">([\\s\\S]*?)</section>`);
     if (re.test(h)) h = h.replace(re, () => `<section class="view active" id="view-${m.view}">${m.viewHTML}</section>`);
   } else if (m.view === "home" && m.viewHTML) {
-    h = h.replace(/<section class="view active" id="view-home">[\s\S]*?\n  <\/section>\n(?=\s*<section class="view" id="view-lessons">)/, () => `<section class="view active" id="view-home">${m.viewHTML}</section>\n`);
+    h = h.replace(/<section class="view active" id="view-home">[\s\S]*?\n  <\/section>\n(?=\s*(?:<!--[\s\S]*?-->\s*)?<section class="view" id="view-lessons">)/, () => `<section class="view active" id="view-home">${m.viewHTML}</section>\n`);
   }
   return h;
 }
