@@ -31,3 +31,15 @@
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "microphone=(self), camera=(), geolocation=(), payment=()"
+
+# Turkish course lives at /tr; /turkish is a common guess
+[[redirects]]
+  from = "/turkish"
+  to = "/tr"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/turkish/*"
+  to = "/tr/:splat"
+  status = 301
+  force = true
