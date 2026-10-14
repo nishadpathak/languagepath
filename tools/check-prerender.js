@@ -19,7 +19,7 @@ const urls = [...fs.readFileSync(path.join(root, "sitemap.xml"), "utf8").matchAl
 const titles = {}, descs = {};
 let n = 0;
 for (const r of urls) {
-  const f = /\.[a-z]+$/i.test(r) ? path.join(dist, r) : path.join(dist, r === "/" ? "" : r, "index.html");
+  const f = /\.[a-z]+$/i.test(r) ? path.join(dist, r) : (r === "/" ? path.join(dist, "index.html") : path.join(dist, r + ".html"));
   if (!fs.existsSync(f)) { errs.push("missing " + r); continue; }
   if (/\.[a-z]+$/i.test(r)) continue; n++;
   const h = fs.readFileSync(f, "utf8");
