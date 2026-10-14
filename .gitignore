@@ -1,0 +1,17 @@
+# macOS / iCloud
+.DS_Store
+._*
+Icon?
+# Netlify local state and build output
+.netlify/
+dist/
+# Secrets (use Netlify env vars; see .env.example)
+.env
+.env.*
+!.env.example
+# Node
+node_modules/
+npm-debug.log*
+# Large reference material not needed at runtime
+guide/
+*.pdf

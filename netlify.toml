@@ -1,0 +1,29 @@
+# SPA fallback so /spanish, /spanish/lessons etc. serve the app (client-side routing)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Trust: these intake/admin routes must never be indexed (server-enforced)
+[[headers]]
+  for = "/admin"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+[[headers]]
+  for = "/join"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+[[headers]]
+  for = "/request"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Security headers (safe subset; a strict CSP needs careful allow-listing for inline scripts + AdSense/gtag/Travelpayouts)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "microphone=(self), camera=(), geolocation=(), payment=()"
