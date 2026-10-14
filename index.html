@@ -1905,6 +1905,7 @@ input[type=text]:focus,.search:focus,select:focus,input#voiceSel:focus{box-shado
       <div class="row-btns"><button class="btn" onclick="resumeOrStart()">▶ Continue</button>
       <button class="btn ghost" onclick="resetAll()">Reset progress</button></div>
     </div>
+  <div id="tpHome" class="tp-slot"></div>
   </section>
 
   <!-- LESSONS -->
@@ -2000,6 +2001,7 @@ input[type=text]:focus,.search:focus,select:focus,input#voiceSel:focus{box-shado
     <input class="search" id="searchBox" placeholder="Search… (water, thanks, help)" oninput="renderPocket()" style="width:100%;padding:11px 14px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);font-size:14px;margin-bottom:12px">
     <div id="catTags"></div>
     <div id="pocketList" style="margin-top:10px"></div>
+    <div id="tpPocket" class="tp-slot"></div>
   </section>
 
   <!-- SOUNDS -->
@@ -3508,7 +3510,7 @@ function go(v){
   // documented SPA support: https://support.google.com/adsense/answer/9183363. Without this, Auto
   // ads only ever sees the very first view, since we never do a real page reload.
   curView=v; if(curTopic&&(TOPIC_ALIAS[curTopic]||"topic")!==v)curTopic=null; pushRoute(v); try{ if(TRACK_ON) track("view", v); }catch(e){}
-  document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));document.getElementById("view-"+v).classList.add("active");document.querySelectorAll("#nav button").forEach(b=>{const act=b.dataset.v===v;b.classList.toggle("active",act);b.setAttribute("role","tab");b.setAttribute("aria-selected",act?"true":"false");if(act)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});["learn","practice","explore"].forEach(g=>{const el=document.getElementById("grp-"+g),gv=VIEW_GROUP[v];if(el){const c=gv!==g;el.classList.toggle("collapsed",c);const b=el.querySelector(".ng");if(b)b.setAttribute("aria-expanded",String(!c));}});window.scrollTo(0,0);if(v==="home")renderHome();if(v==="lessons"){document.getElementById("player").style.display="none";document.getElementById("lessonHome").style.display="block";renderLessonList();}if(v==="recall"){document.getElementById("recallArea").style.display="none";document.getElementById("recallHome").style.display="block";renderRecallHome();}if(v==="listen"){document.getElementById("listenArea").style.display="none";document.getElementById("listenHome").style.display="block";renderListenHome();}if(v==="dialog"){document.getElementById("dialogArea").style.display="none";document.getElementById("dialogList").style.display="block";renderDialogList();}if(v==="quiz"){document.getElementById("quizArea").style.display="none";document.getElementById("quizResult").style.display="none";document.getElementById("quizHome").style.display="block";renderQuizHome();}if(v==="culture")renderCulture();if(v==="shadow"){document.getElementById("shadowArea").style.display="none";document.getElementById("shadowHome").style.display="block";renderShadowHome();}if(v==="chunks")renderChunks();if(v==="resources")renderResources();if(v==="pocket"){renderTags();renderPocket();}if(v==="sound")renderSounds();if(v==="travel")renderTravel();if(v==="chat")renderChat();if(v==="build")renderBuild();if(v==="seeit")renderSeeIt();if(v==="reallife")renderRealLife();if(v==="progress")renderProgress();if(v==="topic")renderTopic();if(v==="library")renderLibrary();if(v==="join")renderJoin();if(v==="request")renderRequest();if(v==="admin")renderAdmin();if(v==="voyage")renderVoyage();if(v==="map")renderLangMap();}
+  document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));document.getElementById("view-"+v).classList.add("active");document.querySelectorAll("#nav button").forEach(b=>{const act=b.dataset.v===v;b.classList.toggle("active",act);b.setAttribute("role","tab");b.setAttribute("aria-selected",act?"true":"false");if(act)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});["learn","practice","explore"].forEach(g=>{const el=document.getElementById("grp-"+g),gv=VIEW_GROUP[v];if(el){const c=gv!==g;el.classList.toggle("collapsed",c);const b=el.querySelector(".ng");if(b)b.setAttribute("aria-expanded",String(!c));}});window.scrollTo(0,0);if(v==="home")renderHome();if(v==="lessons"){document.getElementById("player").style.display="none";document.getElementById("lessonHome").style.display="block";renderLessonList();}if(v==="recall"){document.getElementById("recallArea").style.display="none";document.getElementById("recallHome").style.display="block";renderRecallHome();}if(v==="listen"){document.getElementById("listenArea").style.display="none";document.getElementById("listenHome").style.display="block";renderListenHome();}if(v==="dialog"){document.getElementById("dialogArea").style.display="none";document.getElementById("dialogList").style.display="block";renderDialogList();}if(v==="quiz"){document.getElementById("quizArea").style.display="none";document.getElementById("quizResult").style.display="none";document.getElementById("quizHome").style.display="block";renderQuizHome();}if(v==="culture")renderCulture();if(v==="shadow"){document.getElementById("shadowArea").style.display="none";document.getElementById("shadowHome").style.display="block";renderShadowHome();}if(v==="chunks")renderChunks();if(v==="resources")renderResources();if(v==="pocket"){renderTags();renderPocket();}if(v==="sound")renderSounds();if(v==="travel")renderTravel();if(v==="chat")renderChat();if(v==="build")renderBuild();if(v==="seeit")renderSeeIt();if(v==="reallife")renderRealLife();if(v==="progress")renderProgress();if(v==="topic")renderTopic();if(v==="library")renderLibrary();if(v==="join")renderJoin();if(v==="request")renderRequest();if(v==="admin")renderAdmin();if(v==="voyage")renderVoyage();if(v==="map")renderLangMap();try{tpRenderSlots(v);}catch(e){}}
 document.querySelectorAll("#nav button").forEach(b=>{ if(b.dataset.v) b.onclick=()=>go(b.dataset.v); });
 
 /* ============ COUNTDOWN ============ */
@@ -3817,6 +3819,72 @@ let rlIdx=0, rlTurn=0, rlRevealed=false;
 // script (removed, see git history) and was never independently verified; do not restore it without
 // a fresh, verified link. The CTA row hides a button whose URL is empty, so this degrades cleanly.
 const TRAVEL_CTA={flights:"https://kiwi.tpk.ro/7Nwsx2kS",hotels:""};
+/* ===== Travelpayouts affiliate layer — marker 736890 ONLY (never 570982, never emrldtp.* scripts) =====
+   Link format (verified: Travelpayouts Help Center, "How to dynamically change SubID in short affiliate
+   links"): create ONE short link per program in the Travelpayouts dashboard (Tools → Links, in the project
+   that uses marker 736890), paste it below; the code appends ?sub_id=<page> per placement so stats show which
+   page earned. Sub-ID convention: lowercase page slug, e.g. travel_uae_dubai, lang_arabic_home.
+   "" = PLACEHOLDER → that button is hidden (degrades cleanly). Each placeholder needs Nishad to join the
+   program in the dashboard and generate the link. Never hand-construct or guess a link.
+   Widgets: paste the dashboard-generated widget script src (must be https://tp.media/… or *.travelpayouts.com).
+   They load only when scrolled into view AND only after the visitor accepted the consent banner.
+   Plain links set no cookies on this site, so they are shown without consent (clearly disclosed). */
+const TP_MARKER="736890";
+const TP_PROGRAMS={
+  flights:  {label:"✈️ Find flights",    link:TRAVEL_CTA.flights /* verified Kiwi.com via Travelpayouts, marker 736890 */},
+  hotels:   {label:"🏨 Find a hotel",    link:"" /* PLACEHOLDER: Hotellook / Booking.com / Agoda short link from dashboard */},
+  tours:    {label:"🎟️ Tours & tickets", link:"" /* PLACEHOLDER: GetYourGuide / Klook / Tiqets short link from dashboard */},
+  esim:     {label:"📶 Travel eSIM",     link:"" /* PLACEHOLDER: Airalo (Travelpayouts program p=8310) short link from dashboard */},
+  insurance:{label:"🛡️ Travel insurance",link:"" /* PLACEHOLDER: EKTA / SafetyWing / VisitorsCoverage short link from dashboard */}
+};
+const TP_WIDGETS={ hotels:"" /* PLACEHOLDER: dashboard widget script src (https://tp.media/content?...) */, flights:"" /* PLACEHOLDER */ };
+// language hub → featured destination for contextual cards on /{lang} and /{lang}/pocket
+const TP_LANG_DEST={arabic:"uae|dubai",spanish:"spain|madrid",turkish:"turkey|istanbul",portuguese:"portugal|lisbon",mandarin:"china|beijing"};
+function tpSub(s){ return String(s||"site").toLowerCase().replace(/[^a-z0-9_]+/g,"_").slice(0,60); }
+function tpLink(kind,sub){
+  const p=TP_PROGRAMS[kind]; if(!p||!p.link) return "";
+  if(/570982|emrldtp\./i.test(p.link)) return "";   // hard guard: wrong account / known-malicious loader
+  return p.link+(p.link.indexOf("?")>=0?"&":"?")+"sub_id="+encodeURIComponent(tpSub(sub));
+}
+function tpClick(kind,sub){ try{ track("affiliate_click", kind+"|"+tpSub(sub)); }catch(e){} }
+function tpDisclosure(){ return `<p class="tp-disc" style="color:var(--muted);font-size:11px;margin-top:8px">Partner links: LanguagePath may earn a commission if you book through them, at no extra cost to you. <a href="/terms.html#affiliates" style="color:var(--muted)">How this works</a>.</p>`; }
+function tpButtons(sub,kinds){
+  return (kinds||["flights","hotels","tours","esim","insurance"]).map(k=>{ const u=tpLink(k,sub); return u?`<a class="btn ${k==="flights"?"":"ghost"}" href="${u}" target="_blank" rel="sponsored noopener nofollow" onclick="tpClick('${k}','${tpSub(sub)}')">${TP_PROGRAMS[k].label}</a>`:""; }).join("");
+}
+function tpTripCard(o){
+  const sub=o.sub||"site"; const btns=tpButtons(sub); if(!btns) return "";
+  const where=o.where?(" to "+o.where):"";
+  const tips=o.where?`<p style="color:var(--muted);font-size:13px;margin:0 0 10px">You've practised the airport, taxi and hotel talks for ${o.where}. Sort the rest of the trip: flights, a place to stay, things to do, mobile data for when you land, and cover in case plans change.</p>`:`<p style="color:var(--muted);font-size:13px;margin:0 0 10px">Practised the airport, taxi and hotel talks. Planning the trip?</p>`;
+  const wk=TP_WIDGETS.hotels?"hotels":(TP_WIDGETS.flights?"flights":"");
+  const w=wk?`<div class="tp-widget" data-tp-widget="${wk}" data-sub="${tpSub(sub)}" style="min-height:1px;margin-top:10px"></div>`:"";
+  return `<div class="card tp-card" style="text-align:center"><h3>Planning a trip${where}?</h3>${tips}<div class="row-btns" style="justify-content:center;flex-wrap:wrap">${btns}</div>${w}${tpDisclosure()}</div>`;
+}
+function tpRenderSlots(v){
+  const slot=v==="home"?"tpHome":(v==="pocket"?"tpPocket":null);
+  document.querySelectorAll(".tp-slot").forEach(el=>{ if(el.id!==slot) el.innerHTML=""; });
+  const dest=TP_LANG_DEST[activeLang]; if(!slot||!dest) return;
+  const [cs,ys]=dest.split("|"); const c=TRAVEL.find(x=>x.slug===cs); const city=c&&(c.cities||[]).find(z=>z.slug===ys); if(!c||!city) return;
+  const el=document.getElementById(slot); if(!el) return;
+  const card=tpTripCard({where:city.name,country:c.country,lang:c.lang,langName:c.langName,sub:"lang_"+activeLang+"_"+v});
+  el.innerHTML=card?card.replace("</h3>",`</h3><p style="font-size:13px;margin:0 0 6px"><a href="/travel/${c.slug}/${city.slug}" style="color:var(--accent)">${c.langName} phrases for ${city.name} →</a></p>`):"";
+  tpObserveWidgets();
+}
+let __tpIO=null;
+function tpConsented(){ try{ return localStorage.getItem("lp_ads_consent")==="accepted"; }catch(e){ return false; } }
+function tpLoadWidget(el){
+  if(el.dataset.loaded) return; const src=TP_WIDGETS[el.dataset.tpWidget]; if(!src) return;
+  let u; try{ u=new URL(src); }catch(e){ return; }
+  if(u.protocol!=="https:"||!(u.hostname==="tp.media"||/(^|\.)travelpayouts\.com$/.test(u.hostname))||/570982/.test(src)) return;
+  el.dataset.loaded="1"; const s=document.createElement("script"); s.async=true; s.charset="utf-8"; s.src=src; el.appendChild(s);
+}
+function tpObserveWidgets(){
+  if(!tpConsented()) return;
+  const els=document.querySelectorAll(".tp-widget:not([data-loaded])"); if(!els.length) return;
+  if(!("IntersectionObserver" in window)){ els.forEach(tpLoadWidget); return; }
+  if(!__tpIO) __tpIO=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ __tpIO.unobserve(e.target); tpLoadWidget(e.target); } }),{rootMargin:"200px"});
+  els.forEach(el=>__tpIO.observe(el));
+}
+
 const TRAVEL=[{country:"China",slug:"china",flag:"🇨🇳",lang:"mandarin",langName:"Mandarin",cities:[
   {name:"Beijing",slug:"beijing"}, {name:"Shanghai",slug:"shanghai"}]},
  {country:"Spain",slug:"spain",flag:"🇪🇸",lang:"spanish",langName:"Spanish",cities:[
@@ -3849,10 +3917,10 @@ function renderTravel(){
       <div class="card"><h3>${travelDest.name} speaking path</h3><p style="color:var(--muted);font-size:13px;margin:0 0 8px">Tap a situation to practise it with LanguagePath.</p>${steps}</div>
       <div class="card"><h3>What you'll hear</h3><p style="color:var(--muted);font-size:13px;margin:0 0 8px">You say something — here's what you might hear back.</p>${cityHears(c.lang).map(h=>`<div class="vrow"><div class="tr">${h.t}</div><div class="pr">${h.pr}</div><div class="en">${h.en}</div></div>`).join("")}<p style="color:var(--muted);font-size:11.5px;margin-top:8px">Implementation-verified; native review pending.</p></div>
       <div class="card"><h3>Conversation lifelines</h3><div class="wordsbox">${lifelines.map(l=>`<button class="wchip" onclick="speak('${esc(l.t)}')"><b>${l.t}</b><span>${l.en}</span><span class="wchip-pr">${l.pr}</span></button>`).join("")}</div></div>
-      <div class="card" style="text-align:center"><h3>Ready to use it?</h3><p style="color:var(--muted);font-size:13px;margin:0 0 10px">You've practised the airport, taxi and hotel talks. Planning the trip?</p><div class="row-btns" style="justify-content:center">${TRAVEL_CTA.flights?`<a class="btn" href="${TRAVEL_CTA.flights}" target="_blank" rel="noopener nofollow" onclick="try{track('travel_flight_clicked','${c.country}')}catch(e){}">✈️ Find flights</a>`:''}${TRAVEL_CTA.hotels?`<a class="btn ghost" href="${TRAVEL_CTA.hotels}" target="_blank" rel="noopener nofollow" onclick="try{track('travel_hotel_clicked','${c.country}')}catch(e){}">🏨 Find a hotel</a>`:''}</div>${(TRAVEL_CTA.flights||TRAVEL_CTA.hotels)?`<p style="color:var(--muted);font-size:11px;margin-top:8px">Some travel links are partner links. LanguagePath may earn a commission if you book through them, at no extra cost to you.</p>`:''}</div>
+      ${tpTripCard({where:travelDest.name,country:c.country,lang:c.lang,langName:c.langName,sub:"travel_"+c.slug+"_"+travelDest.slug})}
       <button class="btn" onclick="travelStart('${c.lang}')">▶ Start your ${travelDest.name} speaking path</button>
       <div class="row-btns" style="margin-top:10px"><button class="btn ghost" onclick="go('voyage')">Play Path</button></div>`;
-    try{track("travel_page_viewed",c.country+"/"+travelDest.slug);}catch(e){}
+    try{track("travel_page_viewed",c.country+"/"+travelDest.slug);}catch(e){} try{tpObserveWidgets();}catch(e){}
     window.scrollTo(0,0); return;
   }
   // /travel landing
@@ -3860,7 +3928,7 @@ function renderTravel(){
   const cards=TRAVEL.map(c=>`<a href="/travel/${c.slug}/${c.cities[0].slug}" style="text-decoration:none;background:var(--panelGrad);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--cardShadow)"><div style="font-size:26px">${c.flag}</div><b style="font-size:16px;color:var(--txt)">${c.langName} in ${c.country}</b><div style="font-size:12.5px;color:var(--muted);margin-top:4px">${c.cities.map(x=>x.name).join(" · ")}</div></a>`).join("");
   sec.innerHTML=`<div class="hero"><span class="k">Travel with LanguagePath</span><h1 class="t" style="margin:2px 0 6px">Visit the country. Speak the language.</h1><div class="d">Turn your next trip into a reason to use what you're learning — prepare for the conversations you'll actually have.</div></div>
     <div class="card"><h3>Choose a destination</h3><div class="hero-langs" style="justify-content:flex-start;margin-top:8px">${cards}</div><p style="color:var(--muted);font-size:12.5px;margin-top:10px">A pilot across 5 countries. Each destination turns travel into <b>language practice</b>, not a booking portal.</p><div class="row-btns"><button class="btn" onclick="go('voyage')">Play Path</button></div></div>
-    <div class="card" style="text-align:center"><h3>Ready to use it?</h3><p style="color:var(--muted);font-size:13px;margin:0 0 10px">Practised the airport, taxi and hotel talks. Planning the trip?</p><div class="row-btns" style="justify-content:center"><a class="btn" href="${TRAVEL_CTA.flights}" target="_blank" rel="noopener nofollow" onclick="try{track('travel_flight_clicked','landing')}catch(e){}">✈️ Find flights</a>${TRAVEL_CTA.hotels?`<a class="btn ghost" href="${TRAVEL_CTA.hotels}" target="_blank" rel="noopener nofollow" onclick="try{track('travel_hotel_clicked','landing')}catch(e){}">🏨 Find a hotel</a>`:''}</div><p style="color:var(--muted);font-size:11px;margin-top:8px">Some travel links are partner links. LanguagePath may earn a commission if you book through them, at no extra cost to you.</p></div>`;
+    ${tpTripCard({where:null,country:null,lang:null,langName:null,sub:"travel_landing"})}`;
   try{track("travel_page_viewed","landing");}catch(e){}
   window.scrollTo(0,0);
 }
@@ -4017,7 +4085,7 @@ let voyageState=voyageLoad();
 function voyageLangName(code){ return (code&&PACKS[code]&&PACKS[code].name)||"the local language"; }
 function voyagePartnerDisc(){ return (TRAVEL_CTA.flights||TRAVEL_CTA.hotels)?`<p style="color:var(--muted);font-size:11px;margin-top:8px">Some travel links are partner links. LanguagePath may earn a commission if you book through them, at no extra cost to you.</p>`:""; }
 function voyageFlightBtns(label){
-  const f=TRAVEL_CTA.flights?`<a class="btn" href="${TRAVEL_CTA.flights}" target="_blank" rel="noopener nofollow" onclick="try{track('voyage_flight_clicked','${label}')}catch(e){}">Find flights</a>`:"";
+  const f=TRAVEL_CTA.flights?`<a class="btn" href="${tpLink('flights','voyage_'+label)}" target="_blank" rel="sponsored noopener nofollow" onclick="try{track('voyage_flight_clicked','${label}')}catch(e){};tpClick('flights','voyage_${label}')">Find flights</a>`:"";
   const h=TRAVEL_CTA.hotels?`<a class="btn ghost" href="${TRAVEL_CTA.hotels}" target="_blank" rel="noopener nofollow" onclick="try{track('voyage_hotel_clicked','${label}')}catch(e){}">Find a hotel</a>`:"";
   return f+h;
 }
@@ -4691,6 +4759,7 @@ function pathFeatureCard(){
   </div>`;
 }
 function renderHome(){
+  setTimeout(()=>{ try{ if((curView||"home")==="home") tpRenderSlots("home"); }catch(e){} },0);
   const p=PACKS[activeLang];
   const hn=document.getElementById("heroName"); if(hn)hn.textContent=p.name;
   const hl=document.getElementById("heroLangs"); if(hl){ const n=LANG_ORDER.filter(l=>PACKS[l]&&!PACKS[l].ai).length; hl.textContent=n; }
@@ -8605,7 +8674,7 @@ function initConsent(){
   const box=document.getElementById("consent"); if(!box) return;
   box.style.display="block";
   const yes=document.getElementById("consentYes"), no=document.getElementById("consentNo");
-  if(yes) yes.addEventListener("click",()=>{ try{localStorage.setItem(ADS_CONSENT_LS,"accepted");}catch(e){} loadAdsScript(); loadAnalytics(); box.style.display="none"; });
+  if(yes) yes.addEventListener("click",()=>{ try{localStorage.setItem(ADS_CONSENT_LS,"accepted");}catch(e){} loadAdsScript(); loadAnalytics(); box.style.display="none"; try{tpObserveWidgets();}catch(e){} });
   if(no) no.addEventListener("click",()=>{ try{localStorage.setItem(ADS_CONSENT_LS,"rejected");}catch(e){} box.style.display="none"; });
 }
 const KNOWN_LS="known_langs_v1", BRIDGE_CACHE_LS="ai_bridge_cache_v1";

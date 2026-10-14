@@ -19,6 +19,8 @@ jobs:
         run: node tools/check-noindex-routes.js
       - name: No client-side secrets
         run: node tools/check-no-secrets.js
+      - name: Travelpayouts affiliate guard
+        run: node tools/check-affiliates.js
       - name: Sitemap + language-code validator
         run: node tools/validate-sitemap.js
       - name: Inline app script parses
