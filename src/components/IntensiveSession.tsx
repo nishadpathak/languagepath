@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { courses, lessonSteps } from "@/data/courses";
+import { courses, isBuildStep, lessonSteps } from "@/data/courses";
 import { canReveal, stepKey } from "@/lib/progress";
 import { speakText } from "@/lib/speech";
 import { useProgress } from "@/context/ProgressContext";
@@ -17,7 +17,7 @@ export function IntensiveSession() {
     () =>
       course.lessons.flatMap((lesson) =>
         lessonSteps(lesson, true)
-          .filter((step) => step.kind === "construct")
+          .filter(isBuildStep)
           .map((step) => ({ lesson, step })),
       ),
     [course],
@@ -72,62 +72,60 @@ export function IntensiveSession() {
       </div>
       <IntensiveToggle />
       <p className="text-[var(--muted)]">
-        A 20–25 minute chain. Speak every sentence before you reveal. No hearts.
-        When the clock hits zero, stop — tired mimicry is not the method.
+        A 20–25 minute chain of construct and rebuild steps. Speak every
+        sentence before you reveal. No hearts. When the clock hits zero, stop —
+        tired mimicry is not the method.
       </p>
       <article className="rounded-[2rem] border border-[var(--rule)] bg-white/70 p-6">
         <p className="text-sm text-[var(--muted)]">
           {current.lesson.title} · {index + 1}/{chain.length}
+          {step.kind === "rebuild" ? " · rebuild" : ""}
         </p>
-        {"prompt" in step ? (
-          <>
-            <h2 className="mt-2 font-serif text-3xl">{step.prompt}</h2>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {step.pieces.map((piece) => (
-                <li
-                  key={piece.target}
-                  className="rounded-2xl border border-[var(--rule)] bg-[var(--paper)] px-3 py-2"
-                >
-                  <span className="block text-xs text-[var(--muted)]">{piece.gloss}</span>
-                  <span className="font-serif text-lg">{piece.target}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-5 flex gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setOpened((currentOpened) => ({
-                    ...currentOpened,
-                    [index]: { spoken: true, revealed: Boolean(currentOpened[index]?.revealed) },
-                  }));
-                  markSpoken(key);
-                }}
-                className="rounded-full bg-[var(--forest)] px-4 py-2 text-sm text-[var(--paper)]"
-              >
-                I said it aloud
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (!revealAllowed) return;
-                  setOpened((currentOpened) => ({
-                    ...currentOpened,
-                    [index]: { spoken: true, revealed: true },
-                  }));
-                  markBuilt(key);
-                  speakText(step.answer, course.locale);
-                }}
-                disabled={!revealAllowed}
-                className="rounded-full bg-[var(--terracotta)] px-4 py-2 text-sm text-white disabled:opacity-40"
-              >
-                Reveal
-              </button>
-            </div>
-            {revealed ? (
-              <p className="mt-4 font-serif text-4xl">{step.answer}</p>
-            ) : null}
-          </>
+        <h2 className="mt-2 font-serif text-3xl">{step.prompt}</h2>
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {step.pieces.map((piece) => (
+            <li
+              key={`${piece.gloss}-${piece.target}`}
+              className="rounded-2xl border border-[var(--rule)] bg-[var(--paper)] px-3 py-2"
+            >
+              <span className="block text-xs text-[var(--muted)]">{piece.gloss}</span>
+              <span className="font-serif text-lg">{piece.target}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-5 flex gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setOpened((currentOpened) => ({
+                ...currentOpened,
+                [index]: { spoken: true, revealed: Boolean(currentOpened[index]?.revealed) },
+              }));
+              markSpoken(key);
+            }}
+            className="rounded-full bg-[var(--forest)] px-4 py-2 text-sm text-[var(--paper)]"
+          >
+            I said it aloud
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (!revealAllowed) return;
+              setOpened((currentOpened) => ({
+                ...currentOpened,
+                [index]: { spoken: true, revealed: true },
+              }));
+              markBuilt(key);
+              speakText(step.answer, course.locale);
+            }}
+            disabled={!revealAllowed}
+            className="rounded-full bg-[var(--terracotta)] px-4 py-2 text-sm text-white disabled:opacity-40"
+          >
+            Reveal
+          </button>
+        </div>
+        {revealed ? (
+          <p className="mt-4 font-serif text-4xl">{step.answer}</p>
         ) : null}
       </article>
       <button

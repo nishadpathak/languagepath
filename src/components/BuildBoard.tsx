@@ -7,10 +7,12 @@ export function BuildBoard({
   tiles,
   salt,
   onResult,
+  variant = "path",
 }: {
   tiles: string[];
   salt: string;
   onResult: (correct: boolean) => void;
+  variant?: "path" | "practice";
 }) {
   const bank = useMemo(() => shuffleTiles(tiles, salt), [salt, tiles]);
   const [built, setBuilt] = useState<string[]>([]);
@@ -34,6 +36,12 @@ export function BuildBoard({
     const correct = tilesMatch(built, tiles);
     setResult(correct ? "correct" : "miss");
     onResult(correct);
+  }
+
+  function retry() {
+    setBuilt([]);
+    setRemaining(bank);
+    setResult("idle");
   }
 
   return (
@@ -76,10 +84,21 @@ export function BuildBoard({
           Check
         </button>
         {result === "correct" ? (
-          <span className="self-center text-sm text-[var(--forest)]">Clean build. No days lost.</span>
+          <span className="self-center text-sm text-[var(--forest)]">
+            {variant === "path" ? "Clean build. No days lost." : "Clean build."}
+          </span>
         ) : null}
         {result === "miss" ? (
-          <span className="self-center text-sm text-[var(--terracotta)]">Miss. That costs a day.</span>
+          <>
+            <span className="self-center text-sm text-[var(--terracotta)]">
+              {variant === "path" ? "Miss. That costs a day." : "Not yet. Rebuild it from the pieces."}
+            </span>
+            {variant === "practice" ? (
+              <button type="button" onClick={retry} className="text-sm underline">
+                Try again
+              </button>
+            ) : null}
+          </>
         ) : null}
       </div>
     </div>

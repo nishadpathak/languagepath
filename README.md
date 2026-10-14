@@ -2,7 +2,7 @@
 
 Free language learning by constructing sentences: reason one out, say it aloud, then reveal. The core trainer stays free. Optional **Pro** is the only paid offer: Stripe Checkout (monthly/yearly) → webhook → cloud progress sync, streak backup, and AI chat quota.
 
-Sample Spanish and French lessons are **synthetic originals**. They were not scraped from languagepath.org.
+Courses are **original beginner sequences** (Spanish, French, German, Portuguese). They were not scraped from languagepath.org.
 
 ## What is free (no account, no card)
 
@@ -37,7 +37,18 @@ npm run db:seed   # optional: demo@languagepath.test / languagepath
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and start Spanish. No login needed.
+Open [http://localhost:3000](http://localhost:3000) and start a course. No login needed.
+
+### Run a course locally
+
+1. `npm run dev`
+2. Open [http://localhost:3000/learn](http://localhost:3000/learn)
+3. Pick a language. Spanish is the flagship (10 lessons). French is next (10). German and Portuguese are shorter (8 each).
+4. A lesson is ~10 minutes: understand a piece → construct a new sentence → say it aloud → reveal → listen → rebuild.
+5. From the course hub you can also open **Recall** (spaced review of sentences you already built), **Build** (brand-new lines from known pieces), **Dialogue**, and **Pocket phrases**.
+6. Toggle **Intensive** in a lesson or open `/intensive` for the longer speak-before-reveal chain.
+
+First Spanish lesson stays at `/learn/es/es-want`.
 
 ```bash
 npm test
@@ -132,9 +143,9 @@ npm run e2e                           # Chrome: signup → pricing → mock webh
 
 Toggle it in a lesson, on `/account`, or open `/intensive`.
 
-- Extra construct chain after the daily lesson
+- Extra construct/rebuild chain after the daily lesson
 - Reveal stays locked until **I said it aloud**
-- Power session is a 25:00 clock over every construct step in the course
+- Power session is a 25:00 clock over every construct and rebuild step in the course
 
 ## Production-ready vs needs Stripe keys
 
@@ -160,6 +171,6 @@ Toggle it in a lesson, on `/account`, or open `/intensive`.
 ## Notes
 
 - Signed-out progress: `localStorage` key `languagepath.progress.v1`
-- Speech: browser `speechSynthesis` (`es-ES` / `fr-FR`)
-- Path uses the last course you opened (Spanish or French)
+- Speech: browser `speechSynthesis` (`es-ES` / `fr-FR` / `de-DE` / `pt-PT`)
+- Path uses the last course you opened (Spanish, French, German, or Portuguese)
 - Optional `OPENAI_API_KEY` — without it, chat uses a local beginner tutor and still counts quota

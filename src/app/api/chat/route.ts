@@ -12,8 +12,13 @@ type ChatMessage = { role: "user" | "assistant"; content: string };
 function localTutor(courseId: string, messages: ChatMessage[]) {
   const course = getCourse(courseId) ?? getCourse("es")!;
   const last = messages.filter((message) => message.role === "user").at(-1)?.content ?? "";
-  const sample =
-    course.id === "fr" ? "Je voudrais un café, s’il vous plaît." : "Quiero café, por favor.";
+  const samples: Record<string, string> = {
+    es: "Quiero café, por favor.",
+    fr: "Je voudrais un café, s’il vous plaît.",
+    de: "Ich möchte einen Kaffee, bitte.",
+    pt: "Quero um café, por favor.",
+  };
+  const sample = samples[course.id] ?? samples.es;
   if (!last.trim()) {
     return `Try building one sentence in ${course.language}. Example: ${sample}`;
   }

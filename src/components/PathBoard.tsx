@@ -56,8 +56,8 @@ export function PathBoard() {
           Misses so far: {progress.pathMisses}. Switch course in Learn — Path
           uses your last language.
         </p>
-        <div className="mt-4 flex gap-2">
-          {(["es", "fr"] as const).map((id) => (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {(["es", "fr", "de", "pt"] as const).map((id) => (
             <button
               key={id}
               type="button"
@@ -68,7 +68,13 @@ export function PathBoard() {
                   : "border border-[var(--rule)]"
               }`}
             >
-              {id === "es" ? "Spanish" : "French"}
+              {id === "es"
+                ? "Spanish"
+                : id === "fr"
+                  ? "French"
+                  : id === "de"
+                    ? "German"
+                    : "Portuguese"}
             </button>
           ))}
         </div>

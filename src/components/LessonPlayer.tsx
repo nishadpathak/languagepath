@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   estimatedMinutes,
+  isBuildStep,
   lessonSteps,
   type Course,
   type Lesson,
@@ -14,7 +15,7 @@ import { speakText } from "@/lib/speech";
 import { useProgress } from "@/context/ProgressContext";
 import { IntensiveToggle } from "@/components/IntensiveToggle";
 
-function Pieces({ step }: { step: Extract<Step, { kind: "construct" }> }) {
+function Pieces({ step }: { step: Extract<Step, { kind: "construct" | "rebuild" }> }) {
   return (
     <ul className="flex flex-wrap gap-2">
       {step.pieces.map((piece) => (
@@ -32,6 +33,13 @@ function Pieces({ step }: { step: Extract<Step, { kind: "construct" }> }) {
   );
 }
 
+function stepLabel(kind: Step["kind"]) {
+  if (kind === "teach") return "1 · Understand";
+  if (kind === "construct") return "2 · Construct";
+  if (kind === "listen") return "3 · Listen";
+  return "4 · Rebuild";
+}
+
 export function LessonPlayer({ course, lesson }: { course: Course; lesson: Lesson }) {
   const { progress, markBuilt, markSpoken, markLessonComplete, setCourse } =
     useProgress();
@@ -44,9 +52,9 @@ export function LessonPlayer({ course, lesson }: { course: Course; lesson: Lesso
   const key = step ? stepKey(course.id, lesson.id, step.id) : "";
   const minutes = estimatedMinutes(lesson, progress.intensiveMode);
   const spoken = progress.spokenStepKeys.includes(key);
-  const revealed = Boolean(
-    step && step.kind === "construct" && progress.completedStepKeys.includes(key),
-  );
+  const built = progress.completedStepKeys.includes(key);
+  const needsBuild = Boolean(step && (isBuildStep(step) || step.kind === "listen"));
+  const revealed = Boolean(step && needsBuild && built);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setCourse(course.id), 0);
@@ -58,12 +66,16 @@ export function LessonPlayer({ course, lesson }: { course: Course; lesson: Lesso
   const revealAllowed = canReveal({
     intensiveMode: progress.intensiveMode,
     spoken,
-    requireSpeak: step.kind === "construct" ? step.requireSpeak : false,
+    requireSpeak: isBuildStep(step) ? step.requireSpeak : false,
   });
 
   function onSaidIt() {
-    if (step.kind !== "construct") {
+    if (step.kind === "teach") {
       speakText(step.target, course.locale);
+      return;
+    }
+    if (step.kind === "listen") {
+      markSpoken(key);
       return;
     }
     markSpoken(key);
@@ -71,9 +83,14 @@ export function LessonPlayer({ course, lesson }: { course: Course; lesson: Lesso
 
   function onReveal() {
     if (!revealAllowed) return;
-    if (step.kind === "construct") {
+    if (isBuildStep(step)) {
       markBuilt(key);
       speakText(step.answer, course.locale);
+      return;
+    }
+    if (step.kind === "listen") {
+      markBuilt(key);
+      speakText(step.target, course.locale);
     }
   }
 
@@ -111,7 +128,7 @@ export function LessonPlayer({ course, lesson }: { course: Course; lesson: Lesso
         {step.kind === "teach" ? (
           <div className="space-y-4">
             <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">
-              1 · Understand
+              {stepLabel(step.kind)}
             </p>
             <p className="text-[var(--muted)]">{step.gloss}</p>
             <p className="font-serif text-5xl leading-tight">{step.target}</p>
@@ -124,10 +141,56 @@ export function LessonPlayer({ course, lesson }: { course: Course; lesson: Lesso
               Hear it
             </button>
           </div>
+        ) : step.kind === "listen" ? (
+          <div className="space-y-5">
+            <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">
+              {stepLabel(step.kind)}
+            </p>
+            <p className="font-serif text-3xl leading-snug">{step.prompt}</p>
+            <p className="text-[var(--muted)]">
+              Hear the line. Guess the meaning. Do not peek until you have a
+              sentence in your mouth.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => speakText(step.target, course.locale)}
+                className="rounded-full border border-[var(--rule)] px-4 py-2 text-sm"
+              >
+                Hear it
+              </button>
+              <button
+                type="button"
+                onClick={onSaidIt}
+                className="rounded-full bg-[var(--forest)] px-4 py-2 text-sm text-[var(--paper)]"
+              >
+                {spoken ? "Guessed · +XP" : "I have a guess"}
+              </button>
+              <button
+                type="button"
+                onClick={onReveal}
+                disabled={!revealAllowed}
+                className="rounded-full bg-[var(--terracotta)] px-4 py-2 text-sm text-white disabled:opacity-40"
+              >
+                Reveal
+              </button>
+            </div>
+            {!revealAllowed ? (
+              <p className="text-sm text-[var(--terracotta)]">
+                Guess first. Reveal waits until you do.
+              </p>
+            ) : null}
+            {revealed ? (
+              <div className="rounded-2xl bg-[var(--paper)] p-4">
+                <p className="font-serif text-4xl">{step.target}</p>
+                <p className="mt-2 text-lg">{step.meaning}</p>
+              </div>
+            ) : null}
+          </div>
         ) : (
           <div className="space-y-5">
             <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">
-              2 · Construct
+              {stepLabel(step.kind)}
             </p>
             <p className="font-serif text-3xl leading-snug">{step.prompt}</p>
             <Pieces step={step} />
@@ -190,7 +253,7 @@ export function LessonPlayer({ course, lesson }: { course: Course; lesson: Lesso
           <button
             type="button"
             onClick={onNext}
-            disabled={step.kind === "construct" && !revealed}
+            disabled={needsBuild && !revealed}
             className="rounded-full bg-[var(--ink)] px-5 py-2 text-sm text-[var(--paper)] disabled:opacity-40"
           >
             Next

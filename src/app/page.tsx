@@ -69,7 +69,7 @@ export default function HomePage() {
             <h2 className="font-serif text-4xl">{course.name}</h2>
             <p className="mt-2 text-[var(--muted)]">{course.tagline}</p>
             <p className="mt-4 text-sm">
-              {constructCount(course)} synthetic sentences you can actually build.
+              {constructCount(course)} sentences you can actually build.
             </p>
           </Link>
         ))}

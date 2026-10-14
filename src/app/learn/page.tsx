@@ -8,8 +8,8 @@ export default function LearnIndexPage() {
         <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">Courses</p>
         <h1 className="font-serif text-5xl">Pick a path of sentences</h1>
         <p className="mt-3 max-w-2xl text-[var(--muted)]">
-          Synthetic sample lessons only — original beginner chains for Spanish
-          and French. Nothing here was copied from production course files.
+          Original beginner courses. Nothing here was scraped from
+          languagepath.org. Core lessons stay free.
         </p>
       </div>
       <div className="grid gap-6 md:grid-cols-2">

@@ -305,9 +305,274 @@ const frenchChallenges: PathChallenge[] = [
   },
 ];
 
+const germanChallenges: PathChallenge[] = [
+  {
+    cityId: "lisbon",
+    prompt: "At the first café, say “I would like coffee.”",
+    pieces: [
+      { gloss: "I would like", target: "ich möchte" },
+      { gloss: "coffee", target: "Kaffee" },
+    ],
+    tiles: ["Ich", "möchte", "Kaffee."],
+    answer: "Ich möchte Kaffee.",
+  },
+  {
+    cityId: "madrid",
+    prompt: "Ask politely: “I would like water, please.”",
+    pieces: [
+      { gloss: "I would like", target: "ich möchte" },
+      { gloss: "water", target: "Wasser" },
+      { gloss: "please", target: "bitte" },
+    ],
+    tiles: ["Ich", "möchte", "Wasser,", "bitte."],
+    answer: "Ich möchte Wasser, bitte.",
+  },
+  {
+    cityId: "barcelona",
+    prompt: "Introduce yourself: “Hello, my name is Lena.”",
+    pieces: [
+      { gloss: "hello", target: "hallo" },
+      { gloss: "my name is", target: "ich heiße" },
+      { gloss: "Lena", target: "Lena" },
+    ],
+    tiles: ["Hallo,", "ich", "heiße", "Lena."],
+    answer: "Hallo, ich heiße Lena.",
+  },
+  {
+    cityId: "marseille",
+    prompt: "Say where you come from: “I come from Germany.”",
+    pieces: [
+      { gloss: "I come from", target: "ich komme aus" },
+      { gloss: "Germany", target: "Deutschland" },
+    ],
+    tiles: ["Ich", "komme", "aus", "Deutschland."],
+    answer: "Ich komme aus Deutschland.",
+  },
+  {
+    cityId: "milan",
+    prompt: "Decline a drink: “I would not like coffee.”",
+    pieces: [
+      { gloss: "I would not like", target: "ich möchte keinen" },
+      { gloss: "coffee", target: "Kaffee" },
+    ],
+    tiles: ["Ich", "möchte", "keinen", "Kaffee."],
+    answer: "Ich möchte keinen Kaffee.",
+  },
+  {
+    cityId: "zagreb",
+    prompt: "Admit a gap: “I don’t have water.”",
+    pieces: [
+      { gloss: "I have", target: "ich habe" },
+      { gloss: "no water", target: "kein Wasser" },
+    ],
+    tiles: ["Ich", "habe", "kein", "Wasser."],
+    answer: "Ich habe kein Wasser.",
+  },
+  {
+    cityId: "belgrade",
+    prompt: "Order two things: “I would like coffee and water.”",
+    pieces: [
+      { gloss: "I would like", target: "ich möchte" },
+      { gloss: "coffee", target: "Kaffee" },
+      { gloss: "and", target: "und" },
+      { gloss: "water", target: "Wasser" },
+    ],
+    tiles: ["Ich", "möchte", "Kaffee", "und", "Wasser."],
+    answer: "Ich möchte Kaffee und Wasser.",
+  },
+  {
+    cityId: "istanbul",
+    prompt: "Ask, then answer origin.",
+    pieces: [
+      { gloss: "where do you come from?", target: "Woher kommst du?" },
+      { gloss: "I come from Germany", target: "Ich komme aus Deutschland" },
+    ],
+    tiles: ["Woher", "kommst", "du?", "Ich", "komme", "aus", "Deutschland."],
+    answer: "Woher kommst du? Ich komme aus Deutschland.",
+  },
+  {
+    cityId: "tbilisi",
+    prompt: "Full hello: “Hello, I am Lena. Nice to meet you.”",
+    pieces: [
+      { gloss: "hello", target: "hallo" },
+      { gloss: "I am Lena", target: "ich bin Lena" },
+      { gloss: "nice to meet you", target: "freut mich" },
+    ],
+    tiles: ["Hallo,", "ich", "bin", "Lena.", "Freut", "mich."],
+    answer: "Hallo, ich bin Lena. Freut mich.",
+  },
+  {
+    cityId: "baku",
+    prompt: "Need versus have: “I would like water. I don’t have coffee.”",
+    pieces: [
+      { gloss: "I would like water", target: "Ich möchte Wasser" },
+      { gloss: "I don’t have coffee", target: "Ich habe keinen Kaffee" },
+    ],
+    tiles: ["Ich", "möchte", "Wasser.", "Ich", "habe", "keinen", "Kaffee."],
+    answer: "Ich möchte Wasser. Ich habe keinen Kaffee.",
+  },
+  {
+    cityId: "samarkand",
+    prompt: "A complete order: “I would like a coffee, please.”",
+    pieces: [
+      { gloss: "I would like", target: "ich möchte" },
+      { gloss: "a coffee", target: "einen Kaffee" },
+      { gloss: "please", target: "bitte" },
+    ],
+    tiles: ["Ich", "möchte", "einen", "Kaffee,", "bitte."],
+    answer: "Ich möchte einen Kaffee, bitte.",
+  },
+  {
+    cityId: "almaty",
+    prompt: "The last city: “Hello, I am Lena. I come from Germany.”",
+    pieces: [
+      { gloss: "hello", target: "hallo" },
+      { gloss: "I am Lena", target: "ich bin Lena" },
+      { gloss: "I come from Germany", target: "ich komme aus Deutschland" },
+    ],
+    tiles: ["Hallo,", "ich", "bin", "Lena.", "Ich", "komme", "aus", "Deutschland."],
+    answer: "Hallo, ich bin Lena. Ich komme aus Deutschland.",
+  },
+];
+
+const portugueseChallenges: PathChallenge[] = [
+  {
+    cityId: "lisbon",
+    prompt: "At the first café, say “I want coffee.”",
+    pieces: [
+      { gloss: "I want", target: "quero" },
+      { gloss: "coffee", target: "café" },
+    ],
+    tiles: ["Quero", "café."],
+    answer: "Quero café.",
+  },
+  {
+    cityId: "madrid",
+    prompt: "Ask politely: “I want water, please.”",
+    pieces: [
+      { gloss: "I want", target: "quero" },
+      { gloss: "water", target: "água" },
+      { gloss: "please", target: "por favor" },
+    ],
+    tiles: ["Quero", "água,", "por", "favor."],
+    answer: "Quero água, por favor.",
+  },
+  {
+    cityId: "barcelona",
+    prompt: "Introduce yourself: “Hello, my name is Inês.”",
+    pieces: [
+      { gloss: "hello", target: "olá" },
+      { gloss: "my name is", target: "chamo-me" },
+      { gloss: "Inês", target: "Inês" },
+    ],
+    tiles: ["Olá,", "chamo-me", "Inês."],
+    answer: "Olá, chamo-me Inês.",
+  },
+  {
+    cityId: "marseille",
+    prompt: "Say where you are from: “I am from Portugal.”",
+    pieces: [
+      { gloss: "I am", target: "sou" },
+      { gloss: "from", target: "de" },
+      { gloss: "Portugal", target: "Portugal" },
+    ],
+    tiles: ["Sou", "de", "Portugal."],
+    answer: "Sou de Portugal.",
+  },
+  {
+    cityId: "milan",
+    prompt: "Decline a drink: “I don’t want coffee.”",
+    pieces: [
+      { gloss: "not", target: "não" },
+      { gloss: "I want", target: "quero" },
+      { gloss: "coffee", target: "café" },
+    ],
+    tiles: ["Não", "quero", "café."],
+    answer: "Não quero café.",
+  },
+  {
+    cityId: "zagreb",
+    prompt: "Admit a gap: “I don’t have water.”",
+    pieces: [
+      { gloss: "not", target: "não" },
+      { gloss: "I have", target: "tenho" },
+      { gloss: "water", target: "água" },
+    ],
+    tiles: ["Não", "tenho", "água."],
+    answer: "Não tenho água.",
+  },
+  {
+    cityId: "belgrade",
+    prompt: "Order two things: “I want coffee and water.”",
+    pieces: [
+      { gloss: "I want", target: "quero" },
+      { gloss: "coffee", target: "café" },
+      { gloss: "and", target: "e" },
+      { gloss: "water", target: "água" },
+    ],
+    tiles: ["Quero", "café", "e", "água."],
+    answer: "Quero café e água.",
+  },
+  {
+    cityId: "istanbul",
+    prompt: "Ask, then answer: “Where are you from? I am from Portugal.”",
+    pieces: [
+      { gloss: "where are you from?", target: "De onde és?" },
+      { gloss: "I am from Portugal", target: "Sou de Portugal" },
+    ],
+    tiles: ["De", "onde", "és?", "Sou", "de", "Portugal."],
+    answer: "De onde és? Sou de Portugal.",
+  },
+  {
+    cityId: "tbilisi",
+    prompt: "Full hello: “Hello, I am Inês. Nice to meet you.”",
+    pieces: [
+      { gloss: "hello", target: "olá" },
+      { gloss: "I am Inês", target: "sou Inês" },
+      { gloss: "nice to meet you", target: "prazer" },
+    ],
+    tiles: ["Olá,", "sou", "Inês.", "Prazer."],
+    answer: "Olá, sou Inês. Prazer.",
+  },
+  {
+    cityId: "baku",
+    prompt: "Need versus have: “I want water. I don’t have coffee.”",
+    pieces: [
+      { gloss: "I want water", target: "Quero água" },
+      { gloss: "I don’t have coffee", target: "Não tenho café" },
+    ],
+    tiles: ["Quero", "água.", "Não", "tenho", "café."],
+    answer: "Quero água. Não tenho café.",
+  },
+  {
+    cityId: "samarkand",
+    prompt: "A complete order: “I want a coffee, please.”",
+    pieces: [
+      { gloss: "I want", target: "quero" },
+      { gloss: "a coffee", target: "um café" },
+      { gloss: "please", target: "por favor" },
+    ],
+    tiles: ["Quero", "um", "café,", "por", "favor."],
+    answer: "Quero um café, por favor.",
+  },
+  {
+    cityId: "almaty",
+    prompt: "The last city: “Hello, I am Inês. I am from Portugal.”",
+    pieces: [
+      { gloss: "hello", target: "olá" },
+      { gloss: "I am Inês", target: "sou Inês" },
+      { gloss: "I am from Portugal", target: "sou de Portugal" },
+    ],
+    tiles: ["Olá,", "sou", "Inês.", "Sou", "de", "Portugal."],
+    answer: "Olá, sou Inês. Sou de Portugal.",
+  },
+];
+
 const challengesByCourse: Record<string, PathChallenge[]> = {
   es: spanishChallenges,
   fr: frenchChallenges,
+  de: germanChallenges,
+  pt: portugueseChallenges,
 };
 
 export function pathForCourse(courseId: string) {
