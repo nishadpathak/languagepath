@@ -8,7 +8,7 @@ const links = [
   { href: "/learn", label: "Learn" },
   { href: "/path", label: "Path" },
   { href: "/intensive", label: "Intensive" },
-  { href: "/chat", label: "Chat" },
+  { href: "/chat", label: "GrokBot" },
   { href: "/pricing", label: "Pro" },
 ];
 

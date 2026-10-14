@@ -20,7 +20,7 @@ Create an account, pay with Stripe Checkout, wait for the webhook. Then:
 | --- | --- |
 | Cloud progress sync (`GET`/`PUT /api/sync`) | Local only |
 | Streak backup on the user row | Browser only |
-| AI chat quota | 3 messages / month if signed in; 80 monthly Pro / 120 yearly Pro |
+| GrokBot chat quota | 3 messages / month if signed in; 80 monthly Pro / 120 yearly Pro |
 
 Lessons, Path, and Intensive stay available either way.
 
@@ -139,6 +139,18 @@ npm run e2e                           # Chrome: signup → pricing → mock webh
 
 `npm run e2e` needs `npm run dev`, Google Chrome, and `ALLOW_WEBHOOK_MOCK=1`.
 
+## GrokBot (conversation partner)
+
+LanguagePath’s in-app partner at `/chat`. It stays A1–A2 and reuses sentences from the current course.
+
+```bash
+# .env — get a key at https://console.x.ai
+XAI_API_KEY=xai-...
+GROK_MODEL=grok-4.7   # optional; this is the default
+```
+
+Restart `npm run dev`. Sign in (free accounts get 3 messages / month). Without `XAI_API_KEY`, GrokBot still answers with a local beginner tutor so lessons and the UI keep working. `OPENAI_API_KEY` is only used if xAI is unset.
+
 ## Intensive mode
 
 Toggle it in a lesson, on `/account`, or open `/intensive`.
@@ -173,4 +185,4 @@ Toggle it in a lesson, on `/account`, or open `/intensive`.
 - Signed-out progress: `localStorage` key `languagepath.progress.v1`
 - Speech: browser `speechSynthesis` (`es-ES` / `fr-FR` / `de-DE` / `pt-PT`)
 - Path uses the last course you opened (Spanish, French, German, or Portuguese)
-- Optional `OPENAI_API_KEY` — without it, chat uses a local beginner tutor and still counts quota
+- Optional `XAI_API_KEY` — GrokBot (conversation partner) via `https://api.x.ai/v1/chat/completions`. `GROK_MODEL` defaults to `grok-4.7`. If unset, `OPENAI_API_KEY` is a fallback. With neither key, a local beginner tutor still replies and quota still counts. Lessons stay free.

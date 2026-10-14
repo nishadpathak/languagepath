@@ -93,8 +93,8 @@ export default function HomePage() {
         <div className="rounded-[1.5rem] border border-[var(--rule)] p-5">
           <h3 className="font-serif text-2xl">Pro is optional</h3>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            Account, Stripe monthly or yearly, cloud sync, streak backup, and an
-            AI chat quota. The course itself stays free.
+            Account, Stripe monthly or yearly, cloud sync, streak backup, and a
+            GrokBot quota. The course itself stays free.
           </p>
         </div>
       </section>

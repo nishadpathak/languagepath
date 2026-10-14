@@ -11,7 +11,7 @@ export function ChatPanel() {
     {
       role: "assistant",
       content:
-        "Stay at beginner level. Try a sentence with the pieces you already built. I will answer simply and nudge, not lecture.",
+        "I’m GrokBot. Stay at beginner level. Try a sentence with the pieces you already built. I will answer simply and nudge, not lecture.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -64,12 +64,13 @@ export function ChatPanel() {
     <div className="mx-auto max-w-2xl space-y-4">
       <div>
         <p className="text-sm uppercase tracking-[0.2em] text-[var(--muted)]">
-          Conversation partner
+          GrokBot · conversation partner
         </p>
         <h1 className="font-serif text-4xl">Talk with what you built</h1>
         <p className="mt-2 text-[var(--muted)]">
-          Free accounts get a small monthly taste. Pro backs up your streak and
-          raises the chat quota. Lessons are never gated.
+          GrokBot is LanguagePath’s beginner partner. It stays inside pieces
+          you already hold. Free accounts get a small monthly taste. Pro backs
+          up your streak and raises the quota. Lessons are never gated.
         </p>
       </div>
       <p className="text-sm">

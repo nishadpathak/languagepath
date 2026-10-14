@@ -9,7 +9,7 @@ export default function PricingPage() {
         <p className="mt-4 text-lg text-[var(--muted)]">
           Pro is the only paid offer: Stripe Checkout (monthly or yearly), then a
           webhook that turns on cloud progress sync, streak backup, and a larger
-          AI chat quota. Lessons, Path, and Intensive are never paywalled.
+          GrokBot quota. Lessons, Path, and Intensive are never paywalled.
         </p>
       </div>
       <div className="grid gap-6 md:grid-cols-2">
@@ -19,7 +19,7 @@ export default function PricingPage() {
           <ul className="mt-4 space-y-2 text-sm text-[var(--muted)]">
             <li>Cloud sync of progress</li>
             <li>Streak backup across devices</li>
-            <li>80 AI chat messages / month</li>
+            <li>80 GrokBot messages / month</li>
             <li>Lessons stay free either way</li>
           </ul>
           <div className="mt-6">
@@ -31,7 +31,7 @@ export default function PricingPage() {
           <p className="font-serif text-5xl">$72</p>
           <ul className="mt-4 space-y-2 text-sm text-[var(--muted)]">
             <li>Same sync and streak backup</li>
-            <li>120 AI chat messages / month</li>
+            <li>120 GrokBot messages / month</li>
             <li>Customer portal to cancel or switch</li>
             <li>No hard paywall on any lesson</li>
           </ul>
