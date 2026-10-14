@@ -37,6 +37,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="preload" href="/assets/world-map.svg" as="image">
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
 <link rel="icon" type="image/png" sizes="512x512" href="/icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <!-- Google AdSense is loaded only after the visitor consents (see the consent banner); the script is injected at runtime. -->
@@ -1729,6 +1730,52 @@ input[type=text]:focus,.search:focus,select:focus,input#voiceSel:focus{box-shado
 </style>
 <script>/* set theme before first paint to avoid a flash; default dark */(function(){try{var t=localStorage.getItem("theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 
+<style id="lp-redesign">
+/* ---- 2026 redesign: header contrast, home discovery, compact consent bar ---- */
+header{background:#0B1F4D !important;box-shadow:0 2px 12px rgba(0,0,0,.25) !important}
+:root[data-theme="light"] header{background:#fff !important;border-bottom:1px solid #e6eaf2 !important;box-shadow:0 1px 6px rgba(11,31,77,.06) !important}
+header .logo{height:40px;width:auto}
+#nav button,nav button{color:var(--txt);opacity:.82;font-size:13.5px}
+#nav button:hover,#nav button.active{opacity:1}
+#nav .ng,nav .ng{font-size:12.5px !important;letter-spacing:.06em;color:var(--txt) !important;opacity:.85}
+.lp-hero{padding:34px 28px 28px !important}
+.lp-hero h1.t{font-size:clamp(32px,5.4vw,52px);line-height:1.06;letter-spacing:-1px}
+.lp-hero .k{font-size:12.5px;letter-spacing:.08em}
+.lp-hero .d{font-size:17px;max-width:620px}
+.lp-search{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:6px;margin:22px 0 8px;max-width:600px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.lp-search input{flex:1;min-width:0;border:0;background:transparent;color:var(--txt);font-size:16px;padding:0 12px;outline:0}
+.lp-search .btn{margin:0}
+.lp-sres{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px;max-width:600px}
+.lp-res,.lp-lang{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:14px;color:var(--txt);cursor:pointer;font:inherit;transition:.15s}
+.lp-res{flex-direction:row;align-items:center;gap:8px;padding:8px 12px}
+.lp-res small,.lp-lang small{color:var(--muted);font-size:12.5px}
+.lp-lang{padding:14px}
+.lp-lang .fl{font-size:26px}
+.lp-lang:hover,.lp-res:hover,.lp-city:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lp-none{color:var(--muted);font-size:13.5px}.lp-none a{color:var(--accent)}
+.lp-sec{margin:22px 0}
+.lp-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.lp-head h2{margin:0;font-size:24px;color:var(--txt)}.lp-head p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.lp-more{background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;text-decoration:none;font-size:14px;padding:0}
+.lp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.lp-travel{background:linear-gradient(135deg,#0B1F4D,#123a6b);border-radius:20px;padding:22px}
+.lp-travel h2{color:#fff}.lp-travel p{color:#b7c3dc}.lp-travel .lp-more{color:#2DD4BF}
+.lp-cities{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.lp-city{display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px;color:#fff;text-decoration:none;transition:.15s}
+.lp-city small{color:#9fb0d3}.lp-city span{color:#2DD4BF;font-weight:700;font-size:13px;margin-top:6px}
+/* ad slot: reserves fixed height only once ads are accepted, so no empty box and no layout shift */
+.lp-ad{display:none}
+.ads-on .lp-ad{display:block;height:120px;margin:18px 0;border-radius:14px;overflow:hidden}
+@media(max-width:640px){.lp-hero{padding:24px 18px 20px !important}.lp-grid{grid-template-columns:repeat(2,1fr)}.lp-cities{grid-template-columns:1fr 1fr}.ads-on .lp-ad{height:270px}.lp-search .btn{padding:10px 14px}}
+/* compact consent bar */
+#consent{padding:8px 14px !important;font-size:12.5px !important;max-height:none !important}
+#consent .crow{flex-wrap:nowrap !important;gap:10px !important}
+#consent p{line-height:1.35 !important;flex:1 1 auto !important}
+#consent .cbtns{flex-wrap:nowrap !important}
+#consent button{padding:6px 12px !important}
+#consent .cx{display:none}
+@media(max-width:640px){#consent .crow{flex-wrap:wrap !important}#consent .cbtns{width:100%}#consent .cbtns button{flex:1}}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -1797,14 +1844,27 @@ input[type=text]:focus,.search:focus,select:focus,input#voiceSel:focus{box-shado
 
   <!-- HOME / METHOD -->
   <section class="view active" id="view-home">
-    <div class="hero">
-      <span class="k">LanguagePath</span>
-      <h1 class="t" style="margin:2px 0 6px">Figure it out. Say it. <em>Remember it.</em></h1>
-      <div class="d">Don't memorize the language — learn to <b>build</b> it. Construct real sentences yourself, then say them out loud. <b id="heroLangs">dozens of</b> languages, free.</div>
-      <div class="hero-cta"><button class="btn" onclick="go('voyage')">Play Path</button><button class="btn ghost" onclick="go('lessons')">Start learning free</button><span class="hero-note">Free &middot; No account &middot; Your progress stays private</span></div>
-      <div class="hero-note" style="margin:18px 0 2px;font-weight:700;color:var(--gold)">Choose your language</div>
+    <div class="hero lp-hero">
+      <span class="k">Free · No account · <b id="heroLangs">dozens of</b> languages</span>
+      <h1 class="t" style="margin:6px 0 10px">Figure it out. Say it. <em>Remember it.</em></h1>
+      <div class="d">Don't memorize the language — learn to <b>build</b> it. Construct real sentences yourself, then say them out loud.</div>
+      <form class="lp-search" role="search" onsubmit="event.preventDefault();lpSearchGo()">
+        <label for="lpSearch" class="sr-only">Which language do you want to learn?</label>
+        <input id="lpSearch" type="search" autocomplete="off" placeholder="Which language do you want to learn? e.g. Spanish, Japanese…" oninput="lpSearchRender(this.value)" aria-controls="lpSearchRes">
+        <button class="btn" type="submit">Start</button>
+      </form>
+      <div class="lp-sres" id="lpSearchRes" role="listbox" aria-label="Matching languages"></div>
       <div class="hero-langs" id="heroChips"></div>
-      <div class="orb"></div>
+      <div class="hero-cta"><button class="btn" onclick="go('lessons')">Start learning free</button><button class="btn ghost" onclick="go('voyage')">🎮 Play Path</button><span class="hero-note">Your progress stays private in your browser</span></div>
+    </div>
+    <div class="lp-sec" id="lpPopular">
+      <div class="lp-head"><div><h2>Popular languages</h2><p>Pick one and build your first sentence in under a minute.</p></div><button class="lp-more" onclick="openHub()">All languages →</button></div>
+      <div class="lp-grid" id="lpPopGrid"></div>
+    </div>
+    <div class="lp-ad" id="lpAdTop" aria-hidden="true"></div>
+    <div class="lp-sec lp-travel" id="lpTravel">
+      <div class="lp-head"><div><h2>Travel phrasebooks</h2><p>The phrases you actually need — greetings, taxis, restaurants, emergencies — for the city you're visiting.</p></div><a class="lp-more" href="/travel">All destinations →</a></div>
+      <div class="lp-cities" id="lpCities"></div>
     </div>
     <div id="voyageHub" style="margin-top:-6px"></div>
     <div id="seeItHub" style="margin-top:-6px"></div>
@@ -2049,7 +2109,7 @@ input[type=text]:focus,.search:focus,select:focus,input#voiceSel:focus{box-shado
 
 <div id="consent" role="dialog" aria-modal="false" aria-labelledby="consentTxt">
   <div class="crow">
-    <p id="consentTxt">🍪 <b>Your privacy.</b> LanguagePath is free and ad-supported. Everything you do runs in your own browser — nothing is sold or shared. We'd like to show advertising (Google AdSense) to keep the site free. <a href="/privacy.html">Privacy policy</a></p>
+    <p id="consentTxt">🍪 <b>Your privacy.</b> LanguagePath is free and runs in your browser — nothing is sold. We'd like to show ads (Google AdSense) to keep it free. <a href="/privacy.html">Privacy policy</a></p>
     <span class="cbtns">
       <button class="primary" id="consentYes">Accept ads</button>
       <button id="consentNo">Reject</button>
@@ -3560,7 +3620,16 @@ function setDemo(lang){ const d=demoFor(lang); const w=document.getElementById('
 }
 function demoReveal(){ const a=document.getElementById('demoA'); if(a){ a.textContent=demoFor(activeLang).a; a.style.display='block'; } const r=document.getElementById('demoRevealBtn'),n=document.getElementById('demoNextBtn'); if(r)r.style.display='none'; if(n)n.style.display=''; }
 function demoNext(){ setDemo(activeLang); }
-function renderHeroChips(){ const box=document.getElementById('heroChips'); if(!box)return;
+function lpPop(){ const pref=['spanish','french','german','japanese','mandarin','korean','arabic','italian','portuguese','tr','hindi','dutch','russian','farsi'];
+  const extra=LANG_ORDER.filter(l=>!pref.includes(l)); return pref.concat(extra).filter(l=>PACKS[l]).slice(0,12); }
+function lpLangBtn(l,cls){ const p=PACKS[l]; return '<button class="'+cls+'" data-l="'+l+'" onclick="switchLang(this.dataset.l)"><span class="fl">'+p.flag+'</span><b>'+p.name+'</b>'+(NATIVE&&NATIVE[l]&&NATIVE[l]!==p.name?'<small>'+NATIVE[l]+'</small>':'')+'</button>'; }
+function lpSearchMatches(q){ q=(q||'').trim().toLowerCase(); if(!q)return []; return LANG_ORDER.filter(l=>PACKS[l]&&((PACKS[l].name||'').toLowerCase().includes(q)||String((NATIVE&&NATIVE[l])||'').toLowerCase().includes(q)||l.startsWith(q))).slice(0,8); }
+function lpSearchRender(q){ const box=document.getElementById('lpSearchRes'); if(!box)return; const m=lpSearchMatches(q);
+  box.innerHTML=q.trim()?(m.length?m.map(l=>lpLangBtn(l,'lp-res')).join(''):'<span class="lp-none">No match yet — try another spelling, or <a href="/request">request a language</a>.</span>'):''; }
+function lpSearchGo(){ const m=lpSearchMatches((document.getElementById('lpSearch')||{}).value); if(m.length){ switchLang(m[0]); track&&track('home_search',m[0]); } }
+function lpRenderHome(){ const g=document.getElementById('lpPopGrid'); if(g) g.innerHTML=lpPop().map(l=>lpLangBtn(l,'lp-lang')).join('');
+  const c=document.getElementById('lpCities'); if(c&&typeof TRAVEL!=='undefined') c.innerHTML=TRAVEL.flatMap(t=>t.cities.map(city=>'<a class="lp-city" href="/travel/'+t.slug+'/'+city.slug+'"><b>'+t.flag+' '+city.name+'</b><small>'+t.country+' · '+t.langName+'</small><span>Phrasebook →</span></a>')).slice(0,8).join(''); }
+function renderHeroChips(){ try{lpRenderHome();}catch(e){} const box=document.getElementById('heroChips'); if(!box)return;
   const list=['spanish','french','german','mandarin','arabic','portuguese','turkish','italian','japanese'];
   box.innerHTML=list.filter(c=>PACKS[c]).map(c=>'<button class="langchip" data-l="'+c+'" onclick="switchLang(this.dataset.l)">'+PACKS[c].flag+' '+PACKS[c].name+'</button>').join('');
 }
@@ -4791,7 +4860,7 @@ function renderHome(){
   // Returning-user default: put Today's Path ABOVE the acquisition hero (kept in-DOM for crawlers);
   // fresh visitors see the marketing hero first.
   const vh=document.getElementById("view-home"), tpEl=document.getElementById("todayPath");
-  if(vh && tpEl){ const hero=vh.querySelector(".hero"); if(hero){ if(anyProg){ if(tpEl.nextElementSibling!==hero) vh.insertBefore(tpEl,hero); } else { if(hero.nextElementSibling!==tpEl) vh.insertBefore(hero,tpEl); } } }
+  if(vh && tpEl){ const hero=vh.querySelector(".hero"); if(hero){ if(anyProg){ if(tpEl.nextElementSibling!==hero) vh.insertBefore(tpEl,hero); } else { if(vh.firstElementChild!==hero) vh.insertBefore(hero,vh.firstElementChild); } } const lpS=["lpPopular","lpAdTop","lpTravel"].map(i=>document.getElementById(i)).filter(Boolean); if(hero&&lpS.length&&hero.nextElementSibling!==lpS[0]) hero.after(...lpS); }
   document.getElementById("methodIntro").innerHTML=`<b>${p.name}</b> — ${courseIntro(p)}`;
   document.getElementById("retentionBanner").innerHTML=retentionBannerHtml();
   const _known=getKnown().trim();
@@ -8662,7 +8731,7 @@ function loadAnalytics(){
 const ADS_CLIENT="ca-pub-5646978915498298", ADS_CONSENT_LS="lp_ads_consent";
 let __adsLoaded=false;
 function loadAdsScript(){
-  if(__adsLoaded)return; __adsLoaded=true;
+  if(__adsLoaded)return; __adsLoaded=true; document.documentElement.classList.add("ads-on");
   const s=document.createElement("script"); s.async=true;
   s.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client="+ADS_CLIENT;
   s.crossOrigin="anonymous"; s.setAttribute("data-ad-client",ADS_CLIENT); document.head.appendChild(s);
