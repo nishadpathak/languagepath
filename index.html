@@ -3607,7 +3607,7 @@ const DEMO={
   german:{want:'ich will',coffee:'einen Kaffee',a:'Ich will einen Kaffee.'},
   mandarin:{want:'我要',coffee:'咖啡',a:'我要咖啡。'},
   arabic:{want:'أريد',coffee:'قهوة',a:'أريد قهوة.'},
-  turkish:{want:'bir ... istiyorum',coffee:'kahve',a:'Bir kahve istiyorum.'}
+  tr:{want:'bir ... istiyorum',coffee:'kahve',a:'Bir kahve istiyorum.'}
 };
 function demoFor(lang){ return DEMO[lang]||DEMO.spanish; }
 function setDemo(lang){ const d=demoFor(lang); const w=document.getElementById('demoWant'),c=document.getElementById('demoCoffee'),a=document.getElementById('demoA');
@@ -3630,7 +3630,7 @@ function lpSearchGo(){ const m=lpSearchMatches((document.getElementById('lpSearc
 function lpRenderHome(){ const g=document.getElementById('lpPopGrid'); if(g) g.innerHTML=lpPop().map(l=>lpLangBtn(l,'lp-lang')).join('');
   const c=document.getElementById('lpCities'); if(c&&typeof TRAVEL!=='undefined') c.innerHTML=TRAVEL.flatMap(t=>t.cities.map(city=>'<a class="lp-city" href="/travel/'+t.slug+'/'+city.slug+'"><b>'+t.flag+' '+city.name+'</b><small>'+t.country+' · '+t.langName+'</small><span>Phrasebook →</span></a>')).slice(0,8).join(''); }
 function renderHeroChips(){ try{lpRenderHome();}catch(e){} const box=document.getElementById('heroChips'); if(!box)return;
-  const list=['spanish','french','german','mandarin','arabic','portuguese','turkish','italian','japanese'];
+  const list=['spanish','french','german','mandarin','arabic','portuguese','tr','italian','japanese'];
   box.innerHTML=list.filter(c=>PACKS[c]).map(c=>'<button class="langchip" data-l="'+c+'" onclick="switchLang(this.dataset.l)">'+PACKS[c].flag+' '+PACKS[c].name+'</button>').join('');
 }
 
@@ -4008,7 +4008,7 @@ function cityLifelines(lang){
     mandarin:[{t:"我不明白",pr:"wǒ bù míngbai",en:"I don't understand"},{t:"请再说一遍",pr:"qǐng zài shuō yí biàn",en:"please say that again"},{t:"请慢一点",pr:"qǐng màn yìdiǎn",en:"a little slower, please"}],
     spanish:[{t:"No entiendo",pr:"no en-TYEN-doh",en:"I don't understand"},{t:"Otra vez, por favor",pr:"OH-trah bes por fah-VOR",en:"again, please"},{t:"Más despacio",pr:"mas des-PAH-syoh",en:"slower, please"}],
     arabic:[{t:"لا أفهم",pr:"lā afham",en:"I don't understand"},{t:"أعد من فضلك",pr:"a'id min faḍlik",en:"please repeat"},{t:"أبطأ من فضلك",pr:"abṭa' min faḍlik",en:"slower, please"}],
-    turkish:[{t:"Anlamıyorum",pr:"an-la-muh-YOH-room",en:"I don't understand"},{t:"Tekrar eder misin",pr:"tek-RAR e-der mee-SEEN",en:"could you repeat?"},{t:"Daha yavaş",pr:"dah-HA yah-VASH",en:"slower, please"}],
+    tr:[{t:"Anlamıyorum",pr:"an-la-muh-YOH-room",en:"I don't understand"},{t:"Tekrar eder misin",pr:"tek-RAR e-der mee-SEEN",en:"could you repeat?"},{t:"Daha yavaş",pr:"dah-HA yah-VASH",en:"slower, please"}],
     portuguese:[{t:"Não entendo",pr:"nowng en-TEN-doo",en:"I don't understand"},{t:"Repita, por favor",pr:"rreh-PEE-tuh poor fuh-VOR",en:"repeat, please"},{t:"Mais devagar",pr:"mighsh deh-vuh-GAR",en:"slower, please"}]
   };
   return m[lang]||m.mandarin;
@@ -4021,7 +4021,7 @@ function cityHears(lang){
     mandarin:[{t:"去哪儿？",pr:"qù nǎr",en:"Where to? (taxi)"},{t:"好的。",pr:"hǎo de",en:"OK."},{t:"多少钱？",pr:"duōshao qián",en:"How much?"}],
     spanish:[{t:"¿A dónde?",pr:"ah DOHN-deh",en:"Where to? (taxi)"},{t:"Vale.",pr:"BAH-leh",en:"OK."},{t:"¿Cuánto es?",pr:"KWAN-toh es",en:"How much is it?"}],
     arabic:[{t:"إلى أين؟",pr:"ilā ayna",en:"Where to? (taxi)"},{t:"حسناً.",pr:"ḥasanan",en:"OK, alright."},{t:"كم؟",pr:"kam",en:"How much?"}],
-    turkish:[{t:"Nereye?",pr:"neh-reh-YEH",en:"Where to? (taxi)"},{t:"Tamam.",pr:"tah-MAHM",en:"OK."},{t:"Ne kadar?",pr:"neh kah-DAR",en:"How much?"}],
+    tr:[{t:"Nereye?",pr:"neh-reh-YEH",en:"Where to? (taxi)"},{t:"Tamam.",pr:"tah-MAHM",en:"OK."},{t:"Ne kadar?",pr:"neh kah-DAR",en:"How much?"}],
     portuguese:[{t:"Para onde?",pr:"PAH-rah OHN-deh",en:"Where to? (taxi)"},{t:"Está bem.",pr:"shtah BENG",en:"OK, alright."},{t:"Quanto é?",pr:"KWAN-too eh",en:"How much is it?"}]
   };
   return m[lang]||m.mandarin;
