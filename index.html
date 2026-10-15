@@ -9111,10 +9111,12 @@ if(PACKS[activeLang] && PACKS[activeLang]._lazy){
   }catch(e){} };
   // 3) phrase-pack card on city pages
   const _tr=renderTravel;
-  renderTravel=function(){ _tr.apply(this,arguments); try{
+  renderTravel=function(){ _tr.apply(this,arguments); lpPackCard(); };
+  function lpPackCard(){ try{
     if(typeof travelDest==="undefined"||!travelDest)return; const sec=document.getElementById("view-travel"); const hero=sec&&sec.querySelector(".hero"); if(!hero||sec.querySelector(".lp-pack-card"))return;
     hero.insertAdjacentHTML("afterend",`<div class="lp-pack-card" style="margin:12px 0;padding:12px 14px;border-radius:12px;background:var(--soft,#f3f7fd);font-size:14px">📄 <b>Printable ${travelDest.name} Phrase Pack</b> — every phrase on this page plus dialogues and etiquette, as a 10-page PDF for your bag. $9 · all 8 cities $19. <a href="/pro.html#packs" style="color:var(--accent);font-weight:700;text-decoration:none">Get the PDF →</a></div>`);
-  }catch(e){} };
+  }catch(e){} }
+  lpPackCard(); document.addEventListener("DOMContentLoaded",lpPackCard);window.addEventListener("load",()=>setTimeout(lpPackCard,300));
   // 4) Pro-only extras
   window.lpProExportCSV=function(){ if(!lpIsPro()){ location.href="/pro.html?from=export"; return; }
     const rows=[["language","lessons_done","words_in_review","streak"]]; for(const l of Object.keys(MASTER||{})){ const st=MASTER[l]; if(!st||typeof st!=="object")continue; rows.push([l,(st.done||[]).length,Object.keys(st.srs||{}).length,st.streak||0]); }
