@@ -34,6 +34,8 @@ function serve() {
     }).listen(0, "127.0.0.1", () => res(srv));
   });
 }
+const { buildGuides } = require("./guides.js");
+const { score, textOf } = require("./content-quality.js");
 const escAttr = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 const escText = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 function setMeta(html, sel, re, val) { return re.test(html) ? html.replace(re, val) : html; }
@@ -51,6 +53,8 @@ function build(route, m) {
   h = h.replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${escAttr(canon)}">`);
   h = h.replace(/(<meta name="twitter:title" content=")[^"]*(">)/, `$1${escAttr(m.title)}$2`);
   h = h.replace(/(<meta name="twitter:description" content=")[^"]*(">)/, `$1${escAttr(m.desc)}$2`);
+  if (m.guide) h = h.replace("<!--LP_GUIDE-->", () => m.guide);
+  if (m.ads) h = h.replace(/<html ([^>]*)>/, '<html $1 data-ads="1">');
   if (m.view && m.view !== "home" && m.viewHTML) {
     // activate the rendered view in static markup; the app re-renders it on boot
     h = h.replace('<section class="view active" id="view-home">', '<section class="view" id="view-home">');
@@ -114,6 +118,10 @@ function build(route, m) {
   // Language list + lesson counts for the app-only route rewrites (_redirects)
   const pg = await browser.newPage(); await pg.goto(base + "/", { waitUntil: "networkidle0" });
   const langs = await pg.evaluate(() => Object.keys(PACKS).map(k => [k, (PACKS[k].lessons && PACKS[k].lessons.length) || 0]));
+  await pg.evaluate(() => new Promise(r => ensureCourses(r)));
+  const gdata = await pg.evaluate(() => { const packs = {}; for (const k of Object.keys(PACKS)) packs[k] = JSON.parse(JSON.stringify(PACKS[k]));
+    const lifelines = {}, hears = {}; for (const c of TRAVEL) { lifelines[c.lang] = cityLifelines(c.lang); hears[c.lang] = cityHears(c.lang); }
+    return { packs, curated: JSON.parse(JSON.stringify(CURATED)), travel: JSON.parse(JSON.stringify(TRAVEL)), lifelines, hears, trip: JSON.parse(JSON.stringify(TP_LANG_TRIP)), programs: Object.fromEntries(Object.entries(TP_PROGRAMS).map(([k, v]) => [k, v.link])), labels: Object.fromEntries(Object.entries(TP_PROGRAMS).map(([k, v]) => [k, v.label])), gocity: [...TP_GOCITY] }; });
   await browser.close(); srv.close();
 
   for (const r of report) if (r.route === "/travel") { r.title = "Travel phrases by city — speak the local language | LanguagePath"; r.desc = "Free pocket phrase guides for travellers: the sentences you actually need in Dubai, Istanbul, Lisbon, Madrid, Beijing and more, with pronunciation. No sign-up."; }
@@ -128,6 +136,12 @@ function build(route, m) {
   const descSeen = { [(shell.match(/<meta name="description" content="([^"]*)"/) || [])[1]]: 1 };
   for (const r of report) if (!r.error && r.route !== "/") { if (descSeen[r.desc]) r.desc = r.desc.replace(/\.?\s*$/, "") + " — " + r.route.split("/").filter(Boolean).join(" / ") + "."; descSeen[r.desc] = 1; }
 
+  // Written guides + ad eligibility (only content-rich, mostly-unique pages may ever load ads)
+  const guides = buildGuides(gdata);
+  const scored = score(report.filter(r => !r.error && guides[r.route]).map(r => ({ route: r.route, kind: guides[r.route].kind,
+    text: textOf(guides[r.route].html) + (r.view === "topic" ? " " + textOf(r.viewHTML || "") : "") })));
+  for (const r of report) { r.guide = guides[r.route] ? guides[r.route].html : ""; r.ads = !!(scored[r.route] && scored[r.route].eligible); }
+  fs.writeFileSync(path.join(dist, "ads-allowlist.json"), JSON.stringify(Object.entries(scored).map(([route, v]) => ({ route, ...v })), null, 1));
   for (const r of report) {
     if (r.error) continue;
     const out = r.route === "/" ? path.join(dist, "index.html") : path.join(dist, r.route + ".html"); // /x/y.html: Netlify serves /x/y with no trailing-slash 301
@@ -147,7 +161,7 @@ function build(route, m) {
     for (let k = 1; k <= max; k++) rules.push(`/${lang}/lesson-${k}  /${lang}/lessons.html  200`);
   }
   fs.writeFileSync(path.join(dist, "_redirects"), rules.join("\n") + "\n");
-  fs.writeFileSync(path.join(dist, "prerender-report.json"), JSON.stringify(report.map(({ viewHTML, curated, ...r }) => r), null, 1));
+  fs.writeFileSync(path.join(dist, "prerender-report.json"), JSON.stringify(report.map(({ viewHTML, curated, guide, ...r }) => r), null, 1));
   const bad = report.filter(r => r.error || r.textLen < 80);
   console.log(`PRERENDER: ${report.length - report.filter(r => r.error).length}/${routes.length} routes written to dist/; ${bad.length} errors/thin pages`);
   bad.slice(0, 20).forEach(r => console.log("  " + r.route + " " + (r.error || ("thin text " + r.textLen))));
