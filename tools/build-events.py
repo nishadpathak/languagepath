@@ -5,7 +5,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 about = open(os.path.join(ROOT, "about.html"), encoding="utf8").read()
 HEAD = about.split("</head>")[0]
 HEADER = re.search(r'<header class="lp-site">.*?</header>', about, re.S).group(0).replace(' aria-current="page"', "")
-HEADER = HEADER.replace('<a href="/travel">Travel phrases</a>', '<a href="/travel">Travel phrases</a><a href="/events/visiting/">Trade shows</a>')
+HEADER = HEADER if "Trade-show guides" in HEADER else HEADER.replace('<a href="/travel">Travel phrases</a>', '<a href="/travel">Travel phrases</a><a href="/events/visiting/">Trade-show guides</a>')
+UPDATED = "2026-10-15"; UPD_TXT = "15 October 2026"
 FOOT = about[about.index('<footer class="lp-foot">'):]
 CFG = open(os.path.join(ROOT, "pro-config.js"), encoding="utf8").read()
 LINKS = dict(re.findall(r'(\w+):\s*"(https://buy\.stripe\.com/[^"]+)"', CFG))
@@ -94,6 +95,8 @@ ETQ = {
            "Traffic is heavy and unpredictable, so build generous buffers into a day of meetings.",
            "A side-to-side head tilt usually means “OK” or “I'm listening”, not “no”."]}
 
+ORG = {'wetex-2026': ['Dubai Electricity and Water Authority (DEWA)'], 'gcc-power-2026': ['CIGRE GCC'], 'saudi-elenex-2026': ['Riyadh Exhibitions Company (REC)'], 'ep-shanghai-2026': ['China Electricity Council', 'Adsale Exhibition Services Ltd'], 'world-future-energy-summit-2027': ['RX'], 'elecrama-2027': ["IEEMA (Indian Electrical & Electronics Manufacturers' Association)"], 'middle-east-energy-2027': ['Informa Markets'], 'power-and-utilities-india-2027': ['dmg events']}
+
 def tp(kind, slug):
     lab, u = TP[kind]; sub = "event_" + slug.replace("-", "_") + ("_hotels" if kind == "hotels" else "")
     return f'<a class="btn" href="{u}?sub_id={sub}" target="_blank" rel="sponsored noopener nofollow">{E(lab)}</a>'
@@ -113,10 +116,10 @@ SHOWS = [
                "Muscat has no metro. The city stretches along the coast, so most visitors get around by taxi, ride-hailing app or hire car. Agree the fare first, or use a metered or app-booked car.",
                "If you stay at or near the conference hotel, you can walk to sessions. Hotels in Al Khuwair, Qurum or the old town of Muttrah are a longer drive, so allow extra time at the start and end of the working day.",
                "Driving in Oman is straightforward on good, well-signed roads. A hire car is worth it if you plan to see clients across the city or take a day trip after the conference."]),
- dict(n=3, name="Saudi Elenex 2026", city="Riyadh", country="Saudi Arabia", cc="SA", ctry="saudi", start="2026-11-02", end="2026-11-05", dates="2–5 November 2026",
+ dict(n=3, name="Saudi Elenex 2026", city="Riyadh", country="Saudi Arabia", cc="SA", ctry="saudi", start="2026-11-16", end="2026-11-19", dates="16–19 November 2026",
       venue="Riyadh International Convention & Exhibition Center", slug="saudi-elenex-2026", lang="ar", pack=None,
       about="Saudi Elenex is Saudi Arabia's exhibition for electrical power, lighting, renewable energy and related engineering. It draws utilities, contractors and manufacturers serving the Kingdom's large build-out of grid and generation capacity. This page is a practical brief for visitors and exhibitors coming to Riyadh for the show.",
-      getting=["The Riyadh International Convention & Exhibition Center (RICEC) is in the city's north-central area. King Khalid International Airport (RUH) is north of the city; allow roughly 30–45 minutes by car, longer at peak times.",
+      getting=["The Riyadh International Convention & Exhibition Center (RICEC) is centrally located, with road access from King Abdullah Road (near Exit 10) and its own stop on the Riyadh Metro Red Line, Riyadh Exhibition Center station. King Khalid International Airport (RUH) is north of the city; allow roughly 30–45 minutes by car, longer at peak times.",
                "Most business visitors use taxis or ride-hailing apps. A pre-booked airport transfer saves negotiating on arrival after a long flight.",
                "Riyadh is spread out and car-centred, and traffic around the morning and evening peaks can be heavy. Group your meetings by district, and leave buffers between appointments.",
                "Check your visa before you fly. Many nationalities can get a Saudi eVisa or visa on arrival, but the rules change, so confirm the current requirements for your passport with official sources."]),
@@ -198,7 +201,8 @@ def page(s):
     ld = {"@context": "https://schema.org", "@type": "Event", "name": s["name"], "startDate": s["start"], "endDate": s["end"],
           "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
           "location": {"@type": "Place", "name": s["city"] if s.get("venue_unconfirmed") else s["venue"], "address": {"@type": "PostalAddress", "addressLocality": s["city"], "addressCountry": s["cc"]}},
-          "url": url, "sameAs": f"https://transformerpath.com/events/{s['slug']}/"}
+          "dateModified": UPDATED, "url": url, "sameAs": f"https://transformerpath.com/events/{s['slug']}/"}
+    if s["slug"] in ORG: ld["organizer"] = [{"@type": "Organization", "name": o} for o in ORG[s["slug"]]] if len(ORG[s["slug"]]) > 1 else {"@type": "Organization", "name": ORG[s["slug"]][0]}
     bc = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "LanguagePath", "item": "https://languagepath.org/"},
         {"@type": "ListItem", "position": 2, "name": "Visiting for a trade show", "item": "https://languagepath.org/events/visiting/"},
@@ -207,8 +211,8 @@ def page(s):
     title = f"Visiting {s['city']} for {s['name']}: venue, travel tips and {nm} phrases | LanguagePath"
     desc = f"Going to {s['name']} in {s['city']} ({s['dates']})? Venue and transport tips, business etiquette in {s['country']}, and {len(LANG[s['lang']][3])} key {nm} phrases for the show floor."
     b = [head(title, desc, url, extra)]
-    b.append(f'<p class="updated"><a href="/events/visiting/">Trade shows</a> › {E(s["name"])}</p><h1>Visiting {E(s["city"])} for {E(s["name"])}</h1>')
-    b.append(f'<ul class="facts card"><li>📅 <b>Dates:</b> {s["dates"]}</li><li>📍 <b>Venue:</b> {E(venue_txt)}</li><li>🏙️ <b>City:</b> {E(s["city"])}, {E(s["country"])}</li><li>🗣️ <b>Local language:</b> {nm}{" (with English widely used in business)" if s["ctry"] in ("uae","oman","saudi","india") else ""}</li></ul>')
+    b.append(f'<p class="updated"><a href="/events/visiting/">Trade shows</a> › {E(s["name"])}</p><h1>Visiting {E(s["city"])} for {E(s["name"])}</h1><p class="disc">Last updated {UPD_TXT}</p>')
+    b.append(f'<ul class="facts card"><li>📅 <b>Dates:</b> {s["dates"]}</li><li>📍 <b>Venue:</b> {E(venue_txt)}</li>{('<li>🏢 <b>Organiser:</b> ' + E(' and '.join(ORG[s['slug']])) + '</li>') if s['slug'] in ORG else ''}<li>🏙️ <b>City:</b> {E(s["city"])}, {E(s["country"])}</li><li>🗣️ <b>Local language:</b> {nm}{" (with English widely used in business)" if s["ctry"] in ("uae","oman","saudi","india") else ""}</li></ul>')
     b.append(f'<p class="lead">{E(s["about"])}</p><p>Always confirm opening hours, registration and any last-minute changes on the official event website before you travel. The dates and venue here come from our trade-show list, and we update them when organisers announce changes.</p>')
     b.append("<h2>Venue and getting there</h2>" + "".join(f"<p>{E(p)}</p>" for p in s["getting"]))
     b.append(f'<div class="card"><h3>Book the practical bits</h3><p>Partner links for the trip: a hotel near the venue, an airport transfer, mobile data from the moment you land, a car if you need one, and travel insurance.</p><p>{"".join(tp(k, s["slug"]) for k in ["hotels","transfers","esim","carrental","insurance"])}</p><p class="disc">Partner links: LanguagePath may earn a commission if you book through them, at no extra cost to you. <a href="/terms.html#affiliates">How this works</a>.</p></div>')
@@ -226,7 +230,8 @@ def hub():
     url = "https://languagepath.org/events/visiting/"
     t = "Visiting for a trade show: venue tips, etiquette and phrases | LanguagePath"
     d = "Practical guides for business visitors to energy and power trade shows in Dubai, Abu Dhabi, Muscat, Riyadh, Shanghai, Greater Noida and Mumbai: venues, transport, etiquette and key phrases."
-    b = [head(t, d, url), "<h1>Visiting for a trade show</h1><p class=\"lead\">Short, practical guides for business visitors: how to reach the venue, how meetings usually run in the host country, and the local-language phrases that help on the show floor.</p><ul class=\"hub\">"]
+    wp = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Visiting for a trade show", "url": url, "dateModified": UPDATED}
+    b = [head(t, d, url, '<script type="application/ld+json">' + json.dumps(wp) + "</script>"), "<h1>Visiting for a trade show</h1><p class=\"disc\">Last updated " + UPD_TXT + "</p><p class=\"lead\">Short, practical guides for business visitors: how to reach the venue, how meetings usually run in the host country, and the local-language phrases that help on the show floor.</p><ul class=\"hub\">"]
     for s in sorted(SHOWS, key=lambda x: x["start"]):
         b.append(f'<li><a href="/events/visiting/{s["slug"]}/"><b>{E(s["name"])}</b></a><br><span class="disc">{s["dates"]} · {E(s["city"])}, {E(s["country"])} · {E(s["venue"])}</span></li>')
     b.append("</ul><p>More shows will be added once their dates and venues are confirmed.</p></main>\n" + FOOT)

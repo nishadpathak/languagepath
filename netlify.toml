@@ -40,6 +40,16 @@
 
 # Turkish course lives at /tr; /turkish is a common guess
 [[redirects]]
+  from = "/events"
+  to = "/events/visiting/"
+  status = 301
+
+[[redirects]]
+  from = "/events/"
+  to = "/events/visiting/"
+  status = 301
+
+[[redirects]]
   from = "/turkish"
   to = "/tr"
   status = 301
