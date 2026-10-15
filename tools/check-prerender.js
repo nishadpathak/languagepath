@@ -42,3 +42,8 @@ console.log("PRERENDER CHECK PASS — " + n + " prerendered routes, unique title
   if (!/<link rel="canonical" href="https:\/\/languagepath\.org\/">/.test(h)) bad.push("dist/index.html canonical is not /");
   if (bad.length) { console.error("HOME GUARD FAIL — " + bad.join("; ")); process.exit(1); } else console.log("HOME GUARD PASS — dist/index.html " + kb.toFixed(0) + " KB, prerendered /");
 }
+{ // One h1 per HTML page in dist.
+  const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(d, e.name)) : e.name.endsWith(".html") ? [path.join(d, e.name)] : []);
+  const bad = walk(dist).filter(f => (fs.readFileSync(f, "utf8").match(/<h1[\s>]/g) || []).length !== 1).map(f => path.relative(dist, f));
+  if (bad.length) { console.error("H1 GUARD FAIL — not exactly one <h1>: " + bad.slice(0, 15).join(", ")); process.exit(1); } else console.log("H1 GUARD PASS — every page has exactly one <h1>");
+}

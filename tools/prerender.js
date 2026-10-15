@@ -190,7 +190,9 @@ function build(route, m) {
     if (r.error) continue;
     const out = r.route === "/" ? path.join(dist, "index.html") : path.join(dist, r.route + ".html"); // /x/y.html: Netlify serves /x/y with no trailing-slash 301
     fs.mkdirSync(path.dirname(out), { recursive: true });
-    fs.writeFileSync(out, build(r.route, r));
+    let outH = build(r.route, r); const tg = /<h1 class="t" style="margin:6px 0 10px">([\s\S]*?)<\/h1>/; // one h1 per page: home tagline is an h1 only when the home view is active
+    if (!/<section class="view active" id="view-home"/.test(outH) && (outH.match(/<h1[\s>]/g) || []).length > 1) outH = outH.replace(tg, '<p class="t" style="margin:6px 0 10px">$1</p>');
+    fs.writeFileSync(out, outH);
   }
   // Real 404 page (static, no app boot so it never renders a fake page)
   fs.copyFileSync(path.join(root, "404.html"), path.join(dist, "404.html"));

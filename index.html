@@ -1812,7 +1812,7 @@ html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir=
 <header><div class="htop">
   <button class="brandbtn" onclick="go('home')" title="Go to home" aria-label="LanguagePath — go to home">
     <img class="logo" src="/logo-header-light.png" alt="LanguagePath" height="40">
-    <h1 class="sr-only">LanguagePath</h1>
+    <p class="sr-only">LanguagePath</p>
   </button>
   <button id="themeBtn" class="themebtn" onclick="toggleTheme()" title="Toggle light / dark" aria-label="Toggle light or dark mode">☀️</button>
 </div></header>
@@ -3587,7 +3587,7 @@ function go(v){
   // it's so Google Auto ads (and its crawler) can tell a "soft" SPA navigation happened, per their
   // documented SPA support: https://support.google.com/adsense/answer/9183363. Without this, Auto
   // ads only ever sees the very first view, since we never do a real page reload.
-  curView=v; if(curTopic&&(TOPIC_ALIAS[curTopic]||"topic")!==v)curTopic=null; pushRoute(v); try{ lpPageSync(); }catch(e){} try{ if(TRACK_ON) track("view", v); }catch(e){}
+  curView=v; if(curTopic&&(TOPIC_ALIAS[curTopic]||"topic")!==v)curTopic=null; pushRoute(v); try{ lpPageSync(); }catch(e){} setTimeout(()=>{ try{ lpTutorNow(); }catch(e){} },0); try{ if(TRACK_ON) track("view", v); }catch(e){}
   document.querySelectorAll(".view").forEach(s=>s.classList.remove("active"));document.getElementById("view-"+v).classList.add("active");document.querySelectorAll("#nav button").forEach(b=>{const act=b.dataset.v===v;b.classList.toggle("active",act);b.setAttribute("role","tab");b.setAttribute("aria-selected",act?"true":"false");if(act)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});["learn","practice","explore"].forEach(g=>{const el=document.getElementById("grp-"+g),gv=VIEW_GROUP[v];if(el){const c=gv!==g;el.classList.toggle("collapsed",c);const b=el.querySelector(".ng");if(b)b.setAttribute("aria-expanded",String(!c));}});window.scrollTo(0,0);if(v==="home")renderHome();if(v==="lessons"){document.getElementById("player").style.display="none";document.getElementById("lessonHome").style.display="block";renderLessonList();}if(v==="recall"){document.getElementById("recallArea").style.display="none";document.getElementById("recallHome").style.display="block";renderRecallHome();}if(v==="listen"){document.getElementById("listenArea").style.display="none";document.getElementById("listenHome").style.display="block";renderListenHome();}if(v==="dialog"){document.getElementById("dialogArea").style.display="none";document.getElementById("dialogList").style.display="block";renderDialogList();}if(v==="quiz"){document.getElementById("quizArea").style.display="none";document.getElementById("quizResult").style.display="none";document.getElementById("quizHome").style.display="block";renderQuizHome();}if(v==="culture")renderCulture();if(v==="shadow"){document.getElementById("shadowArea").style.display="none";document.getElementById("shadowHome").style.display="block";renderShadowHome();}if(v==="chunks")renderChunks();if(v==="resources")renderResources();if(v==="pocket"){renderTags();renderPocket();}if(v==="sound")renderSounds();if(v==="travel")renderTravel();if(v==="chat")renderChat();if(v==="build")renderBuild();if(v==="seeit")renderSeeIt();if(v==="reallife")renderRealLife();if(v==="progress")renderProgress();if(v==="topic")renderTopic();if(v==="library")renderLibrary();if(v==="join")renderJoin();if(v==="request")renderRequest();if(v==="admin")renderAdmin();if(v==="voyage")renderVoyage();if(v==="map")renderLangMap();try{tpRenderSlots(v);}catch(e){}}
 document.querySelectorAll("#nav button").forEach(b=>{ if(b.dataset.v) b.onclick=()=>go(b.dataset.v); });
 
@@ -8801,6 +8801,16 @@ function loadAnalytics(){
   const s=document.createElement("script"); s.async=true; s.src="https://www.googletagmanager.com/gtag/js?id="+GA_MEASUREMENT_ID; document.head.appendChild(s);
 }
 const ADS_CLIENT="ca-pub-5646978915498298", ADS_CONSENT_LS="lp_ads_consent";
+
+/* italki tutor CTA: language hubs, the lesson list, dialogues and culture pages only. Never inside exercise
+   screens (the lesson player, recall, build, listen, shadow, quiz, chat). Affiliate link, kept exactly as issued. */
+const ITALKI_URL="https://www.italki.com/affshare?ref=af34057391";
+function lpTutorCard(name){ return `<aside class="lp-tutor" style="margin:18px 0 6px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:14px"><b>🗣️ Practise with a real tutor on italki</b><br><span style="color:var(--muted)">Book 1-to-1 ${name?name+" ":""}lessons with a native-speaking teacher when you're ready to use what you've learned in conversation.</span> <a href="${ITALKI_URL}" target="_blank" rel="sponsored nofollow noopener" style="color:var(--accent);font-weight:700;text-decoration:none">Find a tutor on italki →</a><p style="color:var(--muted);font-size:11px;margin:6px 0 0">This is a partner link. LanguagePath may earn a commission if you book through it, at no extra cost to you.</p></aside>`; }
+function lpTutorNow(){ try{ const v=typeof curView!=="undefined"?curView:""; const host={hub:"view-hub",lessons:"lessonHome",dialog:"view-dialog",culture:"view-culture"}[v]||(v==="home"&&/^\/[a-z-]+\/?$/.test(location.pathname)&&!/^\/(learn|travel|map|path|voyage|seeit|reallife|join|request|admin)\/?$/.test(location.pathname)?"view-home":""); if(!host)return;
+  const el=document.getElementById(host); if(!el||el.querySelector(".lp-tutor"))return;
+  let nm=""; try{ nm=(COURSES[activeLang]&&COURSES[activeLang].langName)||""; }catch(e){}
+  el.insertAdjacentHTML("beforeend",lpTutorCard(nm)); }catch(e){} }
+document.addEventListener("DOMContentLoaded",()=>setTimeout(lpTutorNow,0)); window.addEventListener("load",()=>setTimeout(lpTutorNow,300));
 let __adsLoaded=false;
 /* AdSense policy: ads may only appear on content-rich pages. The prerender marks those with
    a data-ads=1 attribute on the html element (see tools/content-quality.js); app screens (lessons, quizzes, games, forms,

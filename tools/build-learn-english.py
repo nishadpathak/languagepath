@@ -42,7 +42,7 @@ def page(slug):
         b.append(f"<h2>{E(cat)}</h2><table class=\"ph\"><thead><tr><th>English</th><th>{E(name)}</th><th>Say it ({E(script)})</th></tr></thead><tbody>" + "".join(
             f'<tr><td class="en" lang="en">{E(en)}</td><td class="nat" lang="{bcp}" dir="{d}">{E(tr)}</td><td class="pr" lang="{bcp}" dir="{d}">{E(pr)}</td></tr>' for en, (tr, pr) in rows) + "</tbody></table>")
     b.append("<h2>Tips for speaking English at work</h2>" + "".join(f"<h3>{E(h)}</h3><p>{E(p)}</p>" for h, p in TIPS))
-    b.append('<div class="lp-tutor-slot" data-slot="tutors"></div>')
+    b.append('<aside class="lp-tutor-slot" data-slot="tutors" style="margin:18px 0;padding:12px 14px;border:1px solid #d9e1ec;border-radius:12px"><b>Practise with a real tutor on italki</b><br>Book 1-to-1 English lessons with a teacher, at times that fit your shifts. <a href="https://www.italki.com/affshare?ref=af34057391" target="_blank" rel="sponsored nofollow noopener">Find an English tutor on italki</a><p class="disc" style="font-size:12px;margin:6px 0 0">This is a partner link. LanguagePath may earn a commission if you book through it, at no extra cost to you.</p></aside>')
     others = [s for s in LANGS if s != slug]
     b.append("<h2>Other languages</h2><p>" + " · ".join(f'<a href="/learn-english/{s}/">English for {E(LANGS[s][0])} speakers</a>' for s in others) + "</p>")
     b.append('<p class="disc">Pronunciation guides are approximate. Questions or corrections: <a href="/contact.html">contact LanguagePath</a> or <a href="mailto:languagepathorg@gmail.com">languagepathorg@gmail.com</a>.</p>')
@@ -59,6 +59,7 @@ def hub():
     for s, (name, native, bcp, dd, script) in LANGS.items():
         b.append(f'<li><a href="/learn-english/{s}/"><b>English for {E(name)} speakers</b></a> — <span lang="{bcp}" dir="{dd}">{E(native)}</span><br><span class="disc">{E(HELLO[s])}</span></li>'.replace(f'<span class="disc">{E(HELLO[s])}</span>', f'<span class="disc" lang="{bcp}" dir="{dd}">{E(HELLO[s])}</span>'))
     b.append("</ul><p>Topics on every page: " + ", ".join(c.lower() for c in CATS) + ". Each page also has tips for speaking English at work, asking people to repeat, and handling numbers and documents.</p></main>\n" + FOOT)
+    b.append('<aside class="lp-tutor-slot" style="margin:18px 0;padding:12px 14px;border:1px solid #d9e1ec;border-radius:12px"><b>Practise with a real tutor on italki</b><br>Book 1-to-1 English lessons with a teacher, at times that fit your shifts. <a href="https://www.italki.com/affshare?ref=af34057391" target="_blank" rel="sponsored nofollow noopener">Find an English tutor on italki</a><p class="disc" style="font-size:12px;margin:6px 0 0">This is a partner link. LanguagePath may earn a commission if you book through it, at no extra cost to you.</p></aside>')
     return "\n".join(b)
 
 base = os.path.join(ROOT, "learn-english")
