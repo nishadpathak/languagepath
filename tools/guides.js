@@ -6,6 +6,7 @@
    Pages whose article reaches the word threshold (and is mostly unique) become ad-eligible
    (see tools/check-content-depth.js and the data-ads flag in tools/prerender.js). */
 "use strict";
+const { castilianPack } = require("./es-castilian.js");
 const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 // authored strings may contain light markup (<b>, <i>, <br>); keep only that
 const rich = s => String(s == null ? "" : s).replace(/<(?!\/?(b|i|em|strong|br)\b)[^>]*>/gi, " ").replace(/\s+on\w+="[^"]*"/gi, "");
@@ -43,7 +44,7 @@ const CITY_NOTES = {
     "Turkish builds words by adding suffixes in a fixed order, and vowels inside those suffixes change to harmonise with the word they attach to — which is why you see both <i>-ler</i> and <i>-lar</i> for plurals. Tea (<b>çay</b>) is offered constantly, in shops as well as homes, and accepting a glass is part of the conversation. In the Grand Bazaar and similar markets, friendly bargaining is expected; in supermarkets and chain stores, prices are fixed."
   ],
   "portugal/lisbon": [
-    "Lisbon is the capital of Portugal, and the language you will hear is <b>European Portuguese</b>. It shares its grammar and almost all of its vocabulary with Brazilian Portuguese, but sounds quite different: unstressed vowels are often reduced or swallowed, and an <b>s</b> at the end of a syllable is usually pronounced 'sh', so <i>obrigados</i> ends in a soft 'sh'. If you have learned Brazilian Portuguese, you will be understood, but give your ear a few days to adjust.",
+    "Lisbon is the capital of Portugal, and the language you will hear is <b>European Portuguese</b>. It shares its grammar and almost all of its vocabulary with Brazilian Portuguese, but sounds quite different: unstressed vowels are often reduced or swallowed, and an <b>s</b> at the end of a syllable is usually pronounced 'sh', so <i>mais</i> (more) sounds like 'mighsh' and <i>dois</i> (two) like 'doysh'. If you have learned Brazilian Portuguese, you will be understood, but give your ear a few days to adjust.",
     "Say <b>obrigado</b> if you are a man and <b>obrigada</b> if you are a woman — the word agrees with the speaker, not the listener. Coffee culture is everywhere: <i>um café</i> gets you a small espresso, usually drunk standing at the counter. People appreciate an attempt at Portuguese rather than Spanish, even though the two look similar on paper."
   ]
 };
@@ -143,7 +144,7 @@ function buildGuides(data) {
 
   /* ---- travel city guides: /travel/{country}/{city} ---- */
   for (const c of data.travel || []) {
-    const p = P[c.lang]; if (!p) continue;
+    const p = c.slug === "spain" && P[c.lang] ? castilianPack(P[c.lang]) : P[c.lang]; if (!p) continue;
     c.cities.forEach((city, ci) => {
       const key = c.slug + "/" + city.slug, s = [], name = p.name;
       for (const para of CITY_NOTES[key] || []) s.push(`<p>${para}</p>`);

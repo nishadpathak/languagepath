@@ -9,6 +9,7 @@ const fs = require("fs"), path = require("path"), http = require("http");
 const root = path.join(__dirname, ".."), out = path.join(root, "private", "packs");
 const puppeteer = require("puppeteer");
 const { CITY_NOTES } = require("./guides.js");
+const { castilianPack } = require("./es-castilian.js");
 const CHROME = process.env.CHROME_PATH || ["/usr/bin/google-chrome", "/usr/bin/chromium"].find(p => fs.existsSync(p));
 const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 const rich = s => String(s || "").replace(/<(?!\/?(b|i|em|strong)\b)[^>]*>/gi, " ");
@@ -16,7 +17,7 @@ const icon = fs.readFileSync(path.join(root, "icon.svg"), "utf8").replace(/ widt
 const table = (rows, lang) => rows.length ? `<table><thead><tr><th>English</th><th>${esc(lang)}</th><th>Say it</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.en)}</td><td class="tr" dir="auto">${esc(r.tr || r.t)}</td><td class="pr">${esc(r.pr)}</td></tr>`).join("")}</tbody></table>` : "";
 function serve() { return new Promise(res => { const s = http.createServer((q, r) => { let p = decodeURIComponent(q.url.split("?")[0]); let f = path.join(root, p); if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) f = path.join(root, "index.html"); r.writeHead(200, { "content-type": f.endsWith(".js") ? "application/javascript" : f.endsWith(".svg") ? "image/svg+xml" : "text/html; charset=utf-8" }); fs.createReadStream(f).pipe(r); }).listen(0, "127.0.0.1", () => res(s)); }); }
 function html(c, city, d) {
-  const p = d.pack, L = p.name, notes = CITY_NOTES[c.slug + "/" + city.slug] || [];
+  const p = c.slug === "spain" ? castilianPack(d.pack) : d.pack, L = p.name, notes = CITY_NOTES[c.slug + "/" + city.slug] || [];
   const cats = [...new Set((p.pocket || []).map(x => x.c))];
   const sit = (p.lessons || []).filter(l => /greet|polite|survival|want|like|number|money|price|food|restaurant|getting around|direction|transport|ticket|hotel|shop|time|doctor|ill/i.test(l.title));
   const chal = l => (l.steps || []).filter(s => s.t === "chal").slice(0, 8);

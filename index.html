@@ -1131,7 +1131,7 @@
      "name": "Is LanguagePath free?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. Every course and tool is free, with no account, no sign-up and no payment. Advertising only loads after you consent — the site stays fully usable if you reject it."
+      "text": "Yes, every lesson, course and tool is free to use, with no account or sign-up. Two things are optional and paid: LanguagePath Pro ($4.99 a month or $29 a year), which removes ads and adds extra AI practice, and printable Travel Phrase Pack PDFs ($9 per city, or $19 for all 8). Advertising only loads after you consent — the site stays fully usable if you reject it."
      }
     },
     {
@@ -1936,7 +1936,7 @@ html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir=
       <div class="row-btns" style="margin-top:10px"><a href="/learn" style="color:var(--accent);text-decoration:none;font-weight:700">Explore all learning topics →</a></div>
     </div>
     <div class="card" id="faq"><h3>Frequently asked questions</h3>
-      <details><summary>Is LanguagePath free?</summary><p style="color:var(--muted);font-size:13.5px">Yes. Every course and tool is free, with no account, no sign-up and no payment. Advertising only loads after you consent — the site stays fully usable if you reject it.</p></details>
+      <details><summary>Is LanguagePath free?</summary><p style="color:var(--muted);font-size:13.5px">Yes, every lesson, course and tool is free to use, with no account or sign-up. Two things are optional and paid: LanguagePath Pro ($4.99 a month or $29 a year), which removes ads and adds extra AI practice, and printable Travel Phrase Pack PDFs ($9 per city, or $19 for all 8). Advertising only loads after you consent — the site stays fully usable if you reject it.</p></details>
       <details><summary>Do I need an account?</summary><p style="color:var(--muted);font-size:13.5px">No. Your progress is saved in your own browser's local storage. Nothing is uploaded to a server.</p></details>
       <details><summary>How is LanguagePath different?</summary><p style="color:var(--muted);font-size:13.5px">You don't memorize phrases — you reason them out. The teacher gives you a piece, you build real sentences yourself, say them aloud, then reveal and check. Every step reuses what you already built.</p></details>
       <details><summary>Which languages can I learn?</summary><p style="color:var(--muted);font-size:13.5px">Nine flagship courses (Mandarin, Arabic, French, German, Portuguese, Spanish, Turkish, Telugu, Farsi) plus dozens more in the picker. Each Path rolls a new eastbound line of cities from languages you can practise here.</p></details>
@@ -2516,7 +2516,7 @@ let POCKET=[
  {tr:"Afiyet olsun",pr:"ah-fee-YET ol-soon",en:"Enjoy your meal",c:"Food"},
  {tr:"Çok lezzetli",pr:"chok lez-zet-LEE",en:"Very delicious",c:"Food"},
  {tr:"Et yemiyorum",pr:"et yeh-mee-yo-room",en:"I don't eat meat",c:"Food"},
- {tr:"Acı değil, lütfen",pr:"ah-JUH deh-IL lewt-fen",en:"Not spicy, please",c:"Food"},
+ {tr:"Acısız olsun, lütfen",pr:"ah-juh-SUHZ ol-SOON, LEWT-fen",en:"Not spicy, please",c:"Food"},
  {tr:"Sağ",pr:"sah",en:"Right",c:"Directions"},
  {tr:"Sol",pr:"sol",en:"Left",c:"Directions"},
  {tr:"Düz",pr:"dewz",en:"Straight ahead",c:"Directions"},
@@ -4024,7 +4024,7 @@ function renderTravel(){
     sec.innerHTML=`<nav class="crumbs" aria-label="breadcrumb"><a href="/travel" style="color:var(--accent);text-decoration:none">Travel</a> <span class="sep">›</span> <span style="color:var(--muted)">${c.flag} ${travelDest.name}</span></nav>
       <div class="hero"><span class="k">Travel with LanguagePath</span><h1 class="t" style="margin:2px 0 6px">Speak ${c.langName} in ${travelDest.name}</h1><div class="d">Prepare for the conversations you'll actually have in ${travelDest.name} — from the airport and hotel to cafés and taxis.</div></div>
       <div class="card"><h3>${travelDest.name} speaking path</h3><p style="color:var(--muted);font-size:13px;margin:0 0 8px">Tap a situation to practise it with LanguagePath.</p>${steps}</div>
-      <div class="card"><h3>What you'll hear</h3><p style="color:var(--muted);font-size:13px;margin:0 0 8px">You say something — here's what you might hear back.</p>${cityHears(c.lang).map(h=>`<div class="vrow"><div class="tr">${h.t}</div><div class="pr">${h.pr}</div><div class="en">${h.en}</div></div>`).join("")}<p style="color:var(--muted);font-size:11.5px;margin-top:8px">Implementation-verified; native review pending.</p></div>
+      <div class="card"><h3>What you'll hear</h3><p style="color:var(--muted);font-size:13px;margin:0 0 8px">You say something — here's what you might hear back.</p>${cityHears(c.lang).map(h=>`<div class="vrow"><div class="tr">${h.t}</div><div class="pr">${h.pr}</div><div class="en">${h.en}</div></div>`).join("")}<p style="color:var(--muted);font-size:11.5px;margin-top:8px">Pronunciations are simplified, English-friendly guides — tap a phrase to hear it.</p></div>
       <div class="card"><h3>Conversation lifelines</h3><div class="wordsbox">${lifelines.map(l=>`<button class="wchip" onclick="speak('${esc(l.t)}')"><b>${l.t}</b><span>${l.en}</span><span class="wchip-pr">${l.pr}</span></button>`).join("")}</div></div>
       ${tpTripCard({where:travelDest.name,country:c.country,lang:c.lang,langName:c.langName,sub:"travel_"+c.slug+"_"+travelDest.slug,extra:["transfers","carrental","audiotours","luggage","esim2"].concat(TP_GOCITY.has(travelDest.slug)?["citypass"]:[])})}
       <button class="btn" onclick="travelStart('${c.lang}')">▶ Start your ${travelDest.name} speaking path</button>
@@ -4046,9 +4046,9 @@ function renderTravel(){
 function cityLifelines(lang){
   const m={
     mandarin:[{t:"我不明白",pr:"wǒ bù míngbai",en:"I don't understand"},{t:"请再说一遍",pr:"qǐng zài shuō yí biàn",en:"please say that again"},{t:"请慢一点",pr:"qǐng màn yìdiǎn",en:"a little slower, please"}],
-    spanish:[{t:"No entiendo",pr:"no en-TYEN-doh",en:"I don't understand"},{t:"Otra vez, por favor",pr:"OH-trah bes por fah-VOR",en:"again, please"},{t:"Más despacio",pr:"mas des-PAH-syoh",en:"slower, please"}],
-    arabic:[{t:"لا أفهم",pr:"lā afham",en:"I don't understand"},{t:"أعد من فضلك",pr:"a'id min faḍlik",en:"please repeat"},{t:"أبطأ من فضلك",pr:"abṭa' min faḍlik",en:"slower, please"}],
-    tr:[{t:"Anlamıyorum",pr:"an-la-muh-YOH-room",en:"I don't understand"},{t:"Tekrar eder misin",pr:"tek-RAR e-der mee-SEEN",en:"could you repeat?"},{t:"Daha yavaş",pr:"dah-HA yah-VASH",en:"slower, please"}],
+    spanish:[{t:"No entiendo",pr:"no en-TYEN-doh",en:"I don't understand"},{t:"Otra vez, por favor",pr:"OH-trah beth por fah-BOR",en:"again, please"},{t:"Más despacio, por favor",pr:"mas dehs-PAH-thyoh por fah-BOR",en:"slower, please"}],
+    arabic:[{t:"لا أفهم",pr:"lā afham",en:"I don't understand"},{t:"من فضلك",pr:"min faḍlak (to a man) · min faḍlik (to a woman)",en:"please"},{t:"ممكن تعيد؟",pr:"mumkin tʿīd? (to a woman: mumkin tʿīdī?)",en:"could you repeat?"},{t:"ممكن تتكلم ببطء؟",pr:"mumkin titkallam bi-buṭʾ? (to a woman: titkallamī)",en:"could you speak slower?"}],
+    tr:[{t:"Anlamıyorum",pr:"an-la-muh-YOH-room",en:"I don't understand"},{t:"Tekrar eder misiniz?",pr:"tek-RAR eh-DER mee-see-NEEZ",en:"could you repeat? (polite)"},{t:"Daha yavaş",pr:"dah-HA yah-VASH",en:"slower, please"}],
     portuguese:[{t:"Não entendo",pr:"nowng en-TEN-doo",en:"I don't understand"},{t:"Repita, por favor",pr:"rreh-PEE-tuh poor fuh-VOR",en:"repeat, please"},{t:"Mais devagar",pr:"mighsh deh-vuh-GAR",en:"slower, please"}]
   };
   return m[lang]||m.mandarin;
@@ -4062,7 +4062,7 @@ function cityHears(lang){
     spanish:[{t:"¿A dónde?",pr:"ah DOHN-deh",en:"Where to? (taxi)"},{t:"Vale.",pr:"BAH-leh",en:"OK."},{t:"¿Cuánto es?",pr:"KWAN-toh es",en:"How much is it?"}],
     arabic:[{t:"إلى أين؟",pr:"ilā ayna",en:"Where to? (taxi)"},{t:"حسناً.",pr:"ḥasanan",en:"OK, alright."},{t:"كم؟",pr:"kam",en:"How much?"}],
     tr:[{t:"Nereye?",pr:"neh-reh-YEH",en:"Where to? (taxi)"},{t:"Tamam.",pr:"tah-MAHM",en:"OK."},{t:"Ne kadar?",pr:"neh kah-DAR",en:"How much?"}],
-    portuguese:[{t:"Para onde?",pr:"PAH-rah OHN-deh",en:"Where to? (taxi)"},{t:"Está bem.",pr:"shtah BENG",en:"OK, alright."},{t:"Quanto é?",pr:"KWAN-too eh",en:"How much is it?"}]
+    portuguese:[{t:"Para onde?",pr:"PAH-ruh OHND",en:"Where to? (taxi)"},{t:"Está bem.",pr:"shtah BAYNG",en:"OK, alright."},{t:"Quanto é?",pr:"KWAN-too eh",en:"How much is it?"}]
   };
   return m[lang]||m.mandarin;
 }
@@ -4638,7 +4638,7 @@ function renderVoyage(){
       <div class="card"><h3>This Path</h3>
         <p style="color:var(--muted);font-size:13px;margin:0 0 8px">${escHtml(voyageCircuitCopy())}</p>
         ${voyageLine().map(c=>voyageSponsorRow(c)).join("")}
-        <p class="voyage-plus">Each run rolls a new eastbound line. Path stays free — no payment, no checkout.</p>
+        <p class="voyage-plus">Each run rolls a new eastbound line. Path is free to play.</p>
       </div>
       <div class="card"><h3>How to play</h3>
         <p style="color:var(--muted);font-size:13.5px;margin:0 0 10px">You start with <b>${VOYAGE_DAYS} days</b>. A clean build costs nothing. A miss costs ${VOYAGE_COST.fail} days; skip or reveal costs ${VOYAGE_COST.skip}. Finish the circuit with days left to win. Progress stays in this browser.</p>
@@ -6184,7 +6184,7 @@ const PACKS={
 const POLY=[
  {en:"Hello",tr:["Merhaba","mehr-hah-bah"],mandarin:["你好","nǐ hǎo"],german:["Hallo","HAH-loh"],arabic:["مرحبا","marḥaban"],bridge:"Turkish & Arabic share marhaba"},
  {en:"Thank you",tr:["Teşekkürler","te-shek-kewr-ler"],mandarin:["谢谢","xièxie"],german:["Danke","DAN-kuh"],arabic:["شكرا","shukran"],bridge:"Arabic shukran ≈ Hindi/Urdu shukriya"},
- {en:"Please",tr:["Lütfen","LEWT-fen"],mandarin:["请","qǐng"],german:["Bitte","BIT-tuh"],arabic:["من فضلك","min faḍlik"]},
+ {en:"Please",tr:["Lütfen","LEWT-fen"],mandarin:["请","qǐng"],german:["Bitte","BIT-tuh"],arabic:["من فضلك","min faḍlak (m.) / min faḍlik (f.)"]},
  {en:"Yes",tr:["Evet","EH-vet"],mandarin:["是","shì"],german:["Ja","yah"],arabic:["نعم","naʿam"]},
  {en:"No",tr:["Hayır","HAH-yuhr"],mandarin:["不是","bú shì"],german:["Nein","nine"],arabic:["لا","lā"]},
  {en:"Goodbye",tr:["Güle güle","gew-leh gew-leh"],mandarin:["再见","zàijiàn"],german:["Tschüss","chewss"],arabic:["مع السلامة","maʿa s-salāma"]},
@@ -6555,11 +6555,11 @@ const AR_MORE=[
   {tr:"ماء", pr:"maa", en:"water"},
   {tr:"لذيذ", pr:"la-ZEEZ", en:"delicious"}
  ]},
- {t:"chal", en:"A table for two, please", tr:"طاولة لشخصين، من فضلك", pr:"TAA-wi-la li-shakh-SAYN, min FAD-lik", morph:["طاولة = table","لشخصين = for two persons","من فضلك = please"]},
- {t:"chal", en:"The menu, please", tr:"قائمة الطعام، من فضلك", pr:"QAA-i-mat aT-Ta'aam, min FAD-lik", morph:["قائمة الطعام = the menu","من فضلك = please"]},
- {t:"chal", en:"I want water, please", tr:"أريد ماءً، من فضلك", pr:"u-REED MAA-an, min FAD-lik", morph:["أريد = I want","ماءً = water","من فضلك = please"]},
+ {t:"chal", en:"A table for two, please", tr:"طاولة لشخصين، من فضلك", pr:"TAA-wi-la li-shakh-SAYN, min FAD-lak", morph:["طاولة = table","لشخصين = for two persons","من فضلك = please"]},
+ {t:"chal", en:"The menu, please", tr:"قائمة الطعام، من فضلك", pr:"QAA-i-mat aT-Ta'aam, min FAD-lak", morph:["قائمة الطعام = the menu","من فضلك = please"]},
+ {t:"chal", en:"I want water, please", tr:"أريد ماءً، من فضلك", pr:"u-REED MAA-an, min FAD-lak", morph:["أريد = I want","ماءً = water","من فضلك = please"]},
  {t:"chal", en:"This is delicious", tr:"هذا لذيذ", pr:"HAA-za la-ZEEZ", morph:["هذا = this","لذيذ = delicious"]},
- {t:"chal", en:"The bill, please", tr:"الحساب، من فضلك", pr:"al-hi-SAAB, min FAD-lik", morph:["الحساب = the bill","من فضلك = please"]}
+ {t:"chal", en:"The bill, please", tr:"الحساب، من فضلك", pr:"al-hi-SAAB, min FAD-lak", morph:["الحساب = the bill","من فضلك = please"]}
 ], blocks:["قائمة الطعام، من فضلك","الحساب، من فضلك","هذا لذيذ"]},
 {id:19, title:"Days, dates & months", focus:"أيام الأسبوع · الشهور", steps:[
  {t:"say", text:"Talking about <b>when</b> things happen is essential for booking and planning."},
@@ -6609,7 +6609,7 @@ const AR_MORE=[
   {tr:"يغادر", pr:"yu-GHAA-dir", en:"it leaves/departs"}
  ]},
  {t:"chal", en:"Where is the station?", tr:"أين المحطة؟", pr:"AY-na al-ma-HAT-ta", morph:["أين = where","المحطة = the station"]},
- {t:"chal", en:"I want a ticket, please", tr:"أريد تذكرة، من فضلك", pr:"u-REED taz-KA-ra, min FAD-lik", morph:["أريد = I want","تذكرة = a ticket","من فضلك = please"]},
+ {t:"chal", en:"I want a ticket, please", tr:"أريد تذكرة، من فضلك", pr:"u-REED taz-KA-ra, min FAD-lak", morph:["أريد = I want","تذكرة = a ticket","من فضلك = please"]},
  {t:"chal", en:"When does the train leave?", tr:"متى يغادر القطار؟", pr:"MA-taa yu-GHAA-dir al-qi-TAAR", morph:["متى = when","يغادر = leaves","القطار = the train"]},
  {t:"chal", en:"I want a taxi", tr:"أريد تاكسي", pr:"u-REED TAAK-see", morph:["أريد = I want","تاكسي = a taxi"]},
  {t:"chal", en:"Where is the bus?", tr:"أين الحافلة؟", pr:"AY-na al-HAA-fi-la", morph:["أين = where","الحافلة = the bus"]}
@@ -6640,10 +6640,10 @@ const AR_MORE=[
   {tr:"الإفطار", pr:"al-if-TAAR", en:"breakfast"},
   {tr:"ليلتين", pr:"lay-la-TAYN", en:"two nights"}
  ]},
- {t:"chal", en:"I want a room, please", tr:"أريد غرفة، من فضلك", pr:"u-REED GHUR-fa, min FAD-lik", morph:["أريد = I want","غرفة = a room","من فضلك = please"]},
+ {t:"chal", en:"I want a room, please", tr:"أريد غرفة، من فضلك", pr:"u-REED GHUR-fa, min FAD-lak", morph:["أريد = I want","غرفة = a room","من فضلك = please"]},
  {t:"chal", en:"A room for two nights", tr:"غرفة لليلتين", pr:"GHUR-fa li-lay-la-TAYN", morph:["غرفة = room","لليلتين = for two nights"]},
  {t:"chal", en:"I have a booking", tr:"عندي حجز", pr:"'IN-dee HAJZ", morph:["عندي = I have","حجز = a booking"]},
- {t:"chal", en:"The key, please", tr:"المفتاح، من فضلك", pr:"al-mif-TAAH, min FAD-lik", morph:["المفتاح = the key","من فضلك = please"]},
+ {t:"chal", en:"The key, please", tr:"المفتاح، من فضلك", pr:"al-mif-TAAH, min FAD-lak", morph:["المفتاح = the key","من فضلك = please"]},
  {t:"chal", en:"Is breakfast included?", tr:"هل الإفطار مشمول؟", pr:"hal al-if-TAAR mash-MOOL", morph:["هل = (question)","الإفطار = breakfast","مشمول = included"]}
 ], blocks:["أريد غرفة، من فضلك","غرفة لليلتين","المفتاح، من فضلك"]},
 {id:24, title:"Phone, internet & staying in touch", focus:"واي فاي · كلمة السر", steps:[
@@ -6749,7 +6749,7 @@ const AR_MORE=[
 {id:30, title:"Politeness & survival", focus:"عفواً · آسف · لا أفهم", steps:[
  {t:"say", text:"A handful of polite phrases smooth every interaction. \"I don't understand\" is a lifesaver."},
  {t:"words", items:[
-  {tr:"من فضلك", pr:"min FAD-lik", en:"please"},
+  {tr:"من فضلك", pr:"min FAD-lak (to a man) / min FAD-lik (to a woman)", en:"please"},
   {tr:"شكراً", pr:"SHUK-ran", en:"thank you"},
   {tr:"عفواً", pr:"'AF-wan", en:"excuse me / you're welcome"},
   {tr:"آسف", pr:"AA-sif", en:"sorry"},
@@ -6760,7 +6760,7 @@ const AR_MORE=[
  {t:"chal", en:"Sorry, I don't understand", tr:"آسف، لا أفهم", pr:"AA-sif, laa AF-ham", morph:["آسف = sorry","لا أفهم = I don't understand"]},
  {t:"chal", en:"Can you help me?", tr:"هل يمكنك مساعدتي؟", pr:"hal YUM-ki-nuk mu-SAA-'a-DA-tee", morph:["هل يمكنك = can you","مساعدتي = help me"]},
  {t:"chal", en:"Thank you very much", tr:"شكراً جزيلاً", pr:"SHUK-ran ja-ZEE-lan", morph:["شكراً = thank you","جزيلاً = very much"]},
- {t:"chal", en:"Please speak slowly", tr:"من فضلك تكلم ببطء", pr:"min FAD-lik ta-KAL-lam bi-BUT'", morph:["من فضلك = please","تكلم = speak","ببطء = slowly"]}
+ {t:"chal", en:"Please speak slowly", tr:"من فضلك تكلم ببطء", pr:"min FAD-lak ta-KAL-lam bi-BUT'", morph:["من فضلك = please","تكلم = speak","ببطء = slowly"]}
 ], blocks:["عفواً","لا أفهم","هل يمكنك مساعدتي؟"]}
 ];
 /* portuguese +14 lessons */
@@ -6768,18 +6768,18 @@ const PT_MORE=[
 {id:18, title:"At the restaurant", focus:"a ementa · a conta", steps:[
 {t:"say",text:"To ask for a table you say <b>uma mesa para dois</b> — a table for two."},
 {t:"words",items:[
-{tr:"a ementa",pr:"ah eh-MEN-tah",en:"the menu",link:"≈ menu (English)"},
+{tr:"a ementa",pr:"uh ee-MEN-tuh",en:"the menu",link:"≈ menu (English)"},
 {tr:"a conta",pr:"ah KON-tah",en:"the bill",link:"≈ conto (Italian, account)"},
 {tr:"reservar",pr:"reh-zer-VAR",en:"to reserve",link:"≈ reserve (English)"},
 {tr:"o prato do dia",pr:"oo PRAH-too doo DEE-ah",en:"the dish of the day",link:"≈ piatto (Italian)"},
 {tr:"para levar",pr:"PAH-rah leh-VAR",en:"to take away",link:"lit. 'to carry'"}
 ]},
 {t:"say",text:"When you finish, catch the waiter's eye and say <b>a conta, por favor</b>."},
-{t:"chal",en:"I would like to reserve a table for two.",tr:"Queria reservar uma mesa para dois.",pr:"keh-REE-ah reh-zer-VAR OO-mah MEH-zah PAH-rah doysh",morph:["queria = I would like","reservar = to reserve","uma mesa = a table","para dois = for two"]},
-{t:"chal",en:"Can I see the menu, please?",tr:"Posso ver a ementa, por favor?",pr:"POH-soo vair ah eh-MEN-tah poor fah-VOR",morph:["posso = I can","ver = to see","a ementa = the menu"]},
+{t:"chal",en:"I would like to reserve a table for two.",tr:"Queria reservar uma mesa para dois.",pr:"kuh-REE-uh reh-zer-VAR OO-mah MEH-zah PAH-rah doysh",morph:["queria = I would like","reservar = to reserve","uma mesa = a table","para dois = for two"]},
+{t:"chal",en:"Can I see the menu, please?",tr:"Posso ver a ementa, por favor?",pr:"POH-soo vair uh ee-MEN-tuh poor fah-VOR",morph:["posso = I can","ver = to see","a ementa = the menu"]},
 {t:"chal",en:"What is the dish of the day?",tr:"Qual é o prato do dia?",pr:"kwahl eh oo PRAH-too doo DEE-ah",morph:["qual é = what is","o prato do dia = the dish of the day"]},
 {t:"chal",en:"Is service included?",tr:"O serviço está incluído?",pr:"oo ser-VEE-soo shtah een-kloo-EE-doo",morph:["o serviço = the service","está incluído = is included"],link:"incluído ≈ included (English)"},
-{t:"chal",en:"I would like it to take away.",tr:"Queria para levar.",pr:"keh-REE-ah PAH-rah leh-VAR",morph:["queria = I would like","para levar = to take away"]},
+{t:"chal",en:"I would like it to take away.",tr:"Queria para levar.",pr:"kuh-REE-uh PAH-rah leh-VAR",morph:["queria = I would like","para levar = to take away"]},
 {t:"chal",en:"The bill, please.",tr:"A conta, por favor.",pr:"ah KON-tah poor fah-VOR",morph:["a conta = the bill","por favor = please"]}
 ], blocks:["a conta, por favor","uma mesa para dois","está incluído?","para levar"]},
 {id:19, title:"Days, dates & months", focus:"os dias · os meses", steps:[
@@ -6829,7 +6829,7 @@ const PT_MORE=[
 {tr:"partir",pr:"par-TEER",en:"to leave / depart",link:"≈ partire (Italian)"}
 ]},
 {t:"say",text:"Ask timing with <b>a que horas parte?</b> — at what time does it leave?"},
-{t:"chal",en:"I would like a ticket to Lisbon.",tr:"Queria um bilhete para Lisboa.",pr:"keh-REE-ah oong bee-LYEH-teh PAH-rah leezh-BOH-ah",morph:["queria = I would like","um bilhete = a ticket","para Lisboa = to Lisbon"]},
+{t:"chal",en:"I would like a ticket to Lisbon.",tr:"Queria um bilhete para Lisboa.",pr:"kuh-REE-uh oong bee-LYEH-teh PAH-rah leezh-BOH-ah",morph:["queria = I would like","um bilhete = a ticket","para Lisboa = to Lisbon"]},
 {t:"chal",en:"At what time does the train leave?",tr:"A que horas parte o comboio?",pr:"ah keh OH-rahsh PAR-teh oo kom-BOY-oo",morph:["a que horas = at what time","parte = leaves","o comboio = the train"]},
 {t:"chal",en:"Where is the bus stop?",tr:"Onde é a paragem do autocarro?",pr:"ON-deh eh ah pah-RAH-zheng doo ow-too-KAH-roo",morph:["onde é = where is","a paragem = the stop","do autocarro = of the bus"]},
 {t:"chal",en:"Does this metro go to the centre?",tr:"Este metro vai para o centro?",pr:"ESH-teh MEH-troo vai PAH-rah oo SEN-troo",morph:["este metro = this metro","vai = goes","para o centro = to the centre"]},
@@ -6857,15 +6857,15 @@ const PT_MORE=[
 {tr:"um quarto",pr:"oong KWAR-too",en:"a room",link:"≈ quarto (Italian, room)"},
 {tr:"a chave",pr:"ah SHAH-veh",en:"the key",link:"≈ chiave (Italian)"},
 {tr:"a casa de banho",pr:"ah KAH-zah deh BAH-nyoo",en:"the bathroom",link:"lit. 'house of bath'"},
-{tr:"o pequeno-almoço",pr:"oo peh-KEH-noo ahl-MOH-soo",en:"the breakfast",link:"lit. 'small lunch'"},
+{tr:"o pequeno-almoço",pr:"oo puh-KAY-noo ahl-MOH-soo",en:"the breakfast",link:"lit. 'small lunch'"},
 {tr:"a noite",pr:"ah NOY-teh",en:"the night",link:"≈ notte (Italian)"}
 ]},
 {t:"say",text:"Say how long with <b>para duas noites</b> — for two nights."},
-{t:"chal",en:"I would like a room for two nights.",tr:"Queria um quarto para duas noites.",pr:"keh-REE-ah oong KWAR-too PAH-rah DOO-ahsh NOY-tesh",morph:["queria = I would like","um quarto = a room","para duas noites = for two nights"]},
+{t:"chal",en:"I would like a room for two nights.",tr:"Queria um quarto para duas noites.",pr:"kuh-REE-uh oong KWAR-too PAH-rah DOO-ahsh NOY-tesh",morph:["queria = I would like","um quarto = a room","para duas noites = for two nights"]},
 {t:"chal",en:"A room with a bathroom, please.",tr:"Um quarto com casa de banho, por favor.",pr:"oong KWAR-too kong KAH-zah deh BAH-nyoo poor fah-VOR",morph:["um quarto = a room","com = with","casa de banho = bathroom"]},
-{t:"chal",en:"Is breakfast included?",tr:"O pequeno-almoço está incluído?",pr:"oo peh-KEH-noo ahl-MOH-soo shtah een-kloo-EE-doo",morph:["o pequeno-almoço = the breakfast","está incluído = is included"]},
+{t:"chal",en:"Is breakfast included?",tr:"O pequeno-almoço está incluído?",pr:"oo puh-KAY-noo ahl-MOH-soo shtah een-kloo-EE-doo",morph:["o pequeno-almoço = the breakfast","está incluído = is included"]},
 {t:"chal",en:"Here is the key.",tr:"Aqui está a chave.",pr:"ah-KEE shtah ah SHAH-veh",morph:["aqui está = here is","a chave = the key"]},
-{t:"chal",en:"At what time is breakfast?",tr:"A que horas é o pequeno-almoço?",pr:"ah keh OH-rahsh eh oo peh-KEH-noo ahl-MOH-soo",morph:["a que horas = at what time","é = is","o pequeno-almoço = breakfast"]}
+{t:"chal",en:"At what time is breakfast?",tr:"A que horas é o pequeno-almoço?",pr:"ah keh OH-rahsh eh oo puh-KAY-noo ahl-MOH-soo",morph:["a que horas = at what time","é = is","o pequeno-almoço = breakfast"]}
 ], blocks:["um quarto para duas noites","a chave, por favor","com casa de banho","o pequeno-almoço"]},
 {id:24, title:"Phone, internet & staying in touch", focus:"o wi-fi · a palavra-passe", steps:[
 {t:"say",text:"A mobile phone is <b>o telemóvel</b>, and the wi-fi password <b>a palavra-passe</b>."},
@@ -6910,7 +6910,7 @@ const PT_MORE=[
 ]},
 {t:"say",text:"Chain your day with <b>e depois</b> — and then."},
 {t:"chal",en:"I get up at seven every day.",tr:"Levanto-me às sete todos os dias.",pr:"leh-VAN-too meh ahsh SEH-teh TOH-doosh oosh DEE-ahsh",morph:["levanto-me = I get up","às sete = at seven","todos os dias = every day"]},
-{t:"chal",en:"I have breakfast and then I work.",tr:"Tomo o pequeno-almoço e depois trabalho.",pr:"TOH-moo oo peh-KEH-noo ahl-MOH-soo ee deh-POYSH trah-BAH-lyoo",morph:["tomo = I have","o pequeno-almoço = breakfast","e depois = and then","trabalho = I work"]},
+{t:"chal",en:"I have breakfast and then I work.",tr:"Tomo o pequeno-almoço e depois trabalho.",pr:"TOH-moo oo puh-KAY-noo ahl-MOH-soo ee deh-POYSH trah-BAH-lyoo",morph:["tomo = I have","o pequeno-almoço = breakfast","e depois = and then","trabalho = I work"]},
 {t:"chal",en:"I work every day.",tr:"Trabalho todos os dias.",pr:"trah-BAH-lyoo TOH-doosh oosh DEE-ahsh",morph:["trabalho = I work","todos os dias = every day"]},
 {t:"chal",en:"I go to bed late.",tr:"Deito-me tarde.",pr:"DAY-too meh TAR-deh",morph:["deito-me = I go to bed","tarde = late"],link:"tarde ≈ tarde (Spanish, late)"},
 {t:"chal",en:"What do you do every day?",tr:"O que faz todos os dias?",pr:"oo keh fahsh TOH-doosh oosh DEE-ahsh",morph:["o que = what","faz = do you do","todos os dias = every day"]}
@@ -6928,7 +6928,7 @@ const PT_MORE=[
 {t:"chal",en:"I am ill.",tr:"Estou doente.",pr:"shtoh doo-EN-teh",morph:["estou = I am","doente = ill"]},
 {t:"chal",en:"My head hurts.",tr:"Dói-me a cabeça.",pr:"DOY meh ah kah-BEH-sah",morph:["dói-me = hurts me","a cabeça = the head"]},
 {t:"chal",en:"My stomach hurts.",tr:"Dói-me a barriga.",pr:"DOY meh ah bah-REE-gah",morph:["dói-me = hurts me","a barriga = the belly"]},
-{t:"chal",en:"I need a doctor.",tr:"Preciso de um médico.",pr:"preh-SEE-zoo deh oong MEH-dee-koo",morph:["preciso de = I need","um médico = a doctor"]},
+{t:"chal",en:"I need a doctor.",tr:"Preciso de um médico.",pr:"pruh-SEE-zoo deh oong MEH-dee-koo",morph:["preciso de = I need","um médico = a doctor"]},
 {t:"chal",en:"Where is the pharmacy?",tr:"Onde é a farmácia?",pr:"ON-deh eh ah far-MAH-syah",morph:["onde é = where is","a farmácia = the pharmacy"]}
 ], blocks:["estou doente","dói-me a cabeça","preciso de um médico","a farmácia"]},
 {id:28, title:"Countries, nationalities & languages", focus:"de onde é? · falo", steps:[
@@ -6987,7 +6987,7 @@ const PT_MORE=[
   {t:"say", text:"This is where the method pays off. Every line below uses only words and patterns you've already met — build each one yourself before revealing."},
   {t:"chal", en:"Hello! What's the weather like today?", tr:"Olá! Que tempo faz hoje?", pr:"oh-LAH keh TEM-poo fahsh OH-zheh", morph:["olá = hello","que tempo faz = what's the weather like","hoje = today"]},
   {t:"chal", en:"It's very hot. Shall we go to the restaurant?", tr:"Está muito calor. Vamos ao restaurante?", pr:"shtah MOO-ee-too kah-LOR VAH-moosh ow resh-tow-RAHN-teh", morph:["está muito calor = it's very hot","vamos ao restaurante = shall we go to the restaurant"]},
-  {t:"chal", en:"I'd like a coffee and a tea, please.", tr:"Queria um café e um chá, por favor.", pr:"keh-REE-ah oong kah-FEH ee oong shah poor fah-VOR", morph:["queria = I'd like","um café e um chá = a coffee and a tea","por favor = please"]},
+  {t:"chal", en:"I'd like a coffee and a tea, please.", tr:"Queria um café e um chá, por favor.", pr:"kuh-REE-uh oong kah-FEH ee oong shah poor fah-VOR", morph:["queria = I'd like","um café e um chá = a coffee and a tea","por favor = please"]},
   {t:"chal", en:"This is very good!", tr:"Está muito bom!", pr:"shtah MOO-ee-too bohng", morph:["está = it is","muito bom = very good"]},
   {t:"chal", en:"Thank you for today. See you tomorrow!", tr:"Obrigado pelo dia de hoje. Até amanhã!", pr:"oh-bree-GAH-doo PEH-loo DEE-ah deh OH-zheh ah-TEH ah-mah-NYANG", morph:["obrigado pelo dia de hoje = thanks for today","até amanhã = see you tomorrow"]}
 ], blocks:["You just built a full scene — greeting, weather, a plan, an order, an opinion, a goodbye — from nothing but pieces you already owned.","Keep them all alive in Recall and Shadow."]}
@@ -8450,8 +8450,8 @@ const POLY_PT={
  "Water":{portuguese:["água","AH-gwah"]},"Tea":{portuguese:["chá","shah"]},"Coffee":{portuguese:["café","kah-FEH"]},
  "How much?":{portuguese:["Quanto custa?","KWAN-too KOOSH-tah"]},"The bill":{portuguese:["A conta","ah KON-tah"]},
  "Where is…?":{portuguese:["Onde é…?","ON-duh eh"]},"Left":{portuguese:["à esquerda","ah shkerr-dah"]},"Right":{portuguese:["à direita","ah dee-RAY-tah"]},
- "I want…":{portuguese:["Queria","keh-REE-ah"]},"I don't understand":{portuguese:["Não percebo","nowng per-SEH-boo"]},
- "Help!":{portuguese:["Socorro!","soo-KOH-rroo"]},"Delicious":{portuguese:["delicioso","deh-lee-see-OH-zoo"]},
+ "I want…":{portuguese:["Queria","kuh-REE-uh"]},"I don't understand":{portuguese:["Não percebo","nowng per-SEH-boo"]},
+ "Help!":{portuguese:["Socorro!","soo-KOH-rroo"]},"Delicious":{portuguese:["delicioso","dlee-SYOH-zoo"]},
  "One":{portuguese:["um","oong"]},"Ten":{portuguese:["dez","desh"]},"My name is…":{portuguese:["Chamo-me…","SHAH-moo-muh"]}
 };
 // extend each polyglot concept with Telugu + Farsi + Portuguese

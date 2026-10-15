@@ -480,10 +480,10 @@ const COURSES={
     {t:"chal",en:"Thank you",tr:"شكرا",pr:"shukran",morph:["شكرا = thanks"],link:"shukran ≈ shukriya (Hindi/Urdu)"},
     {t:"say",text:"The universal greeting is <b>As-salāmu ʿalaykum</b> ('peace be upon you'). The reply flips it: wa ʿalaykum as-salām."},
     {t:"chal",en:"Peace be upon you (hello)",tr:"السلام عليكم",pr:"as-salāmu ʿalaykum",morph:["salām = peace"],link:"you'll know this one already!"},
-    {t:"say",text:"Please = <b>min faḍlik</b>, yes = naʿam, no = lā."},
-    {t:"chal",en:"Please",tr:"من فضلك",pr:"min faḍlik",morph:["min = from","faḍlik = your kindness"],spoken:{tr:"لو سمحت",pr:"law samaḥt"}},
+    {t:"say",text:"Please = <b>min faḍlak</b> to a man, <b>min faḍlik</b> to a woman (in the Gulf you will also hear <b>law samaḥt</b>). Yes = naʿam, no = lā."},
+    {t:"chal",en:"Please (to a man)",tr:"من فضلك",pr:"min faḍlak",morph:["min = from","faḍlak = your kindness (to a man; to a woman: faḍlik)"],spoken:{tr:"لو سمحت",pr:"law samaḥt"}},
     {t:"chal",en:"Good morning",tr:"صباح الخير",pr:"ṣabāḥ al-khayr",morph:["ṣabāḥ = morning","khayr = good"]},
-    {t:"chal",en:"Excuse me, please",tr:"آسف، من فضلك",pr:"āsif, min faḍlik",morph:["آسف = sorry","من فضلك = please"]}
+    {t:"chal",en:"Excuse me, please",tr:"آسف، من فضلك",pr:"āsif, min faḍlak",morph:["آسف = sorry","من فضلك = please"]}
    ],blocks:["مرحبا = hello · شكرا = thanks","السلام عليكم = peace be upon you","من فضلك = please · نعم naʿam = yes · لا lā = no","صباح الخير = good morning"]},
 {id:2,title:"\"I want\" أريد",focus:"أريد · قهوة · بكم",steps:[
     {t:"say",text:"'I want' is <b>urīd</b> (أريد). And coffee is <b>qahwa</b> (قهوة) — the very word Turkish 'kahve' and English 'coffee' come from!"},
@@ -505,12 +505,12 @@ const COURSES={
    ],blocks:["واحد–عشرة = 1–10","مئة miʾa = 100"]},
 {id:4,title:"Food",focus:"القائمة · لا آكل اللحم · الحساب",steps:[
     {t:"words",items:[{tr:"القائمة",pr:"al-qāʾima",en:"the menu"},{tr:"خبز",pr:"khubz",en:"bread"},{tr:"ماء",pr:"māʾ",en:"water"}]},
-    {t:"chal",en:"The menu, please",tr:"القائمة من فضلك",pr:"al-qāʾima min faḍlik",morph:["al-qāʾima = the menu","min faḍlik = please"]},
+    {t:"chal",en:"The menu, please",tr:"القائمة من فضلك",pr:"al-qāʾima min faḍlak",morph:["al-qāʾima = the menu","min faḍlak = please"]},
     {t:"say",text:"'I don't eat meat' = <b>lā ākul al-laḥm</b> (laḥm = meat)."},
     {t:"chal",en:"I don't eat meat",tr:"لا آكل اللحم",pr:"lā ākul al-laḥm",morph:["lā = not","ākul = I eat","al-laḥm = the meat"]},
     {t:"chal",en:"It's delicious",tr:"إنه لذيذ",pr:"innahu ladhīdh",morph:["إنه = it is","لذيذ = delicious"]},
     {t:"say",text:"The bill is <b>al-ḥisāb</b> (الحساب) — exactly 'hisaab'!"},
-    {t:"chal",en:"The bill, please",tr:"الحساب من فضلك",pr:"al-ḥisāb min faḍlik",morph:["الحساب = the bill","من فضلك = please"],link:"ḥisāb ≈ hisaab (Hindi/Urdu)"}
+    {t:"chal",en:"The bill, please",tr:"الحساب من فضلك",pr:"al-ḥisāb min faḍlak",morph:["الحساب = the bill","من فضلك = please"],link:"ḥisāb ≈ hisaab (Hindi/Urdu)"}
    ],blocks:["القائمة = the menu","لا آكل اللحم = I don't eat meat","لذيذ = delicious","الحساب = the bill (hisaab!)"]},
 {id:5,title:"Getting around",focus:"أين · يمين/يسار · المطار",steps:[
     {t:"say",text:"'Where?' is <b>ayna</b> (أين). 'Bathroom' is al-ḥammām (الحمام)."},
@@ -598,11 +598,11 @@ const COURSES={
     {t:"chal",en:"I want this",tr:"أريد هذا",pr:"urīd hādhā",morph:["أريد = I want","هذا = this"]},
     {t:"chal",en:"Too expensive",tr:"غالي جدا",pr:"ghālī jiddan",morph:["غالي = expensive","جدا = very"]},
     {t:"chal",en:"Is there a cheaper one?",tr:"هل يوجد أرخص؟",pr:"hal yūjad arkhaṣ",morph:["هل يوجد = is there","أرخص = cheaper"]},
-    {t:"chal",en:"A discount, please",tr:"خصم من فضلك",pr:"khaṣm min faḍlik",morph:["خصم = discount","من فضلك = please"]}
+    {t:"chal",en:"A discount, please",tr:"خصم من فضلك",pr:"khaṣm min faḍlak",morph:["خصم = discount","من فضلك = please"]}
    ],blocks:["غالي جدا = too expensive","أرخص = cheaper · خصم = discount","هل يوجد أرخص؟ = is there a cheaper one?"]},
 {id:15,title:"Help & emergencies",focus:"النجدة · طبيب · الشرطة",steps:[
     {t:"say",text:"The words you hope not to need: النجدة <b>an-najda</b> help!, طبيب <b>ṭabīb</b> doctor, مستشفى <b>mustashfā</b> hospital, شرطة <b>shurṭa</b> police."},
-    {t:"chal",en:"Help, please!",tr:"النجدة من فضلك!",pr:"an-najda min faḍlik",morph:["النجدة = help","من فضلك = please"]},
+    {t:"chal",en:"Help, please!",tr:"النجدة من فضلك!",pr:"an-najda min faḍlak",morph:["النجدة = help","من فضلك = please"]},
     {t:"chal",en:"I'm sick",tr:"أنا مريض",pr:"anā marīḍ",morph:["أنا = I","مريض = sick"]},
     {t:"chal",en:"I need a doctor",tr:"أحتاج طبيب",pr:"aḥtāj ṭabīb",morph:["أحتاج = I need","طبيب = doctor"]},
     {t:"chal",en:"Where is the hospital?",tr:"أين المستشفى؟",pr:"ayna al-mustashfā",morph:["أين = where","المستشفى = the hospital"]},
@@ -816,10 +816,10 @@ const COURSES={
     {t:"chal",en:"Excuse me, please",tr:"Desculpe, por favor",pr:"desh-KOOL-puh poor fah-VOR",morph:["Desculpe = sorry","por favor = please"]}
    ],blocks:["Olá = hi · Bom dia = good morning","Obrigado (m) / Obrigada (f) = thanks","sim yes · não no · por favor please"]},
 {id:2,title:"\"I'd like\" Queria",focus:"Queria · água · Quanto custa",steps:[
-    {t:"say",text:"The polite traveller phrase is <b>Queria</b> (keh-REE-ah) = 'I'd like'. ('Quero' = I want.)"},
+    {t:"say",text:"The polite traveller phrase is <b>Queria</b> (kuh-REE-uh) = 'I'd like'. ('Quero' = I want.)"},
     {t:"words",items:[{tr:"água",pr:"AH-gwah",en:"water",link:"≈ acqua"},{tr:"chá",pr:"shah",en:"tea",link:"≈ chai"},{tr:"café",pr:"kah-FEH",en:"coffee",link:"≈ caffè"}]},
-    {t:"chal",en:"I'd like a coffee",tr:"Queria um café",pr:"keh-REE-ah oong kah-FEH",morph:["Queria = I'd like","um = a","café = coffee"]},
-    {t:"chal",en:"I'd like a water",tr:"Queria uma água",pr:"keh-REE-ah OO-mah AH-gwah",morph:["Queria = I'd like","uma = a (feminine)","água = water"]},
+    {t:"chal",en:"I'd like a coffee",tr:"Queria um café",pr:"kuh-REE-uh oong kah-FEH",morph:["Queria = I'd like","um = a","café = coffee"]},
+    {t:"chal",en:"I'd like a water",tr:"Queria uma água",pr:"kuh-REE-uh OO-mah AH-gwah",morph:["Queria = I'd like","uma = a (feminine)","água = water"]},
     {t:"say",text:"To ask the price: <b>Quanto custa?</b> — almost Italian!"},
     {t:"chal",en:"How much is it?",tr:"Quanto custa?",pr:"KWAN-too KOOSH-tah",morph:["quanto = how much","custa = costs"],link:"≈ quanto costa"},
     {t:"say",text:"'I don't want' is <b>Não quero</b>."},
@@ -833,11 +833,11 @@ const COURSES={
     {t:"chal",en:"How much is this?",tr:"Quanto custa isto?",pr:"KWAN-too KOOSH-tah EESH-too",morph:["isto = this"]}
    ],blocks:["um–dez = 1–10 (like Italian!)","vinte = 20 · cem = 100"]},
 {id:4,title:"Food",focus:"a ementa · a conta",steps:[
-    {t:"words",items:[{tr:"a ementa",pr:"ah eh-MEN-tah",en:"the menu"},{tr:"pão",pr:"powng",en:"bread",link:"≈ pane"},{tr:"água",pr:"AH-gwah",en:"water"}]},
-    {t:"chal",en:"The menu, please",tr:"A ementa, por favor",pr:"ah eh-MEN-tah poor fah-VOR",morph:["a ementa = the menu","por favor = please"]},
+    {t:"words",items:[{tr:"a ementa",pr:"uh ee-MEN-tuh",en:"the menu"},{tr:"pão",pr:"powng",en:"bread",link:"≈ pane"},{tr:"água",pr:"AH-gwah",en:"water"}]},
+    {t:"chal",en:"The menu, please",tr:"A ementa, por favor",pr:"uh ee-MEN-tuh poor fah-VOR",morph:["a ementa = the menu","por favor = please"]},
     {t:"say",text:"'I don't eat meat' is <b>Não como carne</b>."},
     {t:"chal",en:"I don't eat meat",tr:"Não como carne",pr:"nowng KOH-moo KAR-nuh",morph:["não = not","como = I eat","carne = meat"]},
-    {t:"chal",en:"It's delicious",tr:"Está delicioso",pr:"shtah deh-lee-see-OH-zoo",morph:["está = it is","delicioso = delicious"],link:"≈ delizioso"},
+    {t:"chal",en:"It's delicious",tr:"Está delicioso",pr:"shtah dlee-SYOH-zoo",morph:["está = it is","delicioso = delicious"],link:"≈ delizioso"},
     {t:"say",text:"The bill is <b>a conta</b>."},
     {t:"chal",en:"The bill, please",tr:"A conta, por favor",pr:"ah KON-tah poor fah-VOR",morph:["a conta = the bill","por favor = please"]}
    ],blocks:["A ementa = the menu","Não como carne = I don't eat meat","Está delicioso = it's delicious","A conta = the bill"]},
@@ -845,7 +845,7 @@ const COURSES={
     {t:"say",text:"'Where is…?' is <b>Onde é…?</b> or <b>Onde fica…?</b> The toilet (EP) is <b>a casa de banho</b>."},
     {t:"chal",en:"Where is the toilet?",tr:"Onde é a casa de banho?",pr:"ON-duh eh ah KAH-zah duh BAH-nyoo",morph:["onde é = where is","casa de banho = toilet"]},
     {t:"words",items:[{tr:"à esquerda",pr:"ah shkerr-dah",en:"to the left"},{tr:"à direita",pr:"ah dee-RAY-tah",en:"to the right"},{tr:"em frente",pr:"eng FREN-tuh",en:"straight ahead"}]},
-    {t:"chal",en:"I'd like to go to the airport",tr:"Queria ir ao aeroporto",pr:"keh-REE-ah eer ow ah-eh-roo-POR-too",morph:["Queria = I'd like","ir = to go","ao = to the","aeroporto = airport"]},
+    {t:"chal",en:"I'd like to go to the airport",tr:"Queria ir ao aeroporto",pr:"kuh-REE-uh eer ow ah-eh-roo-POR-too",morph:["Queria = I'd like","ir = to go","ao = to the","aeroporto = airport"]},
     {t:"chal",en:"a taxi, please",tr:"um táxi, por favor",pr:"oong TAK-see poor fah-VOR",morph:["um táxi = a taxi","por favor = please"]},
     {t:"chal",en:"To the left, please",tr:"À esquerda, por favor",pr:"ah shkerr-dah poor fah-VOR",morph:["à esquerda = to the left","por favor = please"]},
     {t:"say",text:"If lost: 'I don't understand' is <b>Não percebo</b> (European) or Não entendo."},
@@ -853,7 +853,7 @@ const COURSES={
    ],blocks:["Onde é…? = where is…?","à esquerda left · à direita right · em frente straight","Não percebo = I don't understand"]},
 {id:6,title:"\"I have / there is\"",focus:"tenho · há · tem…?",steps:[
     {t:"say",text:"'I have' is <b>tenho</b>; 'there is/are' is <b>há</b>; 'do you have…?' is <b>Tem…?</b>"},
-    {t:"chal",en:"I have a reservation (reserva)",tr:"Tenho uma reserva",pr:"TEH-nyoo OO-mah reh-ZER-vah",morph:["tenho = I have","uma reserva = a reservation"]},
+    {t:"chal",en:"I have a reservation (reserva)",tr:"Tenho uma reserva",pr:"TEH-nyoo OO-mah ruh-ZEHR-vuh",morph:["tenho = I have","uma reserva = a reservation"]},
     {t:"chal",en:"Do you have water?",tr:"Tem água?",pr:"teng AH-gwah",morph:["Tem = do you have","água = water"]},
     {t:"say",text:"'Is there…?' also uses <b>há</b>: Há wi-fi?"},
     {t:"chal",en:"Is there wi-fi?",tr:"Há wi-fi?",pr:"ah wee-fee",morph:["há = is there"]},
@@ -901,8 +901,8 @@ const COURSES={
    ],blocks:["no / na = in/at the","aqui here · ali there · perto near","Há … aqui perto? = is there … nearby?"]},
 {id:12,title:"Need & can",focus:"Preciso de · Posso · Pode",steps:[
     {t:"say",text:"'I need' is <b>Preciso de…</b>; 'can I…?' is <b>Posso…?</b>; 'can you…?' is <b>Pode…?</b>"},
-    {t:"chal",en:"I need help (ajuda)",tr:"Preciso de ajuda",pr:"preh-SEE-zoo duh ah-ZHOO-dah",morph:["preciso de = I need","ajuda = help"]},
-    {t:"chal",en:"I need a doctor",tr:"Preciso de um médico",pr:"preh-SEE-zoo duh oong MEH-dee-koo",morph:["preciso de = I need","médico = doctor"]},
+    {t:"chal",en:"I need help (ajuda)",tr:"Preciso de ajuda",pr:"pruh-SEE-zoo duh ah-ZHOO-dah",morph:["preciso de = I need","ajuda = help"]},
+    {t:"chal",en:"I need a doctor",tr:"Preciso de um médico",pr:"pruh-SEE-zoo duh oong MEH-dee-koo",morph:["preciso de = I need","médico = doctor"]},
     {t:"chal",en:"Can I sit here?",tr:"Posso sentar-me aqui?",pr:"POH-soo sen-TAR-muh ah-kee",morph:["posso = can I","sentar-me = sit","aqui = here"]},
     {t:"chal",en:"Can you help me?",tr:"Pode ajudar-me?",pr:"POH-duh ah-zhoo-DAR-muh",morph:["pode = can you","ajudar-me = help me"]}
    ],blocks:["Preciso de… = I need…","Posso…? = can I…? · Pode…? = can you…?","Pode ajudar-me? = can you help me?"]},
@@ -917,14 +917,14 @@ const COURSES={
 ]},
 {t:"say",text:"Note: <b>porquê?</b> (with accent) means 'why?', while <b>porque</b> means 'because'."},
 {t:"chal",en:"I want a coffee because I am tired.",tr:"Quero um café porque estou cansado.",pr:"KEH-roo oong kah-FEH poor-KEH shtoh kan-SAH-doo",morph:["quero = I want","um café = a coffee","porque = because","estou cansado = I am tired"]},
-{t:"chal",en:"I like Lisbon, but it is expensive.",tr:"Gosto de Lisboa, mas é cara.",pr:"GOSH-too deh leezh-BOH-ah, mahsh eh KAH-rah",morph:["gosto de = I like","Lisboa = Lisbon","mas = but","é cara = it is expensive"]},
+{t:"chal",en:"I like Lisbon, but it is expensive.",tr:"Gosto de Lisboa, mas é cara.",pr:"GOSH-too duh leezh-BOH-uh, mahsh eh KAH-rah",morph:["gosto de = I like","Lisboa = Lisbon","mas = but","é cara = it is expensive"]},
 {t:"chal",en:"I speak Portuguese and also English.",tr:"Falo português e também inglês.",pr:"FAH-loo poor-too-GESH ee tam-BENG eeng-GLESH",morph:["falo = I speak","português = Portuguese","e também = and also","inglês = English"]},
 {t:"chal",en:"It is very good but very expensive.",tr:"É muito bom mas muito caro.",pr:"eh MWEENG-too bong mahsh MWEENG-too KAH-roo",morph:["é = it is","muito bom = very good","mas = but","muito caro = very expensive"]},
 {t:"chal",en:"Why? Because I like it.",tr:"Porquê? Porque gosto.",pr:"poor-KEH? poor-KEH GOSH-too",morph:["porquê = why","porque = because","gosto = I like it"]}
 ], blocks:["porque","mas","também","e"]},
 {id:14,title:"Shopping & bargaining",focus:"comprar · muito caro · barato",steps:[
     {t:"say",text:"'To buy' is <b>comprar</b>. 'Too expensive' is <b>muito caro</b>; 'cheaper' is <b>mais barato</b>."},
-    {t:"chal",en:"I'd like to buy this",tr:"Queria comprar isto",pr:"keh-REE-ah kong-PRAR EESH-too",morph:["Queria = I'd like","comprar = to buy","isto = this"]},
+    {t:"chal",en:"I'd like to buy this",tr:"Queria comprar isto",pr:"kuh-REE-uh kong-PRAR EESH-too",morph:["Queria = I'd like","comprar = to buy","isto = this"]},
     {t:"chal",en:"Too expensive",tr:"Muito caro",pr:"MOOEE-too KAH-roo",morph:["muito = very","caro = expensive"]},
     {t:"chal",en:"Is there a cheaper one?",tr:"Há mais barato?",pr:"ah mah-eesh bah-RAH-too",morph:["há = is there","mais barato = cheaper"]},
     {t:"chal",en:"I'll take this one",tr:"Levo este",pr:"LEH-voo ESH-tuh",morph:["levo = I take","este = this one"]}
@@ -949,12 +949,12 @@ const COURSES={
     {t:"words",items:[{tr:"vermelho",pr:"ver-MEH-lyoo",en:"red"},{tr:"azul",pr:"ah-ZOOL",en:"blue"},{tr:"branco",pr:"BRAN-koo",en:"white"}]},
     {t:"chal",en:"red",tr:"vermelho",pr:"ver-MEH-lyoo",morph:["vermelho = red"]},
     {t:"chal",en:"big",tr:"grande",pr:"GRAN-duh",morph:["grande = big"],link:"≈ grande (Italian)"},
-    {t:"chal",en:"small",tr:"pequeno",pr:"peh-KEH-noo",morph:["pequeno = small"],link:"≈ piccolo"},
+    {t:"chal",en:"small",tr:"pequeno",pr:"puh-KAY-noo",morph:["pequeno = small"],link:"≈ piccolo"},
     {t:"chal",en:"very beautiful",tr:"muito bonito",pr:"MOOEE-too boo-NEE-too",morph:["muito = very","bonito = beautiful"]},
     {t:"say",text:"To compare: <b>maior</b> = bigger, <b>o maior</b> = the biggest, <b>que</b> = than."},
     {t:"words",items:[{tr:"maior",pr:"mah-YOR",en:"bigger"},{tr:"o maior",pr:"oo mah-YOR",en:"the biggest"},{tr:"que",pr:"keh",en:"than"}]},
-    {t:"chal",en:"This one is bigger than that one",tr:"Este é maior que aquele",pr:"ESH-teh eh mah-YOR keh ah-KEL",morph:["este é = this one is","maior = bigger","que = than","aquele = that one"]},
-    {t:"chal",en:"This is the biggest",tr:"Este é o maior",pr:"ESH-teh eh oo mah-YOR",morph:["este é = this is","o maior = the biggest"]}
+    {t:"chal",en:"This one is bigger than that one",tr:"Este é maior que aquele",pr:"ESHT eh mah-YOR kuh uh-KEL",morph:["este é = this one is","maior = bigger","que = than","aquele = that one"]},
+    {t:"chal",en:"This is the biggest",tr:"Este é o maior",pr:"ESHT eh oo mah-YOR",morph:["este é = this is","o maior = the biggest"]}
    ],blocks:["cor colour · vermelho/azul/branco/preto","grande big · pequeno small · bonito beautiful","maior…que = bigger…than · o maior = the biggest"]}
 ]}
 };
@@ -1116,7 +1116,7 @@ const DE_BRIDGES=`<div class="note">🇬🇧 <b>English is your bridge</b> — G
 const AR_DIALOGUES=[
  {id:"cafe",title:"☕ Ordering a tea",emoji:"☕",turns:[
   {who:"Server",tr:"مرحبا، ماذا تريد؟",pr:"marḥaban, mādhā turīd",en:"Hello, what would you like?"},
-  {who:"You",tr:"أريد شاي من فضلك.",pr:"urīd shāy min faḍlik",en:"I'd like a tea, please."},
+  {who:"You",tr:"أريد شاي من فضلك.",pr:"urīd shāy min faḍlak",en:"I'd like a tea, please."},
   {who:"Server",tr:"شيء آخر؟",pr:"shayʾ ākhar",en:"Anything else?"},
   {who:"You",tr:"بكم؟",pr:"bikam",en:"How much?"},
   {who:"Server",tr:"خمسة عشر.",pr:"khamsata ʿashar",en:"Fifteen."},
@@ -1127,7 +1127,7 @@ const AR_DIALOGUES=[
   {who:"Driver",tr:"حسنا.",pr:"ḥasanan",en:"OK."},
   {who:"You",tr:"كم من الوقت؟",pr:"kam min al-waqt",en:"How long does it take?"},
   {who:"Driver",tr:"عشرون دقيقة.",pr:"ʿishrūn daqīqa",en:"Twenty minutes."},
-  {who:"You",tr:"قف هنا من فضلك. شكرا.",pr:"qif hunā min faḍlik, shukran",en:"Stop here, please. Thanks."}
+  {who:"You",tr:"قف هنا من فضلك. شكرا.",pr:"qif hunā min faḍlak, shukran",en:"Stop here, please. Thanks."}
  ]},
  {id:"meet",title:"🤝 Meeting someone",emoji:"🤝",turns:[
   {who:"Local",tr:"مرحبا! ما اسمك؟",pr:"marḥaban! mā ismuk",en:"Hello! What's your name?"},
@@ -1139,7 +1139,7 @@ const AR_DIALOGUES=[
 ];
 const AR_POCKET=[
  {tr:"مرحبا",pr:"marḥaban",en:"hello",c:"Greetings"},{tr:"شكرا",pr:"shukran",en:"thank you",c:"Greetings"},
- {tr:"من فضلك",pr:"min faḍlik",en:"please",c:"Greetings"},{tr:"مع السلامة",pr:"maʿa s-salāma",en:"goodbye",c:"Greetings"},
+ {tr:"من فضلك",pr:"min faḍlak (to a man) / min faḍlik (to a woman)",en:"please",c:"Greetings"},{tr:"مع السلامة",pr:"maʿa s-salāma",en:"goodbye",c:"Greetings"},
  {tr:"نعم",pr:"naʿam",en:"yes",c:"Greetings"},{tr:"لا",pr:"lā",en:"no",c:"Greetings"},{tr:"آسف",pr:"āsif",en:"sorry",c:"Greetings"},
  {tr:"واحد",pr:"wāḥid",en:"1",c:"Numbers"},{tr:"اثنان",pr:"ithnān",en:"2",c:"Numbers"},{tr:"ثلاثة",pr:"thalātha",en:"3",c:"Numbers"},{tr:"عشرة",pr:"ʿashara",en:"10",c:"Numbers"},{tr:"مئة",pr:"miʾa",en:"100",c:"Numbers"},
  {tr:"ماء",pr:"māʾ",en:"water",c:"Food"},{tr:"شاي",pr:"shāy",en:"tea",c:"Food"},{tr:"خبز",pr:"khubz",en:"bread",c:"Food"},{tr:"الحساب",pr:"al-ḥisāb",en:"the bill",c:"Food"},{tr:"لذيذ",pr:"ladhīdh",en:"delicious",c:"Food"},
@@ -1283,17 +1283,17 @@ const FA_BRIDGES=`<div class="note">🇮🇳 <b>Enormous overlap with Hindi/Urdu
 /* ---- PORTUGUESE ---- */
 const PT_DIALOGUES=[
  {id:"cafe",title:"☕ Ordering at a café",emoji:"☕",turns:[
-  {who:"Server",tr:"Boa tarde, o que deseja?",pr:"boh-ah TAR-duh, oo kuh deh-ZEH-zhah",en:"Good afternoon, what would you like?"},
-  {who:"You",tr:"Queria um café, por favor.",pr:"keh-REE-ah oong kah-FEH poor fah-VOR",en:"I'd like a coffee, please."},
+  {who:"Server",tr:"Boa tarde, o que deseja?",pr:"boh-ah TAR-duh, oo kuh duh-ZAY-zhuh",en:"Good afternoon, what would you like?"},
+  {who:"You",tr:"Queria um café, por favor.",pr:"kuh-REE-uh oong kah-FEH poor fah-VOR",en:"I'd like a coffee, please."},
   {who:"Server",tr:"Mais alguma coisa?",pr:"mah-eez al-GOO-mah KOY-zah",en:"Anything else?"},
   {who:"You",tr:"Quanto custa?",pr:"KWAN-too KOOSH-tah",en:"How much is it?"},
   {who:"Server",tr:"Um euro e meio.",pr:"oong EH-oo-roo ee MAY-oo",en:"One euro fifty."},
   {who:"You",tr:"Obrigado!",pr:"oh-bree-GAH-doo",en:"Thank you!"}
  ]},
  {id:"taxi",title:"🚕 Taking a taxi",emoji:"🚕",turns:[
-  {who:"You",tr:"Boa tarde, queria ir ao aeroporto.",pr:"boh-ah TAR-duh, keh-REE-ah eer ow ah-eh-roo-POR-too",en:"Good afternoon, I'd like to go to the airport."},
+  {who:"You",tr:"Boa tarde, queria ir ao aeroporto.",pr:"boh-ah TAR-duh, kuh-REE-uh eer ow ah-eh-roo-POR-too",en:"Good afternoon, I'd like to go to the airport."},
   {who:"Driver",tr:"Com certeza.",pr:"kong ser-TEH-zah",en:"Of course."},
-  {who:"You",tr:"Quanto tempo demora?",pr:"KWAN-too TEM-poo deh-MOH-rah",en:"How long does it take?"},
+  {who:"You",tr:"Quanto tempo demora?",pr:"KWAN-too TEM-poo duh-MOH-ruh",en:"How long does it take?"},
   {who:"Driver",tr:"Vinte minutos.",pr:"VEEN-tuh mee-NOO-toosh",en:"Twenty minutes."},
   {who:"You",tr:"Pare aqui, por favor. Obrigado.",pr:"PAH-ruh ah-KEE poor fah-VOR, oh-bree-GAH-doo",en:"Stop here, please. Thanks."}
  ]},
@@ -1310,9 +1310,9 @@ const PT_POCKET=[
  {tr:"Por favor",pr:"poor fah-VOR",en:"please",c:"Greetings"},{tr:"Sim",pr:"seeng",en:"yes",c:"Greetings"},{tr:"Não",pr:"nowng",en:"no",c:"Greetings"},
  {tr:"Adeus",pr:"ah-DEH-oosh",en:"goodbye",c:"Greetings"},{tr:"Desculpe",pr:"desh-KOOL-puh",en:"sorry / excuse me",c:"Greetings"},
  {tr:"um",pr:"oong",en:"1",c:"Numbers"},{tr:"dois",pr:"doysh",en:"2",c:"Numbers"},{tr:"três",pr:"traysh",en:"3",c:"Numbers"},{tr:"dez",pr:"desh",en:"10",c:"Numbers"},{tr:"cem",pr:"seng",en:"100",c:"Numbers"},
- {tr:"água",pr:"AH-gwah",en:"water",c:"Food"},{tr:"chá",pr:"shah",en:"tea",c:"Food"},{tr:"pão",pr:"powng",en:"bread",c:"Food"},{tr:"A conta, por favor",pr:"ah KON-tah poor fah-VOR",en:"the bill, please",c:"Food"},{tr:"delicioso",pr:"deh-lee-see-OH-zoo",en:"delicious",c:"Food"},
+ {tr:"água",pr:"AH-gwah",en:"water",c:"Food"},{tr:"chá",pr:"shah",en:"tea",c:"Food"},{tr:"pão",pr:"powng",en:"bread",c:"Food"},{tr:"A conta, por favor",pr:"ah KON-tah poor fah-VOR",en:"the bill, please",c:"Food"},{tr:"delicioso",pr:"dlee-SYOH-zoo",en:"delicious",c:"Food"},
  {tr:"Onde é…?",pr:"ON-duh eh",en:"where is…?",c:"Directions"},{tr:"à esquerda",pr:"ah shkerr-dah",en:"left",c:"Directions"},{tr:"à direita",pr:"ah dee-RAY-tah",en:"right",c:"Directions"},{tr:"a casa de banho",pr:"ah KAH-zah duh BAH-nyoo",en:"toilet",c:"Directions"},{tr:"o aeroporto",pr:"oo ah-eh-roo-POR-too",en:"airport",c:"Directions"},
- {tr:"Socorro!",pr:"soo-KOH-rroo",en:"Help!",c:"Emergency"},{tr:"Não percebo",pr:"nowng per-SEH-boo",en:"I don't understand",c:"Emergency"},{tr:"Preciso de um médico",pr:"preh-SEE-zoo duh oong MEH-dee-koo",en:"I need a doctor",c:"Emergency"},{tr:"a polícia",pr:"ah poo-LEE-see-ah",en:"police",c:"Emergency"}
+ {tr:"Socorro!",pr:"soo-KOH-rroo",en:"Help!",c:"Emergency"},{tr:"Não percebo",pr:"nowng per-SEH-boo",en:"I don't understand",c:"Emergency"},{tr:"Preciso de um médico",pr:"pruh-SEE-zoo duh oong MEH-dee-koo",en:"I need a doctor",c:"Emergency"},{tr:"a polícia",pr:"ah poo-LEE-see-ah",en:"police",c:"Emergency"}
 ];
 const PT_CULTURE=[
  {icon:"😙",title:"Two kisses",body:"Greeting socially, people give two kisses (cheek to cheek, right first). Men usually shake hands or hug; two kisses are common between women, or a man and woman."},
