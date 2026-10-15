@@ -1,7 +1,7 @@
 /* LanguagePath service worker — makes the app work offline once hosted (https/localhost).
    Strategy: network-first (so edits to the single HTML file propagate), with a cache fallback
    for when you're offline — e.g. on the plane or abroad with no data. */
-const CACHE = "languagepath-v22";
+const CACHE = "languagepath-v23";
 const CORE = [
   "./",
   "./index.html",

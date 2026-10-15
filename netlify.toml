@@ -32,6 +32,12 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "microphone=(self), camera=(), geolocation=(), payment=()"
 
+# Content-hashed bundles (tools/prerender.js): safe to cache forever
+[[headers]]
+  for = "/assets/v/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 # Turkish course lives at /tr; /turkish is a common guess
 [[redirects]]
   from = "/turkish"

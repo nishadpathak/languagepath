@@ -6,6 +6,7 @@
    FAILS if any page carrying data-ads="1" is under MIN_WORDS / MIN_UNIQUE, is not a language,
    topic or travel page, or if the runtime ad loader is not gated. */
 "use strict";
+const APP_CACHE = {};
 const fs = require("fs"), path = require("path");
 const { score, MIN_WORDS, MIN_UNIQUE } = require("./content-quality.js");
 const { activeViewHTML, textOf } = require("./wordcount.js");
@@ -21,7 +22,9 @@ for (const f of files) {
   const kind = g ? g[1] : (av.view || "static");
   meta[route] = { ads, view: av.view };
   pages.push({ route, kind, text: (g ? textOf(g[2]) : "") + (av.view === "topic" ? " " + textOf(av.html) : "") });
-  if (ads && !/function lpAdsAllowed\(\)/.test(h)) errs.push("ad loader not gated: " + route);
+  const appSrc = (h.match(/<script src="(\/assets\/v\/app\.[0-9a-f]+\.js)"><\/script>/) || [])[1]; // app script is externalized (QA page-weight fix)
+  const code = h + (appSrc ? (APP_CACHE[appSrc] = APP_CACHE[appSrc] || fs.readFileSync(path.join(dist, appSrc), "utf8")) : "");
+  if (ads && !/function lpAdsAllowed\(\)/.test(code)) errs.push("ad loader not gated: " + route);
 }
 const sc = score(pages), rows = [];
 for (const p of pages) {
