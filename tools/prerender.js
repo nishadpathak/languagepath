@@ -34,6 +34,36 @@ function serve() {
     }).listen(0, "127.0.0.1", () => res(srv));
   });
 }
+const crypto = require("crypto");
+// QA page-weight fix: inline CSS + the 650 KB lesson/app script move out of every HTML page into
+// content-hashed files under /assets/v/ (served with immutable caching, see netlify.toml).
+const hash8 = b => crypto.createHash("sha256").update(b).digest("hex").slice(0, 10);
+const ASSETS = {}; // filled in main() once dist/ exists
+function externalize(h, isHome) {
+  h = h.replace(/<style>[\s\S]*?<\/style>\s*<style>[\s\S]*?<\/style>|<style>[\s\S]*?<\/style>/, m => m === ASSETS.cssSrc ? `<link rel="stylesheet" href="${ASSETS.css}">` : m);
+  h = h.split(ASSETS.jsTag).join(`<script src="${ASSETS.js}"></script>`);
+  h = h.replace('<script src="/data.js"></script>', `<script src="${ASSETS.data}"></script>`);
+  if (!isHome) h = h.replace(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/, (m, j) => { try { const d = JSON.parse(j); d["@graph"] = d["@graph"].filter(x => x["@type"] === "Organization" || x["@type"] === "WebSite"); return `<script type="application/ld+json">${JSON.stringify(d)}</script>`; } catch (e) { return m; } });
+  return h;
+}
+function prepAssets() {
+  const vdir = path.join(dist, "assets", "v"); fs.mkdirSync(vdir, { recursive: true });
+  const cssM = shell.match(/<style>[\s\S]*?<\/style>\s*<style>[\s\S]*?<\/style>/) || shell.match(/<style>[\s\S]*?<\/style>/);
+  ASSETS.cssSrc = cssM[0];
+  const css = [...cssM[0].matchAll(/<style>([\s\S]*?)<\/style>/g)].map(x => x[1]).join("\n");
+  const jsM = [...shell.matchAll(/<script>([\s\S]*?)<\/script>/g)].find(x => x[1].includes("LESSON SCRIPTS"));
+  ASSETS.jsTag = jsM[0];
+  const coursesBuf = fs.readFileSync(path.join(root, "courses.js")); const cName = `/assets/v/courses.${hash8(coursesBuf)}.js`;
+  fs.writeFileSync(path.join(dist, cName), coursesBuf);
+  const js = jsM[1].replace('sc.src="/courses.js"', `sc.src="${cName}"`);
+  const dataBuf = fs.readFileSync(path.join(root, "data.js"));
+  for (const [k, ext, body] of [["css", "css", css], ["js", "js", js], ["data", "js", dataBuf]]) {
+    const name = `/assets/v/${k === "js" ? "app" : k}.${hash8(body)}.${ext}`; fs.writeFileSync(path.join(dist, name), body); ASSETS[k] = name;
+  }
+  if (js === jsM[1]) console.warn("WARN: courses.js loader not rewritten");
+}
+const NAME_FALLBACK = "Alex";
+const fixNames = s => String(s || "").split("__NAME__").join(NAME_FALLBACK);
 const { buildGuides } = require("./guides.js");
 const { score, textOf } = require("./content-quality.js");
 const escAttr = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
@@ -41,10 +71,11 @@ const escText = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 function setMeta(html, sel, re, val) { return re.test(html) ? html.replace(re, val) : html; }
 
 function build(route, m) {
-  if (route === "/") return shell.replace(/<html lang="en">/, '<html lang="en" data-prerendered="/" data-view="home" data-canonical="https://languagepath.org/">'); // home keeps its hand-written global meta + markup
+  m = { ...m, title: fixNames(m.title), desc: fixNames(m.desc) };
+  if (route === "/") return externalize(shell.replace(/<html lang="en">/, '<html lang="en" dir="ltr" data-prerendered="/" data-view="home" data-canonical="https://languagepath.org/">'), true); // home keeps its hand-written global meta + markup
   const canon = ORIGIN + (route === "/" ? "/" : route);
   let h = shell;
-  h = h.replace(/<html lang="[^"]*">/, `<html lang="${escAttr(m.lang || "en")}" dir="${escAttr(m.dir || "ltr")}" data-prerendered="${escAttr(route)}" data-view="${escAttr(m.view)}" data-canonical="${escAttr(canon)}">`);
+  h = h.replace(/<html lang="[^"]*">/, `<html lang="en" dir="ltr" data-pack-dir="${escAttr(m.packDir || "ltr")}" data-prerendered="${escAttr(route)}" data-view="${escAttr(m.view)}" data-canonical="${escAttr(canon)}">`);
   h = h.replace(/<title>[^<]*<\/title>/, `<title>${escText(m.title)}</title>`);
   h = h.replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${escAttr(m.desc)}">`);
   h = h.replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${escAttr(m.title)}">`);
@@ -53,7 +84,8 @@ function build(route, m) {
   h = h.replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${escAttr(canon)}">`);
   h = h.replace(/(<meta name="twitter:title" content=")[^"]*(">)/, `$1${escAttr(m.title)}$2`);
   h = h.replace(/(<meta name="twitter:description" content=")[^"]*(">)/, `$1${escAttr(m.desc)}$2`);
-  if (m.guide) h = h.replace("<!--LP_GUIDE-->", () => m.guide);
+  if (m.guide) h = h.replace("<!--LP_GUIDE-->", () => fixNames(m.guide));
+  if (m.viewHTML) m = { ...m, viewHTML: fixNames(m.viewHTML) };
   if (m.ads) h = h.replace(/<html ([^>]*)>/, '<html $1 data-ads="1">');
   if (m.view && m.view !== "home" && m.viewHTML) {
     // activate the rendered view in static markup; the app re-renders it on boot
@@ -63,7 +95,7 @@ function build(route, m) {
   } else if (m.view === "home" && m.viewHTML) {
     h = h.replace(/<section class="view active" id="view-home">[\s\S]*?\n  <\/section>\n(?=\s*(?:<!--[\s\S]*?-->\s*)?<section class="view" id="view-lessons">)/, () => `<section class="view active" id="view-home">${m.viewHTML}</section>\n`);
   }
-  return h;
+  return externalize(h, false);
 }
 
 (async () => {
@@ -80,6 +112,7 @@ function build(route, m) {
     }
   })(root, dist);
 
+  prepAssets();
   const srv = await serve(); const base = `http://127.0.0.1:${srv.address().port}`;
   const browser = await puppeteer.launch({ executablePath: CHROME, headless: true, args: ["--no-sandbox", "--disable-gpu"] });
   const report = []; const CONC = 6; let i = 0;
@@ -101,7 +134,7 @@ function build(route, m) {
           return {
             title: document.title,
             desc: (document.querySelector('meta[name="description"]') || {}).content || "",
-            lang: document.documentElement.lang, dir: document.documentElement.getAttribute("dir"),
+            lang: document.documentElement.lang, dir: document.documentElement.getAttribute("dir"), packDir: document.documentElement.getAttribute("data-pack-dir"),
             view, viewHTML: clone ? clone.innerHTML : "",
             h1: (act && (act.querySelector("h1,h2") || {}).textContent || "").trim(),
             textLen: act ? act.innerText.length : 0,
@@ -125,6 +158,9 @@ function build(route, m) {
   await browser.close(); srv.close();
 
   for (const r of report) if (r.route === "/travel") { r.title = "Travel phrases by city — speak the local language | LanguagePath"; r.desc = "Free pocket phrase guides for travellers: the sentences you actually need in Dubai, Istanbul, Lisbon, Madrid, Beijing and more, with pronunciation. No sign-up."; }
+  // QA: hand-written distinct titles for app views that share a screen
+  const TITLE_OVERRIDE = { "/path": "Your learning path — step-by-step language plan | LanguagePath", "/voyage": "Language voyage map — explore the world's languages | LanguagePath" };
+  for (const r of report) if (TITLE_OVERRIDE[r.route]) r.title = TITLE_OVERRIDE[r.route];
   // Prefer curated topic titles/descriptions; then make every title unique.
   for (const r of report) if (r.curated && r.curated.title && !r.route.startsWith("/travel")) { r.title = r.curated.title + " — LanguagePath"; if (r.curated.meta) r.desc = r.curated.meta; }
   const seen = { [(shell.match(/<title>([^<]*)<\/title>/) || [])[1]]: [{ route: "/", title: "" }] };

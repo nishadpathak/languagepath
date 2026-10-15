@@ -1764,6 +1764,8 @@ header .logo{height:40px;width:auto}
 .lp-city{display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px;color:#fff;text-decoration:none;transition:.15s}
 .lp-city small{color:#9fb0d3}.lp-city span{color:#2DD4BF;font-weight:700;font-size:13px;margin-top:6px}
 /* ad slot: reserves fixed height only once ads are accepted, so no empty box and no layout shift */
+html,body{overflow-x:clip;max-width:100%}
+html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir="rtl"] .inline-tr{unicode-bidi:plaintext}
 .lp-ad{display:none}
 .ads-on .lp-ad{display:block;height:120px;margin:18px 0;border-radius:14px;overflow:hidden}
 @media(max-width:640px){.lp-hero{padding:24px 18px 20px !important}.lp-grid{grid-template-columns:repeat(2,1fr)}.lp-cities{grid-template-columns:1fr 1fr}.ads-on .lp-ad{height:270px}.lp-search .btn{padding:10px 14px}}
@@ -1871,7 +1873,6 @@ header .logo{height:40px;width:auto}
       <div class="lp-head"><div><h2>Popular languages</h2><p>Pick one and build your first sentence in under a minute.</p></div><button class="lp-more" onclick="openHub()">All languages →</button></div>
       <div class="lp-grid" id="lpPopGrid"></div>
     </div>
-    <div class="lp-ad" id="lpAdTop" aria-hidden="true"></div>
     <div class="lp-sec lp-travel" id="lpTravel">
       <div class="lp-head"><div><h2>Travel phrasebooks</h2><p>The phrases you actually need — greetings, taxis, restaurants, emergencies — for the city you're visiting.</p></div><a class="lp-more" href="/travel">All destinations →</a></div>
       <div class="lp-cities" id="lpCities"></div>
@@ -3554,7 +3555,7 @@ function updateMeta(view){
     const can=document.querySelector('link[rel="canonical"]'); if(can) can.setAttribute("href","https://languagepath.org/"+activeLang+(v&&v!=="home"?"/"+v:""));
   }catch(e){}
 }
-function applyPackDir(){ try{ document.documentElement.setAttribute("dir", activeDir||"ltr"); }catch(e){} }
+function applyPackDir(){ try{ const h=document.documentElement; h.setAttribute("dir","ltr"); h.setAttribute("data-pack-dir", activeDir||"ltr"); }catch(e){} } /* QA: page stays LTR (English UI); only target-language text is RTL via <bdi dir=rtl>/dir=auto */
 function activateLang(l, done){
   if(!PACKS[l])return;
   if(PACKS[l]._lazy){ ensureCourses(()=>{ activateLang(l, done); }); return; }
@@ -3767,7 +3768,7 @@ function renderLibrary(){
   // curated topic pages (real content, list them as popular topics)
   const topics=Object.keys(CURATED).map(k=>{const [ln,slug]=k.split("|");const name=PACKS[ln]?PACKS[ln].name:ln;return {lang:ln,slug,name,title:CURATED[k].title};});
   const topicCards=topics.map(t=>`<a href="/${t.lang}/${t.slug}" style="display:block;text-decoration:none;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--txt)"><b>${t.title}</b><div style="font-size:11.5px;color:var(--muted)">${t.name}</div></a>`).join("");
-  const skills=[["Grammar","ser-vs-estar"],["Vocabulary","food-vocabulary"],["Speaking","introduce-yourself"],["Pronunciation","pronunciation"],["Listening","listening"],["Situations","restaurant"]];
+  const skills=[["Grammar","ser-vs-estar"],["Vocabulary","pocket"],["Speaking","introduce-yourself"],["Pronunciation","sound"],["Listening","listen"],["Situations","dialog"]];
   const skillCards=skills.filter(s=>s[1]).map(s=>`<a href="/spanish/${s[1]}" style="display:block;text-decoration:none;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:var(--txt)"><b>${s[0]}</b><div style="font-size:11.5px;color:var(--muted)">Spanish</div></a>`).join("");
   sec.innerHTML=`<div class="hero" style="margin-bottom:8px"><span class="k">LanguagePath</span><h1 class="t" style="margin:2px 0 6px">Learning Library</h1><div class="d">A structured path into every language we teach — pick a language, then a skill or a real-life situation, and start building real sentences.</div></div>
     <div class="card"><h3>Browse by language <span class="duepill">${langs.length}</span></h3><div class="hero-langs" style="margin-top:8px">${langCards}</div><p style="color:var(--muted);font-size:12.5px;margin-top:10px">Every course builds sentences you can say, hear and rebuild — not phrase lists to memorise.</p></div>
@@ -6068,7 +6069,7 @@ function renderResources(){
       <p style="color:var(--muted);font-size:12.5px">Day to day: keep <b>Phrases</b> open, and drop anything new into <b>Chunks</b>.</p>
     </div>
     <div class="card"><h3>📺 Watch & listen (free)</h3>
-      ${RESOURCES.map(r=>`<a class="reslink" href="${r.url}" target="_blank" rel="noopener"><span class="ricon">${r.icon}</span><span><span class="rt">${r.t}</span><br><span class="rd">${r.d}</span></span><span class="go">open ↗</span></a>`).join("")}
+      ${RESOURCES.filter(r=>r&&r.url&&r.url!=="undefined").map(r=>`<a class="reslink" href="${r.url}" target="_blank" rel="noopener"><span class="ricon">${r.icon}</span><span><span class="rt">${r.t}</span><br><span class="rd">${r.d}</span></span><span class="go">open ↗</span></a>`).join("")}
       <p style="color:var(--muted);font-size:12px;margin-top:6px">Tip (comprehensible input): pick videos you can follow ~70–90% of and actually enjoy — that sweet spot is where listening improves most.</p>
     </div>`;
 }
@@ -6078,7 +6079,7 @@ function renderResources(){
 /* generic course engine — reuses the lesson-card look, audio in the course's language */
 let cCourse=null,cL=null,cIdx=0,cRev={};
 function courseDone(id){ state.courses=state.courses||{}; state.courses[id]=state.courses[id]||[]; return state.courses[id]; }
-function bdi(co,txt){ return co.dir==="rtl"?`<bdi dir="rtl">${txt}</bdi>`:txt; }
+function bdi(co,txt){ return co.dir==="rtl"?`<bdi dir="rtl"${co.tts?` lang="${String(co.tts).split("-")[0]}"`:""}>${txt}</bdi>`:txt; }
 function renderCourse(id){
   const co=COURSES[id], done=courseDone(id);
   document.getElementById(id+"List").innerHTML=`
@@ -8693,6 +8694,22 @@ let USER_NAME=localStorage.getItem("user_name_v1")||"Alex";
 let PRISTINE=null;
 function escHtml(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function subNames(obj,name){ return JSON.parse(JSON.stringify(obj).split("__NAME__").join(JSON.stringify(String(name)).slice(1,-1))); }
+/* QA: on a prerendered URL keep the server-rendered (unique) title/description/canonical; the SPA
+   used to overwrite them with the generic view title, creating duplicates (/path vs /voyage, /x/sound vs /x/pronunciation). */
+(function(){ try{ const h=document.documentElement, pre=(h.dataset.prerendered||"").replace(/\/+$/,"")||"/"; if(!h.dataset.prerendered)return;
+  const T=document.title, md=document.querySelector('meta[name="description"]'), D=md&&md.content, cn=document.querySelector('link[rel="canonical"]'), C=cn&&cn.getAttribute("href");
+  const onPre=()=>(location.pathname.replace(/\/+$/,"")||"/")===pre;
+  const fix=()=>{ if(!onPre())return; if(document.title!==T)document.title=T; if(md&&md.content!==D)md.content=D; if(cn&&cn.getAttribute("href")!==C)cn.setAttribute("href",C); };
+  new MutationObserver(fix).observe(document.head,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["content","href"]});
+}catch(e){} })();
+function lpFixNames(root){ try{ const n=((typeof USER_NAME!=="undefined"&&USER_NAME)||"Alex").trim()||"Alex";
+  const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,null); let t; const hits=[];
+  while((t=w.nextNode())) if(t.nodeValue.indexOf("__NAME__")>=0) hits.push(t);
+  hits.forEach(t=>{ t.nodeValue=t.nodeValue.split("__NAME__").join(n); });
+  (root||document.body).querySelectorAll("[placeholder*='__NAME__'],[title*='__NAME__'],[aria-label*='__NAME__']").forEach(e=>{["placeholder","title","aria-label"].forEach(a=>{const v=e.getAttribute(a); if(v&&v.indexOf("__NAME__")>=0)e.setAttribute(a,v.split("__NAME__").join(n));});});
+}catch(e){} }
+(function(){ function arm(){ try{ lpFixNames(document.body); new MutationObserver(ms=>{ for(const m of ms){ for(const nd of m.addedNodes){ if(nd.nodeType===1)lpFixNames(nd); else if(nd.nodeType===3&&nd.nodeValue.indexOf("__NAME__")>=0&&nd.parentNode)lpFixNames(nd.parentNode);} if(m.type==="characterData"&&m.target.nodeValue.indexOf("__NAME__")>=0&&m.target.parentNode)lpFixNames(m.target.parentNode);} }).observe(document.body,{childList:true,subtree:true,characterData:true}); }catch(e){} }
+  if(document.body)arm(); else document.addEventListener("DOMContentLoaded",arm); })();
 function applyUserName(){
   if(!PRISTINE){ PRISTINE={}; BUILTIN_LANGS.forEach(l=>{ PRISTINE[l]={lessons:PACKS[l].lessons,dialogues:PACKS[l].dialogues}; }); }
   const n=(USER_NAME||"Alex").trim()||"Alex";
