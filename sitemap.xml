@@ -623,4 +623,14 @@
   <url><loc>https://languagepath.org/tr/greetings</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://languagepath.org/tr/pronunciation</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://languagepath.org/mandarin/travel</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/wetex-2026/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/gcc-power-2026/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/saudi-elenex-2026/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/ep-shanghai-2026/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/world-future-energy-summit-2027/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/elecrama-2027/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/middle-east-energy-2027/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/power-and-utilities-india-2027/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/events/visiting/epower-2027/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
 </urlset>

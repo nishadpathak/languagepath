@@ -46,6 +46,11 @@ for (const u of urls) {
   if (!parts.length) continue;
   const [lang, seg] = parts;
   if (SPECIAL.has(lang)) continue;
+  if (lang === "events") { // static trade-show pages: must exist in dist as /events/visiting/<slug>/index.html
+    const f = require("path").join(__dirname, "..", "dist", ...parts, "index.html");
+    if (parts[1] !== "visiting" || parts.length > 3 || !require("fs").existsSync(f)) errs.push("BAD EVENTS URL or missing page: " + u);
+    continue;
+  }
   if (lang === "travel") {
     if (parts.length === 1) continue; // /travel landing page
     if (parts.length === 3 && travelCityPairs.has(parts[1] + "/" + parts[2])) continue;

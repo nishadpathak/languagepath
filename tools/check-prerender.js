@@ -19,7 +19,7 @@ const urls = [...fs.readFileSync(path.join(root, "sitemap.xml"), "utf8").matchAl
 const titles = {}, descs = {};
 let n = 0;
 for (const r of urls) {
-  const f = /\.[a-z]+$/i.test(r) ? path.join(dist, r) : (r === "/" ? path.join(dist, "index.html") : path.join(dist, r + ".html"));
+  const f = r.endsWith("/") && r !== "/" ? path.join(dist, r, "index.html") : /\.[a-z]+$/i.test(r) ? path.join(dist, r) : (r === "/" ? path.join(dist, "index.html") : path.join(dist, r + ".html"));
   if (!fs.existsSync(f)) { errs.push("missing " + r); continue; }
   if (/\.[a-z]+$/i.test(r)) continue; n++;
   const h = fs.readFileSync(f, "utf8");
@@ -28,7 +28,7 @@ for (const r of urls) {
   if (!t) errs.push("no title " + r); else (titles[t] = titles[t] || []).push(r);
   if (!d) errs.push("no description " + r); else (descs[d] = descs[d] || []).push(r);
   if (c !== "https://languagepath.org" + r) errs.push("canonical " + r + " -> " + c);
-  const act = h.match(/<section class="view active" id="view-[a-z]+">([\s\S]*?)<\/section>/);
+  const act = r.startsWith("/events/") ? h.match(/<main>([\s\S]*?)<\/main>/) : h.match(/<section class="view active" id="view-[a-z]+">([\s\S]*?)<\/section>/);
   const txt = act ? act[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : "";
   if (txt.length < 80) errs.push("thin/empty content " + r + " (" + txt.length + ")");
 }

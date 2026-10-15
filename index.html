@@ -9145,6 +9145,15 @@ if(PACKS[activeLang] && PACKS[activeLang]._lazy){
     hero.insertAdjacentHTML("afterend",`<div class="lp-pack-card" style="margin:12px 0;padding:12px 14px;border-radius:12px;background:var(--soft,#f3f7fd);font-size:14px">📄 <b>Printable ${travelDest.name} Phrase Pack</b> — every phrase on this page plus dialogues and etiquette, as a 10-page PDF for your bag. $9 · all 8 cities $19. <a href="/pro.html#packs" style="color:var(--accent);font-weight:700;text-decoration:none">Get the PDF →</a></div>`);
   }catch(e){} }
   lpPackCard(); document.addEventListener("DOMContentLoaded",lpPackCard);window.addEventListener("load",()=>setTimeout(lpPackCard,300));
+  // 3b) compact phrase-pack / Pro callout on language hubs, pocket phrasebooks and travel topics (one line, below the content)
+  const LP_LANG_PACKS={arabic:[["dubai","Dubai"],["abu-dhabi","Abu Dhabi"]],mandarin:[["shanghai","Shanghai"],["beijing","Beijing"]],spanish:[["madrid","Madrid"],["barcelona","Barcelona"]],catalan:[["barcelona","Barcelona"]],tr:[["istanbul","Istanbul"]],portuguese:[["lisbon","Lisbon"]]};
+  window.lpUpsellLine=function(lang){ const pk=LP_LANG_PACKS[lang];
+    const msg=pk?`📄 Printable phrase pack${pk.length>1?"s":""} for ${pk.map(x=>x[1]).join(" and ")}: $9 each, all 8 cities $19.`:`⭐ LanguagePath Pro: no ads, the whole course offline, and more AI practice. $4.99/month or $29/year.`;
+    return `<p class="lp-upsell" style="margin:10px 0 0;padding:9px 12px;border:1px solid var(--line);border-radius:10px;font-size:13px;color:var(--muted)">${msg} <a href="/pro.html${pk?"#packs":""}" style="color:var(--accent);font-weight:700;text-decoration:none">${pk?"Get the PDF":"See Pro"} →</a></p>`; };
+  const _tps=tpRenderSlots;
+  tpRenderSlots=function(v){ _tps.apply(this,arguments); try{ if(lpIsPro())return;
+    const id=v==="home"?"tpHome":(v==="pocket"?"tpPocket":(v==="topic"?"tpTopic":null)); const el=id&&document.getElementById(id);
+    if(el&&!el.querySelector(".lp-upsell")&&(v!=="topic"||el.innerHTML)) el.insertAdjacentHTML("beforeend",lpUpsellLine(activeLang)); }catch(e){} };
   // 4) Pro-only extras
   window.lpProExportCSV=function(){ if(!lpIsPro()){ location.href="/pro.html?from=export"; return; }
     const rows=[["language","lessons_done","words_in_review","streak"]]; for(const l of Object.keys(MASTER||{})){ const st=MASTER[l]; if(!st||typeof st!=="object")continue; rows.push([l,(st.done||[]).length,Object.keys(st.srs||{}).length,st.streak||0]); }
