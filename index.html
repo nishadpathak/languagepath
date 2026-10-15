@@ -1780,6 +1780,8 @@ html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir=
 #consent .cx{display:none}
 @media(max-width:640px){#consent .crow{flex-wrap:wrap !important}#consent .cbtns{width:100%}#consent .cbtns button{flex:1}}
 /* written guides + ad gating */
+/* no-ads rule: never inside listening, speaking or sentence-building exercises */
+#view-lessons .google-auto-placed,#view-lessons ins.adsbygoogle,#view-recall .google-auto-placed,#view-recall ins.adsbygoogle,#view-build .google-auto-placed,#view-build ins.adsbygoogle,#view-listen .google-auto-placed,#view-listen ins.adsbygoogle,#view-shadow .google-auto-placed,#view-shadow ins.adsbygoogle,#view-dialog .google-auto-placed,#view-dialog ins.adsbygoogle,#view-quiz .google-auto-placed,#view-quiz ins.adsbygoogle,#view-chat .google-auto-placed,#view-chat ins.adsbygoogle,#view-seeit .google-auto-placed,#view-seeit ins.adsbygoogle,#view-reallife .google-auto-placed,#view-reallife ins.adsbygoogle,#view-sound .google-auto-placed,#view-sound ins.adsbygoogle{display:none !important}
 .ads-off .google-auto-placed,.ads-off ins.adsbygoogle,.ads-off .adsbygoogle-noablate,.ads-off .lp-ad{display:none !important}
 .lp-guide{max-width:820px;margin:28px auto 10px;padding:26px 24px;background:var(--panel);border:1px solid var(--line);border-radius:18px;color:var(--txt);line-height:1.7;font-size:15.5px}
 .lp-guide h2{font-size:21px;margin:26px 0 8px;color:var(--txt)}.lp-guide h2.lpg-h{margin-top:0;font-size:25px}
@@ -8779,10 +8781,12 @@ function markActivation(){
 function applyTheme(t){ document.documentElement.setAttribute("data-theme",t); try{localStorage.setItem("theme",t);}catch(e){} const b=document.getElementById("themeBtn"); if(b)b.textContent=(t==="light"?"🌙":"☀️"); const lo=document.querySelector("header .logo"); if(lo) lo.src=(t==="dark"?"/logo-header-light.png":"/logo-header.png"); }
 function toggleTheme(){ const cur=document.documentElement.getAttribute("data-theme")||"dark"; applyTheme(cur==="light"?"dark":"light"); }
 function initTheme(){ const t=document.documentElement.getAttribute("data-theme")||"dark"; const b=document.getElementById("themeBtn"); if(b)b.textContent=(t==="light"?"🌙":"☀️"); const lo=document.querySelector("header .logo"); if(lo) lo.src=(t==="dark"?"/logo-header-light.png":"/logo-header.png"); }
+let __cfLoaded=false;
+function lpCfBeacon(){ if(!CF_BEACON_TOKEN||__cfLoaded)return; __cfLoaded=true; const s=document.createElement("script"); s.defer=true;
+  s.src="https://static.cloudflareinsights.com/beacon.min.js"; s.setAttribute("data-cf-beacon",JSON.stringify({token:CF_BEACON_TOKEN})); document.head.appendChild(s); }
 function bootAnalytics(){
-  if(CF_BEACON_TOKEN){ const s=document.createElement("script"); s.defer=true;
-    s.src="https://static.cloudflareinsights.com/beacon.min.js";
-    s.setAttribute("data-cf-beacon",JSON.stringify({token:CF_BEACON_TOKEN})); document.head.appendChild(s); }
+  let ok=false; try{ ok=localStorage.getItem("lp_ads_consent")==="accepted"; }catch(e){}
+  if(ok) lpCfBeacon();   // Cloudflare beacon loads only after consent (also fired from the consent "accept" handler)
   TRACK_ON=true;
 }
 /* Privacy-first ad-consent gate. AdSense (Auto ads) is only loaded after the visitor agrees,
@@ -8824,7 +8828,7 @@ function initConsent(){
   const box=document.getElementById("consent"); if(!box) return;
   box.style.display="block";
   const yes=document.getElementById("consentYes"), no=document.getElementById("consentNo");
-  if(yes) yes.addEventListener("click",()=>{ try{localStorage.setItem(ADS_CONSENT_LS,"accepted");}catch(e){} loadAdsScript(); loadAnalytics(); box.style.display="none"; try{tpObserveWidgets();}catch(e){} });
+  if(yes) yes.addEventListener("click",()=>{ try{localStorage.setItem(ADS_CONSENT_LS,"accepted");}catch(e){} loadAdsScript(); loadAnalytics(); lpCfBeacon(); box.style.display="none"; try{tpObserveWidgets();}catch(e){} });
   if(no) no.addEventListener("click",()=>{ try{localStorage.setItem(ADS_CONSENT_LS,"rejected");}catch(e){} box.style.display="none"; });
 }
 const KNOWN_LS="known_langs_v1", BRIDGE_CACHE_LS="ai_bridge_cache_v1";

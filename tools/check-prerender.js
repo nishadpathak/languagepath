@@ -36,3 +36,9 @@ for (const [t, rs] of Object.entries(titles)) if (rs.length > 1) errs.push("dupl
 for (const [d, rs] of Object.entries(descs)) if (rs.length > 1) errs.push("duplicate description: " + rs.join(", "));
 if (errs.length) { console.log("PRERENDER CHECK FAILED (" + errs.length + "):"); errs.slice(0, 30).forEach(e => console.log("  " + e)); process.exit(1); }
 console.log("PRERENDER CHECK PASS — " + n + " prerendered routes, unique titles/descriptions, self-canonicals, real content, real 404, no catch-all.");
+{ // Home guard: dist/index.html must be the prerendered home, not the raw ~800 KB app shell.
+  const h = fs.readFileSync(path.join(dist, "index.html"), "utf8"), kb = Buffer.byteLength(h) / 1024;
+  const bad = []; if (kb > 150) bad.push("dist/index.html is " + kb.toFixed(0) + " KB (> 150 KB)"); if (!/data-prerendered="\/"/.test(h)) bad.push('dist/index.html lacks data-prerendered="/"');
+  if (!/<link rel="canonical" href="https:\/\/languagepath\.org\/">/.test(h)) bad.push("dist/index.html canonical is not /");
+  if (bad.length) { console.error("HOME GUARD FAIL — " + bad.join("; ")); process.exit(1); } else console.log("HOME GUARD PASS — dist/index.html " + kb.toFixed(0) + " KB, prerendered /");
+}
