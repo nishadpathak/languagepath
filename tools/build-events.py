@@ -221,6 +221,7 @@ def page(s):
     lk = {"ar": "/arabic", "zh": "/mandarin", "hi": "/hindi"}[s["lang"]]
     b.append(f'<p>Want to go further? Start the free <a href="{lk}">{nm} course</a> or browse the <a href="/travel">travel phrasebooks by city</a>.</p>')
     b.append(upsell(s))
+    b.append('<div class="card up"><h3>💼 Business Travel Kit</h3><p>Meeting phrases and etiquette for Saudi Arabia &amp; the UAE, China and India in one print-ready PDF: greetings, business cards, banquets, numbers and money, taxis and hotels. $19 one-time.</p><p><a class="btn" href="/business-travel-kit/">See what\'s inside</a></p></div>')
     b.append(f'<h2>For exhibitors and engineers</h2><p>Planning stand visits, technical meetings or supplier sourcing at {E(s["name"])}? TransformerPath has an engineering-focused guide to the show: <a href="https://transformerpath.com/events/{s["slug"]}/">{E(s["name"])} on TransformerPath</a>.</p>')
     b.append('<p class="disc">Questions or corrections: <a href="/contact.html">contact LanguagePath</a> or email <a href="mailto:languagepathorg@gmail.com">languagepathorg@gmail.com</a>.</p>')
     b.append("</main>\n" + FOOT)
@@ -247,3 +248,38 @@ x = re.sub(r"\s*<url><loc>https://languagepath.org/events/[^<]*</loc>.*?</url>",
 add = "".join(f"\n  <url><loc>https://languagepath.org/events/visiting/{u}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>" for u in [""] + [s["slug"] + "/" for s in SHOWS])
 x = x.replace("\n</urlset>", add + "\n</urlset>"); open(sm, "w", encoding="utf8").write(x)
 print("events:", len(SHOWS), "pages + hub")
+
+# ---- Business Travel Kit sales page (/business-travel-kit/) ----
+def kit_page():
+    import subprocess
+    secs = json.loads(subprocess.check_output(["node", "-e", "process.stdout.write(JSON.stringify(require('./tools/business-kit.js').SECTIONS))"], cwd=ROOT))
+    url = "https://languagepath.org/business-travel-kit/"
+    t = "Business Travel Kit: phrases and etiquette for the Gulf, China and India (PDF) | LanguagePath"
+    d = "A print-ready PDF for business travellers: Gulf Arabic, Mandarin and Hindi meeting phrases with pronunciation, plus etiquette for majlis meetings, banquets, business cards, WeChat and payments. $19 one-time."
+    n = [sum(len(g[1]) for g in s["groups"]) for s in secs]
+    prod = {"@context": "https://schema.org", "@type": "Product", "name": "Business Travel Kit (PDF)", "description": d, "brand": {"@type": "Brand", "name": "LanguagePath"},
+            "offers": {"@type": "Offer", "price": "19.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": url}}
+    extra = '<script type="application/ld+json">' + json.dumps(prod) + "</script><style>.buy{display:inline-block;padding:11px 20px;border-radius:999px;background:var(--accent);color:var(--onAccent);font-weight:800;text-decoration:none}.buy[aria-disabled=true]{opacity:.55;cursor:not-allowed}</style>"
+    def sample(s, k=5):
+        rows = s["groups"][0][1][:k]
+        return '<table class="ph"><thead><tr><th>English</th><th>' + E(s["lang"]) + '</th><th>Say it</th></tr></thead><tbody>' + "".join(
+            f'<tr><td>{E(r[2])}</td><td lang="{s["bcp"]}" dir="{s["dir"]}" class="nat">{E(r[0])}</td><td class="tl">{E(r[1])}</td></tr>' for r in rows) + "</tbody></table>"
+    b = [head(t, d, url, extra)]
+    b.append(f'<h1>Business Travel Kit</h1><p class="disc">Last updated {UPD_TXT}</p><p class="lead">One print-ready PDF for business trips to the Gulf, China and India: {n[0]} Gulf Arabic, {n[1]} Mandarin and {n[2]} Hindi phrases with English-friendly pronunciation, and the etiquette that matters in meetings.</p>')
+    b.append('<div class="card"><p style="font-size:22px;font-weight:800;margin:0">$19 <span style="font-size:14px;color:var(--muted);font-weight:400">one-time · 18-page PDF · yours to keep</span></p><p><a class="buy" data-sku="pack_business_kit" href="#">Get the Business Travel Kit — $19</a></p><p class="disc">Secure checkout by Stripe. After paying you get a download link straight away, and you can restore it any time on <a href="/pro-restore.html">Restore purchase</a>.</p></div>')
+    b.append("<h2>What's inside</h2><ul>")
+    for s in secs:
+        b.append(f'<li><b>{E(s["title"])} ({E(s["lang"])})</b>: {", ".join(E(g[0]).lower() for g in s["groups"])}; etiquette on {", ".join(E(e[0]).lower() for e in s["etiquette"])}; small-talk do\'s and don\'ts.</li>')
+    b.append("</ul><p>Each section covers meeting basics, numbers and money, taxis and hotels, and a do's and don'ts list for small talk, so you can walk into a first meeting prepared. The India section also explains the Indian business English you will hear, and how lakhs and crores work.</p>")
+    b.append("<h2>A taste of the phrases</h2>")
+    for s in secs:
+        b.append(f"<h3>{E(s['title'])}</h3>" + sample(s))
+    b.append("<h2>Who it's for</h2><p>Engineers, sales teams and managers visiting trade shows, suppliers or clients; anyone going to a first meeting in Riyadh, Dubai, Shanghai or Delhi who wants to open politely and avoid the common mistakes. Visiting a show? See our <a href=\"/events/visiting/\">trade-show guides</a>.</p>")
+    b.append("<h2>Questions</h2><p><b>Is there audio?</b> The PDF has pronunciation guides; you can hear many of these phrases free in our <a href=\"/arabic\">Arabic</a>, <a href=\"/mandarin\">Mandarin</a> and <a href=\"/hindi\">Hindi</a> courses.</p><p><b>Can I print it?</b> Yes — it is A4 and designed to print. It is for personal use.</p><p><b>Something wrong?</b> Email <a href=\"mailto:languagepathorg@gmail.com\">languagepathorg@gmail.com</a>.</p>")
+    b.append('</main>\n' + FOOT.replace("</body>", '<script src="/pro-config.js"></script>\n<script>(function(){var L=(window.LP_PRO_CONFIG||{}).links||{};document.querySelectorAll("[data-sku]").forEach(function(a){var u=L[a.dataset.sku];if(u&&/^https:\\/\\/buy\\.stripe\\.com\\//.test(u)){a.href=u;}else{a.removeAttribute("href");a.setAttribute("aria-disabled","true");a.textContent="Checkout opens soon";}});})();</script>\n</body>'))
+    os.makedirs(os.path.join(ROOT, "business-travel-kit"), exist_ok=True)
+    open(os.path.join(ROOT, "business-travel-kit", "index.html"), "w", encoding="utf8").write("\n".join(b))
+    x = open(sm, encoding="utf8").read()
+    if "business-travel-kit/" not in x:
+        x = x.replace("\n</urlset>", "\n  <url><loc>https://languagepath.org/business-travel-kit/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>\n</urlset>"); open(sm, "w", encoding="utf8").write(x)
+kit_page(); print("kit page")

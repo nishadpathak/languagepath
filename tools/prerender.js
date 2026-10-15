@@ -19,7 +19,7 @@ catch (e) { try { puppeteer = require("puppeteer-core"); } catch (e2) { console.
 
 const shell = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const urls = [...fs.readFileSync(path.join(root, "sitemap.xml"), "utf8").matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1].trim());
-const routes = urls.map(u => new URL(u).pathname.replace(/\/+$/, "") || "/").filter(r => !/\.[a-z]+$/i.test(r) && !r.startsWith("/events/")); // .html legal; /events/ are static pages are static files
+const routes = urls.map(u => new URL(u).pathname.replace(/\/+$/, "") || "/").filter(r => !/\.[a-z]+$/i.test(r) && !r.startsWith("/events/") && !fs.existsSync(path.join(root, r, "index.html"))); // .html legal; /events/ are static pages are static files
 
 const STATIC_EXT = /\.(html|js|json|png|svg|ico|txt|xml|webp|jpg|css|webmanifest)$/i;
 const MIME = { ".html": "text/html; charset=utf-8", ".js": "application/javascript", ".json": "application/json", ".png": "image/png", ".svg": "image/svg+xml", ".ico": "image/x-icon", ".txt": "text/plain", ".xml": "application/xml" };

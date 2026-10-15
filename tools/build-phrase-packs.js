@@ -8,6 +8,8 @@
 const fs = require("fs"), path = require("path"), http = require("http");
 const root = path.join(__dirname, ".."), out = path.join(root, "private", "packs");
 const puppeteer = require("puppeteer");
+const { PDFDocument } = require("pdf-lib");
+async function setMeta(f, title) { const d = await PDFDocument.load(fs.readFileSync(f)); d.setTitle(title); d.setAuthor("LanguagePath"); d.setCreator("LanguagePath"); d.setProducer("LanguagePath"); d.setSubject(title); d.setKeywords([]); fs.writeFileSync(f, await d.save()); }
 const { CITY_NOTES } = require("./guides.js");
 const { castilianPack } = require("./es-castilian.js");
 const CHROME = process.env.CHROME_PATH || ["/usr/bin/google-chrome", "/usr/bin/chromium"].find(p => fs.existsSync(p));
@@ -16,6 +18,22 @@ const rich = s => String(s || "").replace(/<(?!\/?(b|i|em|strong)\b)[^>]*>/gi, "
 const icon = fs.readFileSync(path.join(root, "icon.svg"), "utf8").replace(/ width="\d+" height="\d+"/, ' width="64" height="64"');
 const table = (rows, lang) => rows.length ? `<table><thead><tr><th>English</th><th>${esc(lang)}</th><th>Say it</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.en)}</td><td class="tr" dir="auto">${esc(r.tr || r.t)}</td><td class="pr">${esc(r.pr)}</td></tr>`).join("")}</tbody></table>` : "";
 function serve() { return new Promise(res => { const s = http.createServer((q, r) => { let p = decodeURIComponent(q.url.split("?")[0]); let f = path.join(root, p); if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) f = path.join(root, "index.html"); r.writeHead(200, { "content-type": f.endsWith(".js") ? "application/javascript" : f.endsWith(".svg") ? "image/svg+xml" : "text/html; charset=utf-8" }); fs.createReadStream(f).pipe(r); }).listen(0, "127.0.0.1", () => res(s)); }); }
+// Business Travel Kit (private/packs/business-kit.pdf): hand-written content from tools/business-kit.js
+function kitHtml(css) {
+  const { SECTIONS } = require("./business-kit.js");
+  const rows = (sec, rs) => `<table><thead><tr><th>English</th><th>${esc(sec.lang)}</th><th>Say it</th></tr></thead><tbody>${rs.map(r => `<tr><td>${esc(r[2])}</td><td class="tr" lang="${sec.bcp}" dir="${sec.dir}" style="font-family:${sec.font},sans-serif${sec.dir === "rtl" ? ";text-align:right" : ""}">${esc(r[0])}</td><td class="pr">${esc(r[1])}</td></tr>`).join("")}</tbody></table>`;
+  const n = SECTIONS.map(s => s.groups.reduce((a, g) => a + g[1].length, 0));
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Business Travel Kit — LanguagePath</title><meta name="author" content="LanguagePath"><meta name="description" content="Business phrases and etiquette for Saudi Arabia and the UAE, China and India"><style>${css}
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:6mm}.dd ul{margin:1mm 0;padding-left:5mm}.dd h3{margin-top:0}.toc li{margin:2mm 0;font-size:12pt}</style></head><body>
+<div class="cover"><div class="brand">${icon}Language<i>Path</i></div><h1>Business<br>Travel Kit</h1><div class="sub">Phrases &amp; etiquette for Saudi Arabia &amp; the UAE · China · India</div>
+<div class="meta">${n[0]} Gulf Arabic, ${n[1]} Mandarin and ${n[2]} Hindi phrases with pronunciation guides, plus meeting etiquette, numbers and money, taxis and hotels, and small-talk do's and don'ts.<br><br>© 2026 LanguagePath · languagepath.org · For personal use</div></div>
+<section><h2>Inside this kit</h2><ol class="toc">${SECTIONS.map(s => `<li><b>${esc(s.title)}</b> — ${esc(s.lang)}: ${s.groups.map(g => esc(g[0])).join(", ")}; etiquette; small talk</li>`).join("")}</ol>
+<div class="note"><b>How to use it.</b> Say the phrase using the “Say it” column, and point at the original script if you get stuck. Pronunciation guides are approximate. Etiquette notes describe common practice, not rules — follow your host's lead. Hear many of these phrases free at languagepath.org.</div></section>
+${SECTIONS.map(s => `<section class="pb"><h2>${esc(s.title)} · ${esc(s.lang)}</h2><p>${esc(s.intro)}</p>${s.groups.map(g => `<h3>${esc(g[0])}</h3>${rows(s, g[1])}`).join("")}</section>
+<section class="pb"><h2>${esc(s.title)}: etiquette</h2>${s.etiquette.map(e => `<h3>${esc(e[0])}</h3><p>${esc(e[1])}</p>`).join("")}
+<h3>Small talk</h3><div class="dd"><div class="note"><h3>Do</h3><ul>${s.dos.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div><div class="note" style="border-left-color:#e05a47;background:#fdf3f1"><h3>Don't</h3><ul>${s.donts.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div></div></section>`).join("")}
+<section class="pb"><h2>My notes</h2><p>Names, titles and phrases from your meetings.</p><div class="lines">${"<div></div>".repeat(22)}</div></section></body></html>`;
+}
 function html(c, city, d) {
   const p = c.slug === "spain" ? castilianPack(d.pack) : d.pack, L = p.name, notes = CITY_NOTES[c.slug + "/" + city.slug] || [];
   const cats = [...new Set((p.pocket || []).map(x => x.c))];
@@ -51,6 +69,13 @@ ${(p.dialogues || []).length ? `<section class="pb"><h2>Real conversations</h2>$
   fs.mkdirSync(out, { recursive: true });
   const srv = await serve(), base = "http://127.0.0.1:" + srv.address().port;
   const b = await puppeteer.launch({ executablePath: CHROME, args: ["--no-sandbox"] }); const pg = await b.newPage();
+  { const css = html.toString().match(/<style>([\s\S]*?)<\/style>/)[1].replace(/\$\{[^}]*\}/g, "");
+    const kp = await b.newPage(); await kp.setContent(kitHtml(css), { waitUntil: "load" }); await kp.evaluate(() => document.fonts.ready);
+    const kf = path.join(out, "business-kit.pdf");
+    await kp.pdf({ path: kf, format: "A4", printBackground: true, displayHeaderFooter: true, headerTemplate: "<span></span>",
+      footerTemplate: `<div style="font-size:7.5pt;color:#7a879c;width:100%;padding:0 15mm;display:flex;justify-content:space-between;font-family:sans-serif"><span>LanguagePath · Business Travel Kit</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>` });
+    await kp.close(); await setMeta(kf, "Business Travel Kit — LanguagePath"); console.log("PACK business-kit", Math.round(fs.statSync(kf).size / 1024) + " KB");
+    if (process.argv.includes("--kit-only")) { await b.close(); srv.close(); return; } }
   await pg.goto(base + "/", { waitUntil: "networkidle0" }); await pg.evaluate(() => new Promise(r => ensureCourses(r)));
   const data = await pg.evaluate(() => { const o = {}; for (const c of TRAVEL) o[c.lang] = { pack: JSON.parse(JSON.stringify(PACKS[c.lang])), life: cityLifelines(c.lang), hears: cityHears(c.lang) }; return { travel: JSON.parse(JSON.stringify(TRAVEL)), o }; });
   for (const c of data.travel) for (const city of c.cities) {
@@ -58,7 +83,7 @@ ${(p.dialogues || []).length ? `<section class="pb"><h2>Real conversations</h2>$
     const pp = await b.newPage(); await pp.setContent(html(c, city, data.o[c.lang]), { waitUntil: "load" }); await pp.evaluate(() => document.fonts.ready);
     await pp.pdf({ path: f, format: "A4", printBackground: true, displayHeaderFooter: true, headerTemplate: "<span></span>",
       footerTemplate: `<div style="font-size:7.5pt;color:#7a879c;width:100%;padding:0 15mm;display:flex;justify-content:space-between;font-family:sans-serif"><span>LanguagePath · ${city.name} Phrase Pack</span><span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>` });
-    await pp.close(); console.log("PACK", city.slug, Math.round(fs.statSync(f).size / 1024) + " KB");
+    await pp.close(); await setMeta(f, city.name + " Phrase Pack — LanguagePath"); console.log("PACK", city.slug, Math.round(fs.statSync(f).size / 1024) + " KB");
   }
   await b.close(); srv.close();
 })();

@@ -1,11 +1,11 @@
 // Turns verified webhook events into licence records.
-import { SKUS } from "./catalog.mjs";
+import { SKUS, EXTRA_PACKS } from "./catalog.mjs";
 import { PLINKS } from "./links.mjs";
 import { issueLicense, issueDownload } from "./license.mjs";
 import { getSession, putSession, getSubLink, putSubLink } from "./store.mjs";
 const GRACE = 3 * 86400, now = () => Math.floor(Date.now() / 1000);
 const PERIOD = { month: 31 * 86400, year: 366 * 86400 };
-export const downloadsFor = packs => (packs || []).map(c => ({ city: c.replace(/-/g, " ").replace(/\b\w/g, m => m.toUpperCase()), url: "/.netlify/functions/download?t=" + encodeURIComponent(issueDownload(c)) }));
+export const downloadsFor = packs => (packs || []).map(c => ({ city: c.replace(/-/g, " ").replace(/\b\w/g, m => m.toUpperCase()), title: EXTRA_PACKS[c] || (c.replace(/-/g, " ").replace(/\b\w/g, m => m.toUpperCase()) + " Phrase Pack"), url: "/.netlify/functions/download?t=" + encodeURIComponent(issueDownload(c)) }));
 const mint = r => issueLicense({ kind: r.kind, skus: [r.product], packs: r.packs, sid: r.session_id, ...(r.kind === "pro" ? { exp: r.expiry } : {}), iat: now() });
 export async function onCheckout(s) {
   const product = PLINKS[s.payment_link];

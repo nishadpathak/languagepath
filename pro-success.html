@@ -77,7 +77,7 @@
 <script>
 const LIC="lp_pro_license";
 function lpStore(k){ try{ localStorage.setItem(LIC,k); localStorage.setItem("lp_pro_checked",Date.now()); }catch(e){} }
-function lpDl(list){ return (list||[]).map(d=>`<li><a href="${d.url}">${d.city} Phrase Pack (PDF)</a> <span style="color:var(--muted);font-size:13px">— link valid 48 h; restore any time for a new one</span></li>`).join(""); }
+function lpDl(list){ return (list||[]).map(d=>`<li><a href="${d.url}">${d.title||d.city+" Phrase Pack"} (PDF)</a> <span style="color:var(--muted);font-size:13px">— link valid 48 h; restore any time for a new one</span></li>`).join(""); }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 const sid=new URLSearchParams(location.search).get("session_id")||"", out=document.getElementById("out");
 async function go(n){ try{ const r=await fetch("/.netlify/functions/license?session_id="+encodeURIComponent(sid)); const j=await r.json().catch(()=>({}));

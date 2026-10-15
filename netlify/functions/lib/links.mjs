@@ -11,5 +11,6 @@ export const PLINKS = {
   "plink_1UQhVV2YHcFlJstOJGjPSyCM": "pack_dubai",
   "plink_1UQhVZ2YHcFlJstOoPXPWVHq": "pack_abu_dhabi",
   "plink_1UQhVb2YHcFlJstO9qNSM7Xd": "pack_istanbul",
-  "plink_1UQhVe2YHcFlJstObYvpHBqt": "pack_lisbon"
+  "plink_1UQhVe2YHcFlJstObYvpHBqt": "pack_lisbon",
+  "plink_1UQnfw2YHcFlJstOAQfiiNUW": "pack_business_kit"
 };
