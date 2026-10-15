@@ -47,6 +47,7 @@ for (const u of urls) {
   const [lang, seg] = parts;
   if (SPECIAL.has(lang)) continue;
   if (lang === "business-travel-kit" && parts.length === 1) { if (!require("fs").existsSync(require("path").join(__dirname, "..", "dist", "business-travel-kit", "index.html"))) errs.push("missing kit page"); continue; }
+  if (lang === "learn-english") { if (parts.length > 2 || !require("fs").existsSync(require("path").join(__dirname, "..", "dist", ...parts, "index.html"))) errs.push("missing learn-english page: " + u); continue; }
   if (lang === "events") { // static trade-show pages: must exist in dist as /events/visiting/<slug>/index.html
     const f = require("path").join(__dirname, "..", "dist", ...parts, "index.html");
     if (parts[1] !== "visiting" || parts.length > 3 || !require("fs").existsSync(f)) errs.push("BAD EVENTS URL or missing page: " + u);

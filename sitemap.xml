@@ -634,4 +634,10 @@
   <url><loc>https://languagepath.org/events/visiting/middle-east-energy-2027/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://languagepath.org/events/visiting/power-and-utilities-india-2027/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
   <url><loc>https://languagepath.org/events/visiting/epower-2027/</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/learn-english/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/learn-english/hindi/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/learn-english/urdu/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/learn-english/tagalog/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/learn-english/bengali/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://languagepath.org/learn-english/arabic/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
