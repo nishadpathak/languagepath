@@ -2,7 +2,7 @@
 # plus dist/404.html and dist/_redirects (app-only views -> app shell).
 # There is deliberately NO "/* -> /index.html 200" catch-all any more: unknown URLs return a real 404.
 [build]
-  command = "npm ci && node tools/prerender.js"
+  command = "npm ci && npm run build"
   publish = "dist"
 
 [build.environment]
