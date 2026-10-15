@@ -9154,6 +9154,8 @@ if(PACKS[activeLang] && PACKS[activeLang]._lazy){
   tpRenderSlots=function(v){ _tps.apply(this,arguments); try{ if(lpIsPro())return;
     const id=v==="home"?"tpHome":(v==="pocket"?"tpPocket":(v==="topic"?"tpTopic":null)); const el=id&&document.getElementById(id);
     if(el&&!el.querySelector(".lp-upsell")&&(v!=="topic"||el.innerHTML)) el.insertAdjacentHTML("beforeend",lpUpsellLine(activeLang)); }catch(e){} };
+  const lpUpNow=()=>{ try{ if(lpIsPro()||typeof activeLang==="undefined")return; ["tpHome","tpPocket","tpTopic"].forEach(id=>{ const el=document.getElementById(id); if(el&&el.offsetParent!==null&&el.innerHTML.trim()&&!el.querySelector(".lp-upsell")) el.insertAdjacentHTML("beforeend",lpUpsellLine(activeLang)); }); }catch(e){} };
+  lpUpNow(); document.addEventListener("DOMContentLoaded",lpUpNow); window.addEventListener("load",()=>setTimeout(lpUpNow,300));
   // 4) Pro-only extras
   window.lpProExportCSV=function(){ if(!lpIsPro()){ location.href="/pro.html?from=export"; return; }
     const rows=[["language","lessons_done","words_in_review","streak"]]; for(const l of Object.keys(MASTER||{})){ const st=MASTER[l]; if(!st||typeof st!=="object")continue; rows.push([l,(st.done||[]).length,Object.keys(st.srs||{}).length,st.streak||0]); }
