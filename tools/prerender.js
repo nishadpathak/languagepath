@@ -55,13 +55,19 @@ function prepAssets() {
   ASSETS.jsTag = jsM[0];
   const coursesBuf = fs.readFileSync(path.join(root, "courses.js")); const cName = `/assets/v/courses.${hash8(coursesBuf)}.js`;
   fs.writeFileSync(path.join(dist, cName), coursesBuf);
-  const js = jsM[1].replace('sc.src="/courses.js"', `sc.src="${cName}"`);
+  const cdir = path.join(vdir, "courses"); fs.mkdirSync(cdir, { recursive: true }); const CF = {};
+  for (const f of fs.readdirSync(path.join(root, "courses")).filter(f => f.endsWith(".js"))) { const b = fs.readFileSync(path.join(root, "courses", f)); const code = f.slice(0, -3); const n = `/assets/v/courses/${code}.${hash8(b)}.js`; fs.writeFileSync(path.join(dist, n), b); CF[code] = n; }
+  const js = "window.LP_COURSE_FILES=" + JSON.stringify(CF) + ";\n" + jsM[1].replace('sc.src="/courses.js"', `sc.src="${cName}"`);
   const dataBuf = fs.readFileSync(path.join(root, "data.js"));
   for (const [k, ext, body] of [["css", "css", css], ["js", "js", js], ["data", "js", dataBuf]]) {
     const name = `/assets/v/${k === "js" ? "app" : k}.${hash8(body)}.${ext}`; fs.writeFileSync(path.join(dist, name), body); ASSETS[k] = name;
   }
   if (js === jsM[1]) console.warn("WARN: courses.js loader not rewritten");
 }
+// QA: give foreign-script cells in the static guide a lang= (from the page's pack) and dir="rtl" for RTL scripts.
+const RTL_RX = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/, NONLATIN_RX = /[\u0370-\u03FF\u0400-\u04FF\u0530-\u08FF\u0900-\u0DFF\u0E00-\u0FFF\u1000-\u139F\u1780-\u17FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF\uFB1D-\uFEFF]/;
+function tagForeign(html, tts) { const l = String(tts || "").split("-")[0];
+  return html.replace(/ dir="auto">([^<]*)/g, (all, txt) => { if (!NONLATIN_RX.test(txt)) return all; return `${l ? ` lang="${l}"` : ""} dir="${RTL_RX.test(txt) ? "rtl" : "auto"}">${txt}`; }); }
 const NAME_FALLBACK = "Alex";
 const fixNames = s => String(s || "").split("__NAME__").join(NAME_FALLBACK);
 const { buildGuides } = require("./guides.js");
@@ -84,7 +90,7 @@ function build(route, m) {
   h = h.replace(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${escAttr(canon)}">`);
   h = h.replace(/(<meta name="twitter:title" content=")[^"]*(">)/, `$1${escAttr(m.title)}$2`);
   h = h.replace(/(<meta name="twitter:description" content=")[^"]*(">)/, `$1${escAttr(m.desc)}$2`);
-  if (m.guide) h = h.replace("<!--LP_GUIDE-->", () => fixNames(m.guide));
+  if (m.guide) h = h.replace("<!--LP_GUIDE-->", () => tagForeign(fixNames(m.guide), m.tts));
   if (m.viewHTML) m = { ...m, viewHTML: fixNames(m.viewHTML) };
   if (m.ads) h = h.replace(/<html ([^>]*)>/, '<html $1 data-ads="1">');
   if (m.view && m.view !== "home" && m.viewHTML) {
@@ -129,6 +135,7 @@ function build(route, m) {
         const m = await page.evaluate(() => {
           const act = document.querySelector("section.view.active");
           const view = act ? act.id.replace(/^view-/, "") : "home";
+          try { if (act && window.lpTagForeign) window.lpTagForeign(act); } catch (e) {}
           const clone = act ? act.cloneNode(true) : null;
           if (clone) clone.querySelectorAll("script,iframe,ins.adsbygoogle").forEach(n => n.remove());
           return {
@@ -139,6 +146,7 @@ function build(route, m) {
             h1: (act && (act.querySelector("h1,h2") || {}).textContent || "").trim(),
             textLen: act ? act.innerText.length : 0,
             curated: (typeof CURATED !== "undefined" && typeof activeLang !== "undefined") ? (() => { const seg = location.pathname.split("/")[2]; const pk = (typeof PACKS !== "undefined" && PACKS[activeLang]) || {}; const k = Object.keys(CURATED).find(k => { const [a, b] = k.split("|"); return b === seg && (a === activeLang || a === pk.tts || a === (pk.tts || "").split("-")[0]); }); return k ? { title: CURATED[k].title, meta: CURATED[k].meta } : null; })() : null,
+            tts: (typeof PACKS !== "undefined" && typeof activeLang !== "undefined" && PACKS[activeLang]) ? PACKS[activeLang].tts : "",
             langName: (typeof PACKS !== "undefined" && typeof activeLang !== "undefined" && PACKS[activeLang]) ? PACKS[activeLang].name : ""
           };
         });

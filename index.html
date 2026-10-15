@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>/* theme before first paint (inline, render-blocking on purpose) */(function(){try{var t=localStorage.getItem("theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+<style id="lp-theme-critical">html,body{background:#070e18;color:#e6edf6}html[data-theme="light"],html[data-theme="light"] body{background:#eef4f9;color:#0b1f4d}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LanguagePath — Learn languages free by reasoning out real sentences</title>
 <meta name="description" content="LanguagePath is a free language trainer that teaches dozens of full language courses — Mandarin, Arabic, French, German, Portuguese, Spanish, Turkish, Telugu, Farsi and more. Instead of memorizing phrases, you reason them out: speak aloud, reveal, check. No account, no key.">
@@ -1728,7 +1730,7 @@ input[type=text]:focus,.search:focus,select:focus,input#voiceSel:focus{box-shado
   #nav{padding-left:6px}
 
 </style>
-<script>/* set theme before first paint to avoid a flash; default dark */(function(){try{var t=localStorage.getItem("theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+
 
 <style id="lp-redesign">
 /* ---- 2026 redesign: header contrast, home discovery, compact consent bar ---- */
@@ -3558,7 +3560,7 @@ function updateMeta(view){
 function applyPackDir(){ try{ const h=document.documentElement; h.setAttribute("dir","ltr"); h.setAttribute("data-pack-dir", activeDir||"ltr"); }catch(e){} } /* QA: page stays LTR (English UI); only target-language text is RTL via <bdi dir=rtl>/dir=auto */
 function activateLang(l, done){
   if(!PACKS[l])return;
-  if(PACKS[l]._lazy){ ensureCourses(()=>{ activateLang(l, done); }); return; }
+  if(PACKS[l]._lazy){ ensureCourses(()=>{ if(PACKS[l]._lazy){ console.warn("course load failed",l); } else activateLang(l, done); }, l); return; }
   const nav=document.getElementById("nav"); if(nav) nav.style.display="flex";
   const p=PACKS[l];
   activeLang=l; activeTTS=p.tts; activeDir=p.dir||"ltr";
@@ -3923,7 +3925,7 @@ const TP_PROGRAMS={
   transfers: {label:"🚐 Airport transfer",  link:"https://intui.tpk.ro/uKlnIpBL" /* Intui.travel airport transfers */},
   carrental: {label:"🚗 Car rental",       link:"https://localrent.tpk.ro/S2HbNLJ4" /* Localrent */},
   luggage:   {label:"🧳 Luggage storage",   link:"https://radicalstorage.tpk.ro/XtrVEy3G" /* Radical Storage */},
-  compensair:{label:"or Compensair",       link:"https://compensair.tpk.ro/QSVjhAy2" /* Compensair (second flight-compensation option) */},
+  compensair:{label:"or Compensair",       link:"https://compensair.tpk.ro/QSVjhAy2", noSub:true /* Compensair (second flight-compensation option) */},
   citypass:  {label:"🎫 City pass",         link:"https://gocity.tpk.ro/wwBQlscq" /* Go City attraction passes */},
   airhelp:   {label:"Flight delayed or cancelled? Check compensation with AirHelp", link:"https://airhelp.tpk.ro/oFLECFJA" /* AirHelp */}
 };
@@ -3941,6 +3943,7 @@ function tpSub(s){ return String(s||"site").toLowerCase().replace(/[^a-z0-9_]+/g
 function tpLink(kind,sub){
   const p=TP_PROGRAMS[kind]; if(!p||!p.link) return ""; if(kind==="hotels") sub=tpSub(sub)+"_hotels";
   if(/570982|emrldtp\./i.test(p.link)) return "";   // hard guard: wrong account / known-malicious loader
+  if(p.noSub) return p.link;   // Compensair: tpk.ro redirects to "compensair.com?sub_id…" (no slash) when a sub_id is passed
   return p.link+(p.link.indexOf("?")>=0?"&":"?")+"sub_id="+encodeURIComponent(tpSub(sub));
 }
 function tpClick(kind,sub){ try{ track("affiliate_click", kind+"|"+tpSub(sub)); }catch(e){} }
@@ -6061,11 +6064,10 @@ function renderResources(){
       <p style="color:var(--muted);font-size:13px;margin-bottom:8px">The handful of patterns that unlock everything else. Worth a re-read any time a lesson feels harder than usual — same content also lives on the Sounds tab.</p>
       <div class="note" style="text-align:left">${gram}</div>
     </div>`:""}
-    <div class="card"><h3>Your daily 25-minute plan</h3>
+    <div class="card"><h3>Your daily 20-minute plan</h3>
       <div class="note">1️⃣ <b>One lesson</b> — ~10 min</div>
       <div class="note">2️⃣ <b>Recall warm-up</b> of what's due — ~5 min</div>
       <div class="note">3️⃣ <b>Shadowing</b> 10–15 lines out loud — ~5 min</div>
-      <div class="note">4️⃣ <b>One short video</b> below (just enjoy it) — ~5 min</div>
       <p style="color:var(--muted);font-size:12.5px">Day to day: keep <b>Phrases</b> open, and drop anything new into <b>Chunks</b>.</p>
     </div>
     <div class="card"><h3>📺 Watch & listen (free)</h3>
@@ -8344,12 +8346,22 @@ function aiPack(name,flag,tts,dir){
 }
 // course packs are lazy-loaded from courses.js the first time a non-flagship language is opened,
 // so the first paint stays light (flagship courses in data.js load eagerly).
-let __coursesLoaded=false;
-function ensureCourses(cb){
+let __coursesLoaded=false; const __courseWait={};
+/* Per-language course files (build writes window.LP_COURSE_FILES = {code: "/assets/v/courses/<code>.<hash>.js"}),
+   so a page loads only its own language (~10–40 KB) instead of the whole 1.9 MB bundle. No code => full bundle. */
+function __adoptCourses(){ Object.keys(window.LP_COURSES||{}).forEach(code=>{ if(PACKS[code]&&PACKS[code]._lazy) PACKS[code]=Object.assign({ai:false},window.LP_COURSES[code]); }); }
+function ensureCourses(cb, code){
+  const files=window.LP_COURSE_FILES||null;
+  if(code && files && files[code]){
+    if(!PACKS[code]||!PACKS[code]._lazy){ cb&&cb(); return; }
+    if(__courseWait[code]){ __courseWait[code].push(cb); return; } __courseWait[code]=[cb];
+    const sc=document.createElement("script"); sc.src=files[code];
+    const fin=()=>{ __adoptCourses(); const q=__courseWait[code]||[]; delete __courseWait[code]; q.forEach(f=>f&&f()); };
+    sc.onload=fin; sc.onerror=()=>{ delete __courseWait[code]; ensureCourses(()=>{ (q=>q&&q())(cb); }); }; document.head.appendChild(sc); return;
+  }
   if(__coursesLoaded || LANG_ORDER.every(l=>!PACKS[l]||!PACKS[l]._lazy)){ if(!__coursesLoaded)__coursesLoaded=true; cb&&cb(); return; }
-  if(window.LP_COURSES && Object.keys(window.LP_COURSES).length){ __coursesLoaded=true; cb&&cb(); return; }
   const sc=document.createElement("script"); sc.src="/courses.js";
-  sc.onload=()=>{ Object.keys(window.LP_COURSES||{}).forEach(code=>{ if(PACKS[code]&&PACKS[code]._lazy) PACKS[code]=Object.assign({ai:false},window.LP_COURSES[code]); }); __coursesLoaded=true; cb&&cb(); };
+  sc.onload=()=>{ __adoptCourses(); __coursesLoaded=true; cb&&cb(); };
   sc.onerror=()=>{ __coursesLoaded=true; cb&&cb(); };
   document.head.appendChild(sc);
 }
@@ -9100,7 +9112,7 @@ document.querySelectorAll("#nav button").forEach(b=>{b.setAttribute("role","tab"
 ["learn","practice","explore"].forEach(g=>{const el=document.getElementById("grp-"+g);if(el){el.classList.add("collapsed");const b=el.querySelector(".ng");if(b)b.setAttribute("aria-expanded","false");}});
 if(__r.topic)curTopic=__r.topic; try{ const _ret=LANG_ORDER.some(l=>{const st=MASTER[l];return st&&((st.done&&st.done.length)||st.built||Object.keys(st.srs||{}).length);}); if(_ret) track("return_session",activeLang); }catch(e){}
 if(PACKS[activeLang] && PACKS[activeLang]._lazy){
-  ensureCourses(()=>{ const p=PACKS[activeLang]; LESSONS=p.lessons;DIALOGUES=p.dialogues;POCKET=mergeEssentials(activeLang,p.pocket);POCKET_CATS=(p.pocketCats||[]).slice(); if(DAILY_ESSENTIALS[activeLang]&&POCKET_CATS.indexOf("Daily essentials")<0)POCKET_CATS.unshift("Daily essentials");CULTURE=p.culture;SOUNDS=p.sounds;RESOURCES=p.resources; buildChalIndex(); applyPackDir(); if(__r.view&&__r.view!=="home"){go(__r.view);}else{pushRoute("home");} });
+  ensureCourses(()=>{ const p=PACKS[activeLang]; LESSONS=p.lessons;DIALOGUES=p.dialogues;POCKET=mergeEssentials(activeLang,p.pocket);POCKET_CATS=(p.pocketCats||[]).slice(); if(DAILY_ESSENTIALS[activeLang]&&POCKET_CATS.indexOf("Daily essentials")<0)POCKET_CATS.unshift("Daily essentials");CULTURE=p.culture;SOUNDS=p.sounds;RESOURCES=p.resources; buildChalIndex(); applyPackDir(); if(__r.view&&__r.view!=="home"){go(__r.view);}else{pushRoute("home");} }, activeLang);
 } else if(__r.view && __r.view!=="home"){ go(__r.view); } else { pushRoute("home"); }
 
 </script>
@@ -9147,6 +9159,41 @@ if(PACKS[activeLang] && PACKS[activeLang]._lazy){
   // daily refresh of the key (renewals extend exp; refunds/cancels simply stop renewing)
   try{ const k=localStorage.getItem("lp_pro_license"), last=+localStorage.getItem("lp_pro_checked")||0;
     if(k&&Date.now()-last>864e5) fetch("/.netlify/functions/verify-license",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:k})}).then(r=>r.ok?r.json():null).then(j=>{ localStorage.setItem("lp_pro_checked",Date.now()); if(j&&j.license) localStorage.setItem("lp_pro_license",j.license); }).catch(()=>{}); }catch(e){}
+})();
+</script>
+<script>
+/* QA: mark foreign-script text with lang= and (for RTL scripts) dir="rtl", at runtime and in the prerendered HTML.
+   The page itself stays lang="en" dir="ltr"; only target-language runs are tagged. */
+(function(){
+  const SCRIPTS=[["Arabic",/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/,"ar",1],["Hebrew",/[\u0590-\u05FF\uFB1D-\uFB4F]/,"he",1],["Thaana",/[\u0780-\u07BF]/,"dv",1],["Syriac",/[\u0700-\u074F]/,"syr",1],
+    ["Han",/[\u4E00-\u9FFF\u3400-\u4DBF]/,"zh",0],["Kana",/[\u3040-\u30FF]/,"ja",0],["Hangul",/[\uAC00-\uD7AF\u1100-\u11FF]/,"ko",0],["Devanagari",/[\u0900-\u097F]/,"hi",0],["Bengali",/[\u0980-\u09FF]/,"bn",0],
+    ["Gurmukhi",/[\u0A00-\u0A7F]/,"pa",0],["Gujarati",/[\u0A80-\u0AFF]/,"gu",0],["Tamil",/[\u0B80-\u0BFF]/,"ta",0],["Telugu",/[\u0C00-\u0C7F]/,"te",0],["Kannada",/[\u0C80-\u0CFF]/,"kn",0],["Malayalam",/[\u0D00-\u0D7F]/,"ml",0],
+    ["Sinhala",/[\u0D80-\u0DFF]/,"si",0],["Thai",/[\u0E00-\u0E7F]/,"th",0],["Lao",/[\u0E80-\u0EFF]/,"lo",0],["Tibetan",/[\u0F00-\u0FFF]/,"bo",0],["Myanmar",/[\u1000-\u109F]/,"my",0],["Georgian",/[\u10A0-\u10FF]/,"ka",0],
+    ["Ethiopic",/[\u1200-\u139F]/,"am",0],["Khmer",/[\u1780-\u17FF]/,"km",0],["Armenian",/[\u0530-\u058F]/,"hy",0],["Greek",/[\u0370-\u03FF]/,"el",0],["Cyrillic",/[\u0400-\u04FF]/,"ru",0]];
+  const ANY=new RegExp("["+SCRIPTS.map(x=>x[1].source.slice(1,-1)).join("")+"]");
+  let NATIVE=null; function nativeMap(){ if(NATIVE)return NATIVE; NATIVE={}; try{ for(const k of Object.keys(PACKS)){ const q=PACKS[k]; if(q&&q.native&&q.tts) NATIVE[String(q.native).trim()]=q.tts.split("-")[0]; } (typeof EXTRA_LANGS!=="undefined"?EXTRA_LANGS:[]).forEach(e=>{ if(e[2]&&e[4]) NATIVE[String(e[2]).trim()]=String(e[4]).split("-")[0]; }); }catch(e){} return NATIVE; }
+  function langFor(txt){ const nm=nativeMap()[String(txt).trim()]; if(nm){ return [nm, /^(ar|he|fa|ur|ps|yi|dv|ku|sd|ug)$/.test(nm)?1:0]; } for(const [n,re,code,rtl] of SCRIPTS){ if(re.test(txt)){ let l=code; try{ const p=PACKS[activeLang], t=p&&(p.tts||"").split("-")[0]; if(t){ const same=SCRIPTS.find(x=>x[2]===t); if(same? same[0]===n : true) l=t; if(n==="Arabic"&&/^(fa|ur|ps|ku|ug|sd)$/.test(t)) l=t; if(n==="Cyrillic"&&/^(uk|be|bg|sr|mk|kk|ky|mn|tg)$/.test(t)) l=t; if(n==="Devanagari"&&/^(mr|ne|sa)$/.test(t)) l=t; if(n==="Hebrew"&&t==="yi") l=t; if(n==="Ethiopic"&&t==="ti") l=t; } }catch(e){} return [l,rtl]; } } return null; }
+  const SKIP={SCRIPT:1,STYLE:1,NOSCRIPT:1,TEXTAREA:1,INPUT:1,SELECT:1,OPTION:1,TITLE:1,svg:1,SVG:1};
+  function tag(root){
+    if(!root||!root.ownerDocument&&root!==document)return;
+    const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>ANY.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});
+    const nodes=[]; let n; while((n=w.nextNode())) nodes.push(n);
+    for(const t of nodes){
+      const el=t.parentElement; if(!el||SKIP[el.tagName]||el.closest("[data-lp-lt],svg"))continue;
+      const own=el.closest("[lang]"); const lf=langFor(t.nodeValue); if(!lf)continue; const [l,rtl]=lf;
+      if(own&&own!==document.documentElement&&own.getAttribute("lang")===l){ if(rtl&&!own.closest("[dir=rtl],[dir=auto]")) own.setAttribute("dir","rtl"); continue; }
+      const letters=(el.textContent.match(/\p{L}/gu)||[]).length, foreign=(el.textContent.match(new RegExp(ANY.source,"g"))||[]).length;
+      if(el.childElementCount===0&&letters&&foreign/letters>0.6&&el!==document.body){ el.setAttribute("lang",l); if(rtl&&el.getAttribute("dir")!=="auto") el.setAttribute("dir","rtl"); el.setAttribute("data-lp-lt",""); continue; }
+      // mixed English + foreign text: wrap each foreign run
+      const re=new RegExp("(?:"+ANY.source+")(?:[\\s\\u200c\\u200d\\u064B-\\u065F،؟.!?,'’\\-]*(?:"+ANY.source+"))*","g"); const v=t.nodeValue; let last=0,m; const frag=document.createDocumentFragment();
+      while((m=re.exec(v))){ if(m.index>last) frag.appendChild(document.createTextNode(v.slice(last,m.index))); const sp=document.createElement(rtl?"bdi":"span"); sp.setAttribute("lang",l); if(rtl) sp.setAttribute("dir","rtl"); sp.setAttribute("data-lp-lt",""); sp.textContent=m[0]; frag.appendChild(sp); last=m.index+m[0].length; }
+      if(last<v.length) frag.appendChild(document.createTextNode(v.slice(last))); t.parentNode.replaceChild(frag,t);
+    }
+  }
+  window.lpTagForeign=tag;
+  let pend=false; const run=()=>{ pend=false; try{ obs.disconnect(); tag(document.body); }catch(e){} obs.observe(document.body,{childList:true,subtree:true,characterData:true}); };
+  const obs=new MutationObserver(()=>{ if(!pend){ pend=true; (window.requestIdleCallback||setTimeout)(run,{timeout:300}); } });
+  if(document.body) run(); else document.addEventListener("DOMContentLoaded",run);
 })();
 </script>
 </body>
