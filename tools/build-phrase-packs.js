@@ -35,7 +35,7 @@ td.tr{font-weight:700;font-size:11pt}td.pr{color:#55617a;font-style:italic}
 </style></head><body>
 <div class="cover"><div class="brand">${icon}Language<i>Path</i></div>
 <h1>${esc(city.name)}<br>Phrase Pack</h1><div class="sub">${esc(L)} for travellers · ${esc(c.country)}</div>
-<div class="meta">Print it, save it to your phone, or keep it in your bag. Every phrase has an English-friendly pronunciation guide. Hear them all free at languagepath.org/travel/${c.slug}/${city.slug}<br><br>© 2026 LanguagePath · LanguagePath.org · For personal use</div></div>
+<div class="meta">Print it, save it to your phone, or keep it in your bag. Every phrase has an English-friendly pronunciation guide. Hear them all free at languagepath.org/travel/${c.slug}/${city.slug}<br><br>© 2026 LanguagePath · For personal use</div></div>
 <section><h2>Before you go: ${esc(city.name)}</h2>${notes.map(n => `<p>${n}</p>`).join("")}<div class="note"><b>How to use this pack.</b> Read the phrase, say it out loud using the "Say it" column, and point at the ${esc(L)} text if you get stuck — showing the written phrase works even when pronunciation doesn't.</div></section>
 <section><h2>Lifelines</h2><p>When the conversation moves too fast:</p>${table(d.life, L)}<h3>What you'll hear in a taxi</h3>${table(d.hears, L)}</section>
 <section class="pb"><h2>Pocket phrases</h2>${cats.map(k => `<h3>${esc(k)}</h3>${table(p.pocket.filter(x => x.c === k), L)}`).join("")}</section>
