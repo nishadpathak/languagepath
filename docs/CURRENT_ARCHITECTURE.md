@@ -1,13 +1,13 @@
 > ## ⚠️ SOURCE OF TRUTH
 > This document describes the **currently maintained** LanguagePath repository (iCloud workspace:
-> `~/Library/Mobile Documents/com~apple~CloudDocs/NMP DMCC/Website/LanguagePath.org`).
+> `<local iCloud folder>/LanguagePath.org`).
 > **Do not use historical copies or abandoned project directories** (e.g. `~/Documents/Claude/Projects/LanguagePath`, now empty) as development sources.
 > **Confirm the git remote + current HEAD before making changes.** The canonical identity is the git remote + branch + commit SHA — **not** the absolute local path. Do NOT hard-code the iCloud path into application code or CI.
 
 # LanguagePath — Current Source-of-Truth Architecture (iCloud/Documents workspace)
 
 > Internal doc. No secrets. The AI path uses a server-side proxy — no client-side API keys.
-> Repo path: `~/Library/Mobile Documents/com~apple~CloudDocs/NMP DMCC/Website/LanguagePath.org/`
+> Repo path: `<local iCloud folder>/LanguagePath.org/`
 
 ## Repo
 Single-file app shell `index.html` (inline `<style>`+`<script>`, offline-first PWA). `data.js` (flagship content) + `courses.js` (authorized packs, lazy-loaded per language). `sw.js`, `manifest.json`, `icons/`, brand logos, `about.html`/`privacy.html`/`terms.html`, `robots.txt`, `sitemap.xml`, `ads.txt`, `netlify.toml`, `netlify/functions/ai.js`.

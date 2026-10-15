@@ -20,7 +20,7 @@ function html(c, city, d) {
   const cats = [...new Set((p.pocket || []).map(x => x.c))];
   const sit = (p.lessons || []).filter(l => /greet|polite|survival|want|like|number|money|price|food|restaurant|getting around|direction|transport|ticket|hotel|shop|time|doctor|ill/i.test(l.title));
   const chal = l => (l.steps || []).filter(s => s.t === "chal").slice(0, 8);
-  return `<!doctype html><html><head><meta charset="utf-8"><style>
+  return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(city.name)} Phrase Pack — LanguagePath</title><meta name="author" content="LanguagePath"><style>
 @page{size:A4;margin:16mm 15mm 18mm}*{box-sizing:border-box}body{font-family:Inter,"DejaVu Sans","Noto Sans","Noto Sans CJK SC","Noto Naskh Arabic",sans-serif;color:#0B1F4D;font-size:10.5pt;line-height:1.45;margin:0}
 .cover{height:262mm;border-radius:8mm;padding:22mm 18mm;color:#fff;background:linear-gradient(150deg,#0B1F4D 0%,#123a6b 55%,#0E9F8A 130%);display:flex;flex-direction:column;page-break-after:always}
 .cover .brand{display:flex;gap:4mm;align-items:center;font-weight:800;font-size:16pt}.cover .brand i{font-style:normal;color:#2DD4BF}
@@ -35,7 +35,7 @@ td.tr{font-weight:700;font-size:11pt}td.pr{color:#55617a;font-style:italic}
 </style></head><body>
 <div class="cover"><div class="brand">${icon}Language<i>Path</i></div>
 <h1>${esc(city.name)}<br>Phrase Pack</h1><div class="sub">${esc(L)} for travellers · ${esc(c.country)}</div>
-<div class="meta">Print it, save it to your phone, or keep it in your bag. Every phrase has an English-friendly pronunciation guide. Hear them all free at languagepath.org/travel/${c.slug}/${city.slug}<br><br>© 2026 NMP DMCC · LanguagePath.org · For personal use</div></div>
+<div class="meta">Print it, save it to your phone, or keep it in your bag. Every phrase has an English-friendly pronunciation guide. Hear them all free at languagepath.org/travel/${c.slug}/${city.slug}<br><br>© 2026 LanguagePath · LanguagePath.org · For personal use</div></div>
 <section><h2>Before you go: ${esc(city.name)}</h2>${notes.map(n => `<p>${n}</p>`).join("")}<div class="note"><b>How to use this pack.</b> Read the phrase, say it out loud using the "Say it" column, and point at the ${esc(L)} text if you get stuck — showing the written phrase works even when pronunciation doesn't.</div></section>
 <section><h2>Lifelines</h2><p>When the conversation moves too fast:</p>${table(d.life, L)}<h3>What you'll hear in a taxi</h3>${table(d.hears, L)}</section>
 <section class="pb"><h2>Pocket phrases</h2>${cats.map(k => `<h3>${esc(k)}</h3>${table(p.pocket.filter(x => x.c === k), L)}`).join("")}</section>
