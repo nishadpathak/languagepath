@@ -26,3 +26,21 @@ function html(s) {
   }
 })(dist);
 console.log("STRIP: comments removed/minified in " + n + " files");
+/* Re-hash content-addressed assets after stripping so immutable CDN caches never serve the pre-strip copy. */
+const crypto = require("crypto"); const ren = {};
+(function walk(d) {
+  for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+    const f = path.join(d, e.name); if (e.isDirectory()) { walk(f); continue; }
+    const m = e.name.match(/^(.+)\.([0-9a-f]{10})\.(js|css)$/); if (!m) continue;
+    const h = crypto.createHash("sha256").update(fs.readFileSync(f)).digest("hex").slice(0, 10);
+    if (h === m[2]) continue; const nn = m[1] + "." + h + "." + m[3];
+    fs.renameSync(f, path.join(d, nn)); ren[e.name] = nn;
+  }
+})(path.join(dist, "assets"));
+const keys = Object.keys(ren);
+if (keys.length) {
+  const rx = new RegExp(keys.map(k => k.replace(/\./g, "\\.")).join("|"), "g");
+  (function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const f = path.join(d, e.name);
+    if (e.isDirectory()) walk(f); else if (/\.(html|js|css|json|webmanifest|txt|xml)$|_headers$|_redirects$/.test(f)) { const s = fs.readFileSync(f, "utf8"); const o = s.replace(rx, k => ren[k]); if (o !== s) fs.writeFileSync(f, o); } } })(dist);
+}
+console.log("STRIP: re-hashed " + keys.length + " assets");
