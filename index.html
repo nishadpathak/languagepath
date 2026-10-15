@@ -9140,7 +9140,7 @@ if(PACKS[activeLang] && PACKS[activeLang]._lazy){
     const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(",")).join("\n")],{type:"text/csv"})); a.download="languagepath-progress.csv"; document.body.appendChild(a); a.click(); a.remove(); };
   window.lpProOffline=async function(btn){ if(!lpIsPro()){ location.href="/pro.html?from=offline"; return; }
     if(!navigator.serviceWorker||!navigator.serviceWorker.controller){ alert("Offline download needs the installed/https site — reload once and try again."); return; }
-    const urls=["/","/courses.js","/data.js","/travel"].concat((typeof LANG_ORDER!=="undefined"?LANG_ORDER:[]).map(l=>"/"+l));
+    const urls=["/","/travel"].concat(performance.getEntriesByType("resource").map(r=>{try{const u=new URL(r.name);return u.origin===location.origin?u.pathname:null}catch(e){return null}}).filter(Boolean)).concat((typeof LANG_ORDER!=="undefined"?LANG_ORDER:[]).map(l=>"/"+l));
     if(btn){btn.disabled=true;btn.textContent="Downloading…";}
     navigator.serviceWorker.controller.postMessage({type:"lp-offline",urls});
     navigator.serviceWorker.addEventListener("message",e=>{ if(e.data&&e.data.type==="lp-offline-done"&&btn){ btn.textContent="✓ Saved for offline ("+e.data.n+" pages)"; } },{once:true}); };
