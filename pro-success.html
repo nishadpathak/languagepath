@@ -60,7 +60,7 @@ function lpDl(list){ return (list||[]).map(d=>`<li><a href="${d.url}">${d.city} 
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 const sid=new URLSearchParams(location.search).get("session_id")||"", out=document.getElementById("out");
 async function go(n){ try{ const r=await fetch("/.netlify/functions/license?session_id="+encodeURIComponent(sid)); const j=await r.json().catch(()=>({}));
-  if((r.status===402||r.status===502)&&n<6) return setTimeout(()=>go(n+1),2500);
+  if((r.status===202||r.status===502)&&n<20) return setTimeout(()=>go(n+1),2500);
   if(!r.ok) throw new Error(j.error||"We couldn't confirm this purchase yet.");
   lpStore(j.license);
   out.innerHTML=`<p class="lead">Your purchase is active in this browser${j.email?" (receipt sent to "+esc(j.email)+")":""}.</p>${j.kind==="pro"?"<p>✓ <b>Pro</b> is on: ads are off, offline download and CSV export are in Settings, and you have 100 AI turns a day.</p>":""}${(j.downloads||[]).length?"<h2>Your phrase packs</h2><ul>"+lpDl(j.downloads)+"</ul>":""}<h2>Your licence key</h2><p>Save it somewhere safe — paste it on <a href="/pro-restore.html">Restore purchase</a> on any device.</p><div class="key">${esc(j.license)}</div><p><a href="/">← Back to learning</a></p>`;

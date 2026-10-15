@@ -5,7 +5,7 @@
    - secrets read from anywhere other than process.env / Netlify.env, or logged
    - pro-config.js links that aren't empty or https://buy.stripe.com/
    - paid PDFs present in dist/ or referenced from public pages; download function not token-gated
-   - fulfilment trusting client data instead of re-fetching the Checkout Session from Stripe */
+   - fulfilment that isn't webhook-driven, idempotent and limited to our own Payment Links */
 "use strict";
 const fs = require("fs"), path = require("path"), root = path.join(__dirname, "..");
 const R = f => fs.readFileSync(path.join(root, f), "utf8"); const errs = []; const bad = m => errs.push(m);
@@ -18,9 +18,11 @@ if (/req\.json\(\)/.test(hook)) bad("webhook must not parse JSON before signatur
 if (!/verifyWebhook\(/.test(hook) || !/STRIPE_WEBHOOK_SECRET/.test(hook)) bad("webhook must call verifyWebhook with STRIPE_WEBHOOK_SECRET");
 if (!/timingSafeEqual/.test(lib) || !/tolerance|300/.test(lib)) bad("verifyWebhook needs timingSafeEqual + timestamp tolerance");
 if (!/timingSafeEqual/.test(lic) || !/LICENSE_SECRET/.test(lic)) bad("licence signing must use LICENSE_SECRET + timingSafeEqual");
-if (!/STRIPE_SECRET_KEY/.test(lib)) bad("Stripe client must read STRIPE_SECRET_KEY from env");
-if (!/[Ii]dempotency/.test(hook + lib)) bad("Stripe writes should use idempotency keys");
-if (!/sessions\//.test(R("netlify/functions/lib/fulfil.mjs"))) bad("fulfilment must re-fetch the Checkout Session from Stripe");
+const ful = R("netlify/functions/lib/fulfil.mjs");
+if (!/PLINKS\[s\.payment_link\]/.test(ful)) bad("fulfilment must only accept LanguagePath Payment Links (shared Stripe account)");
+if (!/payment_status === "paid"/.test(ful)) bad("fulfilment must require payment_status paid");
+if (!/prev && prev\.license/.test(ful)) bad("checkout fulfilment must be idempotent on webhook retries");
+if (/STRIPE_SECRET_KEY|api\.stripe\.com/.test(walk("netlify/functions").map(R).join("\n"))) bad("functions must not call the Stripe API (webhook-only design)");
 for (const f of walk("netlify/functions")) { const s = R(f); if (/console\.\w+\([^)]*(SECRET|process\.env|[ ,(]license\)|[ ,(]key\)|[ ,(]token\))/i.test(s)) bad("possible secret logging in " + f); }
 const cfg = R("pro-config.js"); for (const m of cfg.matchAll(/:\s*"([^"]*)"/g)) if (m[1] && !/^https:\/\/buy\.stripe\.com\//.test(m[1])) bad("pro-config.js link is not a Stripe Payment Link: " + m[1]);
 if (!/Math\.floor|exp/.test(lic) || !/LPD/.test(lic)) bad("download tokens must expire");

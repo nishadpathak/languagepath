@@ -1,27 +1,37 @@
-// Turns a completed Checkout Session into a license (deterministic: same session -> same key).
-import { stripe } from "./stripe.mjs";
-import { SKUS, skuFromLookup } from "./catalog.mjs";
+// Turns verified webhook events into licence records.
+import { SKUS } from "./catalog.mjs";
+import { PLINKS } from "./links.mjs";
 import { issueLicense, issueDownload } from "./license.mjs";
-const GRACE = 3 * 86400;
-export async function licenseForSession(sessionId) {
-  if (!/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId || "")) return { error: "bad session id", status: 400 };
-  const s = await stripe("GET", "/checkout/sessions/" + encodeURIComponent(sessionId), { expand: ["line_items.data.price", "subscription"] });
-  const paid = s.status === "complete" && (s.payment_status === "paid" || s.payment_status === "no_payment_required");
-  if (!paid) return { error: "payment not completed", status: 402 };
-  const skus = (s.line_items && s.line_items.data || []).map(li => skuFromLookup(li.price && li.price.lookup_key)).filter(Boolean);
-  if (!skus.length) return { error: "no LanguagePath product in this order", status: 404 };
-  const pro = skus.some(k => SKUS[k].kind === "pro");
-  const packs = [...new Set(skus.flatMap(k => SKUS[k].packs || []))];
-  const sub = s.subscription && typeof s.subscription === "object" ? s.subscription : null;
-  const payload = { kind: pro ? "pro" : "pack", skus, packs, sid: s.id, iat: s.created };
-  if (pro) { payload.sub = sub ? sub.id : null; payload.exp = (sub && sub.current_period_end ? sub.current_period_end : s.created + 31 * 86400) + GRACE; }
-  return { license: issueLicense(payload), payload, email: (s.customer_details && s.customer_details.email) || null, downloads: downloadsFor(packs) };
+import { getSession, putSession, getSubLink, putSubLink } from "./store.mjs";
+const GRACE = 3 * 86400, now = () => Math.floor(Date.now() / 1000);
+const PERIOD = { month: 31 * 86400, year: 366 * 86400 };
+export const downloadsFor = packs => (packs || []).map(c => ({ city: c.replace(/-/g, " ").replace(/\b\w/g, m => m.toUpperCase()), url: "/.netlify/functions/download?t=" + encodeURIComponent(issueDownload(c)) }));
+const mint = r => issueLicense({ kind: r.kind, skus: [r.product], packs: r.packs, sid: r.session_id, ...(r.kind === "pro" ? { exp: r.expiry } : {}), iat: now() });
+export async function onCheckout(s) {
+  const product = PLINKS[s.payment_link];
+  if (!product || !SKUS[product]) return { skipped: "not a LanguagePath payment link" };
+  if (!(s.status === "complete" && (s.payment_status === "paid" || s.payment_status === "no_payment_required"))) return { skipped: "payment not completed yet" };
+  const prev = await getSession(s.id); if (prev && prev.license) return { ok: true, dup: true };   // idempotent on retries
+  const sku = SKUS[product];
+  const rec = { session_id: s.id, product, kind: sku.kind, packs: sku.packs || [], city: (sku.packs || []).length === 1 ? sku.packs[0] : (sku.packs ? "all" : null),
+    expiry: sku.kind === "pro" ? now() + PERIOD[sku.recurring] + GRACE : null, status: "active",
+    email: (s.customer_details && s.customer_details.email) || s.customer_email || null, subscription: s.subscription || null };
+  rec.license = mint(rec);
+  await putSession(rec); if (rec.subscription) await putSubLink(rec.subscription, rec.session_id);
+  return { ok: true };
 }
-export function downloadsFor(packs) { return (packs || []).map(c => ({ city: c, url: "/.netlify/functions/download?t=" + encodeURIComponent(issueDownload(c)) })); }
-// refresh a Pro license from the live subscription (renewals / cancellations)
-export async function refreshPro(p) {
-  if (!p.sub) return p.exp > Date.now() / 1000 ? p : null;
-  const sub = await stripe("GET", "/subscriptions/" + encodeURIComponent(p.sub));
-  if (!["active", "trialing", "past_due"].includes(sub.status)) return null;
-  return { ...p, exp: sub.current_period_end + GRACE };
+async function bySub(subId) { const l = subId && await getSubLink(subId); return l ? getSession(l.session_id) : null; }
+export async function onInvoicePaid(inv) {
+  const subId = inv.subscription || (inv.parent && inv.parent.subscription_details && inv.parent.subscription_details.subscription);
+  const rec = await bySub(subId); if (!rec) return { skipped: "unknown subscription" };   // first invoice can precede checkout; checkout sets the initial expiry
+  const end = Math.max(...((inv.lines && inv.lines.data) || []).map(l => (l.period && l.period.end) || 0), 0);
+  if (end && end + GRACE > (rec.expiry || 0)) { rec.expiry = end + GRACE; rec.status = "active"; rec.license = mint(rec); await putSession(rec); }
+  return { ok: true };
 }
+export async function onSubscriptionDeleted(sub) {
+  const rec = await bySub(sub.id); if (!rec) return { skipped: "unknown subscription" };
+  const end = sub.ended_at || sub.canceled_at || now();
+  rec.status = "canceled"; rec.expiry = Math.min(rec.expiry || end, end + GRACE); rec.license = mint(rec); await putSession(rec);
+  return { ok: true };
+}
+export const publicView = r => ({ license: r.license, kind: r.kind, product: r.product, packs: r.packs, exp: r.expiry, status: r.status, email: r.email, downloads: downloadsFor(r.packs) });

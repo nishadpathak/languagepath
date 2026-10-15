@@ -1,27 +1,6 @@
-// Minimal Stripe REST client (no SDK dependency). Secret key comes ONLY from the STRIPE_SECRET_KEY env var.
+// Stripe webhook signature verification (no SDK, no API key needed).
+// Header: "t=<unix>,v1=<hex hmac-sha256(secret, t + '.' + rawBody)>"; constant-time compare, 300 s tolerance.
 import crypto from "node:crypto";
-export const API_VERSION = "2024-06-20";
-function form(obj, pre = "", out = []) {
-  for (const [k, v] of Object.entries(obj || {})) { const key = pre ? `${pre}[${k}]` : k;
-    if (v === undefined || v === null) continue;
-    if (Array.isArray(v)) v.forEach((x, i) => (typeof x === "object" ? form(x, `${key}[${i}]`, out) : out.push([`${key}[${i}]`, String(x)])));
-    else if (typeof v === "object") form(v, key, out); else out.push([key, String(v)]); }
-  return out;
-}
-export async function stripe(method, path, params, opts = {}) {
-  const key = process.env.STRIPE_SECRET_KEY; if (!key) throw new Error("STRIPE_SECRET_KEY not set");
-  let url = "https://api.stripe.com/v1" + path, body;
-  const enc = new URLSearchParams(form(params)).toString();
-  if (method === "GET") { if (enc) url += "?" + enc; } else body = enc;
-  const headers = { authorization: "Bearer " + key, "stripe-version": API_VERSION, "content-type": "application/x-www-form-urlencoded" };
-  if (opts.idempotencyKey) headers["idempotency-key"] = opts.idempotencyKey;
-  const r = await fetch(url, { method, headers, body });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) { const e = new Error((j.error && j.error.message) || "Stripe error " + r.status); e.status = r.status; throw e; }
-  return j;
-}
-// Stripe webhook signature verification (https://docs.stripe.com/webhooks#verify-manually):
-// HMAC-SHA256 of "<t>.<raw body>" with the endpoint secret, constant-time compare, 5-minute tolerance.
 export function verifyWebhook(rawBody, header, secret, toleranceSec = 300) {
   if (!secret || !header) return false;
   let t = null; const v1 = [];

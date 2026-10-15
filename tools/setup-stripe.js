@@ -26,7 +26,7 @@ async function all(p, params = {}) { let out = [], after; for (;;) { const j = a
   console.log(`Stripe ${MODE} mode · site ${SITE}${DRY ? " · DRY RUN" : ""}`);
   const products = await all("/products", { active: true }), links = await all("/payment_links", { active: true });
   const prices = await all("/prices", { active: true });
-  const config = {};
+  const config = {}, plinks = {};
   for (const [sku, s] of Object.entries(SKUS)) {
     let prod = products.find(p => p.metadata && p.metadata.lp_sku === sku);
     if (!prod) { prod = await api("POST", "/products", { name: s.name, metadata: { lp_sku: sku }, tax_code: s.kind === "pro" ? "txcd_10103001" : "txcd_10302000" }, `lp-prod-${sku}`); console.log("+ product", sku); }
@@ -45,16 +45,18 @@ async function all(p, params = {}) { let out = [], after; for (;;) { const j = a
         allow_promotion_codes: true, automatic_tax: { enabled: false }, ...(s.recurring ? {} : { customer_creation: "always" }) }, `lp-link-${sku}-${price.id}`);
       console.log("+ payment link", sku);
     }
-    config[sku] = link.url;
+    config[sku] = link.url; plinks[link.id] = sku;
   }
   const hookUrl = SITE + "/.netlify/functions/stripe-webhook";
   const hooks = await all("/webhook_endpoints"), hook = hooks.find(h => h.url === hookUrl);
-  const events = ["checkout.session.completed", "checkout.session.async_payment_succeeded"];
+  const events = ["checkout.session.completed", "checkout.session.async_payment_succeeded", "customer.subscription.deleted", "invoice.paid"];
   if (!hook) { const h = await api("POST", "/webhook_endpoints", { url: hookUrl, enabled_events: events, api_version: "2024-06-20", description: "LanguagePath licence fulfilment" });
     console.log("+ webhook", hookUrl, "\n  ⚠ Copy its signing secret ONCE from the Stripe Dashboard (Developers → Webhooks) into Netlify env STRIPE_WEBHOOK_SECRET.", h.secret ? "(secret returned by API but not printed)" : ""); }
   else { if (events.some(e => !hook.enabled_events.includes(e))) await api("POST", "/webhook_endpoints/" + hook.id, { enabled_events: events }); console.log("= webhook exists", hookUrl); }
   const file = path.join(__dirname, "..", "pro-config.js"); let src = fs.readFileSync(file, "utf8");
   for (const [sku, url] of Object.entries(config)) if (url) src = src.replace(new RegExp(`(\\b${sku}: )"[^"]*"`), `$1"${url}"`);
-  if (!DRY) fs.writeFileSync(file, src);
+  if (!DRY) { fs.writeFileSync(file, src);
+    const lf = path.join(__dirname, "..", "netlify", "functions", "lib", "links.mjs");
+    fs.writeFileSync(lf, fs.readFileSync(lf, "utf8").replace(/export const PLINKS = \{[\s\S]*?\};/, "export const PLINKS = " + JSON.stringify(plinks, null, 2) + ";")); }
   console.log(DRY ? "Dry run: pro-config.js not changed." : "pro-config.js updated — commit it and deploy.");
 })().catch(e => { console.error("setup-stripe failed:", e.message); process.exit(1); });
