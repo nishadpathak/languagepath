@@ -194,6 +194,22 @@ function build(route, m) {
   }
   // Real 404 page (static, no app boot so it never renders a fake page)
   fs.copyFileSync(path.join(root, "404.html"), path.join(dist, "404.html"));
+  // App-only top-level views get their own static head (unique title/description/og/canonical) instead of the homepage's.
+  const SHELL_HEADS = {
+    seeit: ["See It — picture-based language practice | LanguagePath", "Practise vocabulary visually: see an object or scene, say the word aloud in your target language, then reveal and check. Free, no account."],
+    reallife: ["Real Life — practise everyday conversations | LanguagePath", "Role-play real situations such as shops, taxis, cafés and introductions in your target language. Speak, reveal, check. Free, no account."],
+    join: ["Join LanguagePath — get involved", "Get involved with LanguagePath, the free language trainer for learning by reasoning out real sentences.", 1],
+    request: ["Request a language or feature | LanguagePath", "Ask LanguagePath to add a language, topic or feature to the free language trainer.", 1],
+    admin: ["Admin | LanguagePath", "LanguagePath administration page.", 1]
+  };
+  { const shell = fs.readFileSync(path.join(dist, "index.html"), "utf8"); const A = t => t.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+    for (const [v, [t, d, noidx]] of Object.entries(SHELL_HEADS)) { if (fs.existsSync(path.join(dist, v + ".html"))) continue; const u = "https://languagepath.org/" + v;
+      let h = shell.replace(/<title>[^<]*<\/title>/, "<title>" + A(t) + "</title>")
+        .replace(/(<meta name="description" content=")[^"]*/, "$1" + A(d)).replace(/(<meta property="og:title" content=")[^"]*/, "$1" + A(t))
+        .replace(/(<meta property="og:description" content=")[^"]*/, "$1" + A(d)).replace(/(<meta property="og:url" content=")[^"]*/, "$1" + u)
+        .replace(/(<link rel="canonical" href=")[^"]*/, "$1" + u);
+      if (noidx) h = h.replace(/<meta name="robots" content="[^"]*">/, '<meta name="robots" content="noindex, nofollow">');
+      fs.writeFileSync(path.join(dist, v + ".html"), h); } }
   // _redirects: prerendered files are served as-is (Netlify serves /x/index.html for /x).
   // App-only views that are not prerendered rewrite to the shell; anything else gets the real 404.
   const APP_VIEWS = ["join", "request", "admin", "learn", "recall", "build", "shadow", "quiz", "chat", "chunks", "progress", "path", "map", "voyage", "topic", "beginner", "pronunciation", "listening", "phrases", "grammar", "conversations", "seeit", "reallife", "travel"];
