@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restore purchase — LanguagePath Pro</title>
+<meta name="description" content="Restore LanguagePath Pro or your phrase packs with your licence key.">
+<meta name="robots" content="noindex,follow">
+<meta name="theme-color" content="#161310">
+<link rel="canonical" href="https://languagepath.org/pro-restore.html">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<style>
+  :root{--bg:#161310;--panel:#201b15;--panel2:#2a2318;--txt:#f2ece0;--muted:#a89877;--accent:#e0972a;--line:#3d3221;--noteTxt:#e6ddc9;--onAccent:#181410}
+  @media (prefers-color-scheme: light){
+    :root{--bg:#f7f3ea;--panel:#ffffff;--panel2:#efe7d5;--txt:#241d12;--muted:#79684a;--accent:#8a5a0b;--line:#ddd0b3;--noteTxt:#3a3020;--onAccent:#fff8ec}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.65}
+  main{max-width:680px;margin:0 auto;padding:48px 20px 90px}
+  a{color:var(--accent)}
+  h1{font-size:26px;margin:0 0 6px}
+  .updated{color:var(--muted);font-size:13px;margin-bottom:32px}
+  h2{font-size:18px;margin:34px 0 10px;color:var(--accent)}
+  p,li{color:var(--txt);font-size:15px}
+  ul{padding-left:22px}
+  li{margin-bottom:6px}
+  .back{display:inline-block;margin-bottom:24px;color:var(--muted);text-decoration:none;font-size:14px}
+  .back:hover{color:var(--accent)}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:20px 0}
+  .lead{font-size:17px;color:var(--noteTxt);line-height:1.6}
+
+  main{max-width:860px}
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:22px 0}
+  .tier{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .tier.hl{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  .tier h3{margin:0 0 4px;font-size:17px}.price{font-size:30px;font-weight:800;margin:6px 0}.price small{font-size:14px;color:var(--muted);font-weight:500}
+  .tier ul{padding-left:18px;margin:10px 0 16px}.tag{display:inline-block;font-size:11px;font-weight:700;background:var(--accent);color:var(--onAccent);border-radius:99px;padding:2px 8px;margin-left:6px;vertical-align:middle}
+  .buy{display:block;text-align:center;background:var(--accent);color:var(--onAccent);font-weight:700;text-decoration:none;border-radius:10px;padding:11px;border:0;width:100%;font-size:15px;cursor:pointer}
+  .buy[aria-disabled=true]{opacity:.55;cursor:not-allowed}
+  .packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+  .pk{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}.pk b{display:block}.pk .buy{padding:8px;font-size:14px;margin-top:8px}
+  input[type=text]{width:100%;padding:11px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font-family:monospace;font-size:13px}
+  .key{word-break:break-all;font-family:monospace;font-size:12px;background:var(--panel2);padding:10px;border-radius:8px}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="/">← LanguagePath</a>
+<h1>Restore purchase</h1><p>Paste the licence key from your thank-you page. It's checked by our server and saved in this browser — no account needed.</p>
+<input type="text" id="k" placeholder="LP1.…" autocomplete="off" spellcheck="false"><div style="height:10px"></div><button class="buy" id="b" style="max-width:240px">Restore</button><div id="out" style="margin-top:18px"></div>
+</main>
+<footer class="lp-foot" style="max-width:680px;margin:0 auto;padding:22px 20px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center">
+  <a href="/" style="color:var(--muted)">LanguagePath</a> · <a href="/about.html" style="color:var(--muted)">About</a> · <a href="/contact.html" style="color:var(--muted)">Contact</a> · <a href="/privacy.html" style="color:var(--muted)">Privacy</a> · <a href="/terms.html" style="color:var(--muted)">Terms</a>
+  <div style="margin-top:6px">© 2026 NMP DMCC · LanguagePath.org</div>
+</footer>
+<script src="/pro-config.js"></script>
+<script>
+const LIC="lp_pro_license";
+function lpStore(k){ try{ localStorage.setItem(LIC,k); localStorage.setItem("lp_pro_checked",Date.now()); }catch(e){} }
+function lpDl(list){ return (list||[]).map(d=>`<li><a href="${d.url}">${d.city} Phrase Pack (PDF)</a> <span style="color:var(--muted);font-size:13px">— link valid 48 h; restore any time for a new one</span></li>`).join(""); }
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+const out=document.getElementById("out"), k=document.getElementById("k");
+try{ k.value=localStorage.getItem(LIC)||""; }catch(e){}
+document.getElementById("b").onclick=async()=>{ const key=k.value.trim(); if(!key)return; out.textContent="Checking…";
+ try{ const r=await fetch("/.netlify/functions/verify-license",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key})}); const j=await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(j.error||"That key isn't valid.");
+  lpStore(j.license||key);
+  out.innerHTML=(j.kind==="pro"?"<p>✓ <b>Pro</b> is active until "+new Date(j.exp*1000).toLocaleDateString()+".</p>":(j.proExpired?"<p>Your Pro subscription has ended. <a href='/pro.html'>Renew</a></p>":""))+((j.downloads||[]).length?"<h2>Your phrase packs</h2><ul>"+lpDl(j.downloads)+"</ul>":"");
+ }catch(e){ out.innerHTML="<p>"+esc(e.message)+"</p>"; } };
+</script>
+</body>
+</html>

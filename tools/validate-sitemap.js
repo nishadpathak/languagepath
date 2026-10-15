@@ -17,7 +17,7 @@ const langCodes = new Set(require(path.join(root, "lan-codes.json")));
 
 // the 9 flagship + 60 authored codes come from lan-codes.json (generated from the app registry)
 const VIEWS = new Set(["lessons","dialog","pocket","culture","resources","sound","listen"]);
-const SPECIAL = new Set(["about.html","contact.html","privacy.html","terms.html","learn","map","voyage","path"]);
+const SPECIAL = new Set(["about.html","pro.html","contact.html","privacy.html","terms.html","learn","map","voyage","path"]);
 
 // Travel destination pages are /travel/{country-slug}/{city-slug}, driven by the TRAVEL array in
 // index.html — not a language hub, so they don't fit the /{lang}/{topic} shape below. Validate

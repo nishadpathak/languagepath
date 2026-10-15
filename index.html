@@ -8615,7 +8615,7 @@ function renderHub(){
     </div>
     <div class="card"><h3>💾 Backup & sync</h3>
       <p style="color:var(--muted);font-size:13px">Your progress lives in this browser. Export a file to back it up or move to another device.</p>
-      <div class="row-btns"><button class="btn ghost" onclick="exportProgress()">⬇️ Export progress</button>
+      <div class="row-btns"><button class="btn ghost" onclick="exportProgress()">⬇️ Export progress</button><button class="btn ghost" onclick="lpProExportCSV()">📊 Export CSV <small>(Pro)</small></button><button class="btn ghost" onclick="lpProOffline(this)">📥 Download course for offline <small>(Pro)</small></button>
       <label class="btn ghost" style="cursor:pointer">⬆️ Import<input type="file" accept="application/json" style="display:none" onchange="importProgress(this)"></label></div>
     </div>`;
   renderPoly();
@@ -8771,7 +8771,8 @@ let __adsLoaded=false;
 /* AdSense policy: ads may only appear on content-rich pages. The prerender marks those with
    a data-ads=1 attribute on the html element (see tools/content-quality.js); app screens (lessons, quizzes, games, forms,
    the Today dashboard, 404) never load the ad script, even after consent. */
-function lpAdsAllowed(){ try{ const h=document.documentElement; if(h.dataset.ads!=="1")return false;
+function lpIsPro(){ try{ const k=localStorage.getItem("lp_pro_license")||""; const m=/^LP1\.([\w-]+)\.[\w-]+$/.exec(k); if(!m)return false; const p=JSON.parse(atob(m[1].replace(/-/g,"+").replace(/_/g,"/"))); return p.kind==="pro"&&p.exp*1000>Date.now(); }catch(e){ return false; } }
+function lpAdsAllowed(){ try{ if(lpIsPro())return false; const h=document.documentElement; if(h.dataset.ads!=="1")return false;
   const here=location.pathname.replace(/\/+$/,"")||"/", pre=(h.dataset.prerendered||"").replace(/\/+$/,"")||"/"; if(here!==pre)return false;
   if(typeof curView!=="undefined"&&curView==="home"&&typeof MASTER!=="undefined"&&LANG_ORDER.some(l=>{const st=MASTER[l];return st&&((st.done&&st.done.length)||st.built||Object.keys(st.srs||{}).length);})) return false; // returning learner's Today dashboard
   return true; }catch(e){ return false; } }
@@ -9085,6 +9086,49 @@ if(PACKS[activeLang] && PACKS[activeLang]._lazy){
   ensureCourses(()=>{ const p=PACKS[activeLang]; LESSONS=p.lessons;DIALOGUES=p.dialogues;POCKET=mergeEssentials(activeLang,p.pocket);POCKET_CATS=(p.pocketCats||[]).slice(); if(DAILY_ESSENTIALS[activeLang]&&POCKET_CATS.indexOf("Daily essentials")<0)POCKET_CATS.unshift("Daily essentials");CULTURE=p.culture;SOUNDS=p.sounds;RESOURCES=p.resources; buildChalIndex(); applyPackDir(); if(__r.view&&__r.view!=="home"){go(__r.view);}else{pushRoute("home");} });
 } else if(__r.view && __r.view!=="home"){ go(__r.view); } else { pushRoute("home"); }
 
+</script>
+<script>
+/* LanguagePath Pro — no accounts. A signed key (from /pro-success.html or /pro-restore.html) lives in localStorage
+   "lp_pro_license"; lpIsPro() reads it client-side and verify-license refreshes it at most daily. */
+(function(){
+  const AI_FREE=10, AI_PRO=100, today=()=>new Date().toISOString().slice(0,10);
+  const nudge=(msg,where)=>`<div class="lp-pro-nudge" style="margin:14px 0;padding:12px 14px;border:1px solid var(--line,#dde3ec);border-radius:12px;font-size:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap"><span>${msg}</span><span><a href="/pro.html?from=${where}" style="color:var(--accent);font-weight:700;text-decoration:none">See Pro →</a> <button onclick="this.closest('.lp-pro-nudge').remove();try{localStorage.setItem('lp_nudge_${where}',Date.now())}catch(e){}" aria-label="Dismiss" style="background:none;border:0;color:var(--muted);cursor:pointer;font-size:16px">×</button></span></div>`;
+  const snoozed=w=>{ try{ return Date.now()-(+localStorage.getItem("lp_nudge_"+w)||0) < 7*864e5; }catch(e){ return true; } };
+  // 1) AI practice daily limit (client-side meter; the server proxy has its own rate limiting)
+  const _ai=anthropicCall;
+  anthropicCall=async function(body){
+    let u={}; try{ u=JSON.parse(localStorage.getItem("lp_ai_use")||"{}"); }catch(e){}
+    if(u.d!==today()) u={d:today(),n:0};
+    const cap=lpIsPro()?AI_PRO:AI_FREE;
+    if(u.n>=cap) throw new Error(lpIsPro()?"You've reached today's AI practice limit — it resets tomorrow.":"You've used today's "+AI_FREE+" free AI practice turns. They reset tomorrow — or LanguagePath Pro raises it to "+AI_PRO+" a day: languagepath.org/pro");
+    const r=await _ai(body); u.n++; try{ localStorage.setItem("lp_ai_use",JSON.stringify(u)); }catch(e){} return r;
+  };
+  // 2) gentle prompt after every 3rd finished lesson
+  const _done=renderLessonDone;
+  renderLessonDone=function(){ _done.apply(this,arguments); try{
+    const n=Object.values(MASTER||{}).reduce((a,st)=>a+((st&&st.done&&st.done.length)||0),0);
+    if(!lpIsPro()&&n&&n%3===0&&!snoozed("lesson")){ const box=document.querySelector("#view-lesson .lesson-done, #view-lesson")||document.querySelector("section.view.active"); if(box) box.insertAdjacentHTML("beforeend",nudge("Nice streak! Pro takes the ads away, lets you download the whole course for offline study, and exports your progress.","lesson")); }
+  }catch(e){} };
+  // 3) phrase-pack card on city pages
+  const _tr=renderTravel;
+  renderTravel=function(){ _tr.apply(this,arguments); try{
+    if(typeof travelDest==="undefined"||!travelDest)return; const sec=document.getElementById("view-travel"); const hero=sec&&sec.querySelector(".hero"); if(!hero||sec.querySelector(".lp-pack-card"))return;
+    hero.insertAdjacentHTML("afterend",`<div class="lp-pack-card" style="margin:12px 0;padding:12px 14px;border-radius:12px;background:var(--soft,#f3f7fd);font-size:14px">📄 <b>Printable ${travelDest.name} Phrase Pack</b> — every phrase on this page plus dialogues and etiquette, as a 10-page PDF for your bag. $9 · all 8 cities $19. <a href="/pro.html#packs" style="color:var(--accent);font-weight:700;text-decoration:none">Get the PDF →</a></div>`);
+  }catch(e){} };
+  // 4) Pro-only extras
+  window.lpProExportCSV=function(){ if(!lpIsPro()){ location.href="/pro.html?from=export"; return; }
+    const rows=[["language","lessons_done","words_in_review","streak"]]; for(const l of Object.keys(MASTER||{})){ const st=MASTER[l]; if(!st||typeof st!=="object")continue; rows.push([l,(st.done||[]).length,Object.keys(st.srs||{}).length,st.streak||0]); }
+    const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(",")).join("\n")],{type:"text/csv"})); a.download="languagepath-progress.csv"; document.body.appendChild(a); a.click(); a.remove(); };
+  window.lpProOffline=async function(btn){ if(!lpIsPro()){ location.href="/pro.html?from=offline"; return; }
+    if(!navigator.serviceWorker||!navigator.serviceWorker.controller){ alert("Offline download needs the installed/https site — reload once and try again."); return; }
+    const urls=["/","/courses.js","/data.js","/travel"].concat((typeof LANG_ORDER!=="undefined"?LANG_ORDER:[]).map(l=>"/"+l));
+    if(btn){btn.disabled=true;btn.textContent="Downloading…";}
+    navigator.serviceWorker.controller.postMessage({type:"lp-offline",urls});
+    navigator.serviceWorker.addEventListener("message",e=>{ if(e.data&&e.data.type==="lp-offline-done"&&btn){ btn.textContent="✓ Saved for offline ("+e.data.n+" pages)"; } },{once:true}); };
+  // daily refresh of the key (renewals extend exp; refunds/cancels simply stop renewing)
+  try{ const k=localStorage.getItem("lp_pro_license"), last=+localStorage.getItem("lp_pro_checked")||0;
+    if(k&&Date.now()-last>864e5) fetch("/.netlify/functions/verify-license",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:k})}).then(r=>r.ok?r.json():null).then(j=>{ localStorage.setItem("lp_pro_checked",Date.now()); if(j&&j.license) localStorage.setItem("lp_pro_license",j.license); }).catch(()=>{}); }catch(e){}
+})();
 </script>
 </body>
 </html>

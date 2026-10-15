@@ -70,7 +70,7 @@ function build(route, m) {
   if (!CHROME) { console.error("No Chrome found; set CHROME_PATH"); process.exit(1); }
   fs.rmSync(dist, { recursive: true, force: true }); fs.mkdirSync(dist, { recursive: true });
   // copy static assets (everything the site serves) into dist/
-  const skip = new Set(["dist", "tools", "docs", "netlify", "node_modules", ".git", ".github", "guide", "README.md", ".gitignore", ".env.example", "package.json", "package-lock.json", "netlify.toml"]);
+  const skip = new Set(["dist", "private", "tools", "docs", "netlify", "node_modules", ".git", ".github", "guide", "README.md", ".gitignore", ".env.example", "package.json", "package-lock.json", "netlify.toml"]);
   (function cp(src, dst) {
     for (const e of fs.readdirSync(src, { withFileTypes: true })) {
       if (skip.has(e.name) && src === root) continue;

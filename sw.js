@@ -1,7 +1,7 @@
 /* LanguagePath service worker — makes the app work offline once hosted (https/localhost).
    Strategy: network-first (so edits to the single HTML file propagate), with a cache fallback
    for when you're offline — e.g. on the plane or abroad with no data. */
-const CACHE = "languagepath-v22";
+const CACHE = "languagepath-v23";
 const CORE = [
   "./",
   "./index.html",
@@ -63,4 +63,12 @@ self.addEventListener("fetch", e => {
         })
       )
   );
+});
+
+// Pro: "download course for offline" — page asks us to pre-cache a list of same-origin URLs
+self.addEventListener("message", e => {
+  const d = e.data || {}; if (d.type !== "lp-offline" || !Array.isArray(d.urls)) return;
+  const urls = d.urls.filter(u => typeof u === "string" && u.startsWith("/") && !u.startsWith("//")).slice(0, 200);
+  e.waitUntil(caches.open(CACHE).then(async c => { let n = 0; for (const u of urls) { try { const r = await fetch(u, { credentials: "same-origin" }); if (r.ok) { await c.put(u, r); n++; } } catch (_) {} }
+    if (e.source) e.source.postMessage({ type: "lp-offline-done", n }); }));
 });

@@ -43,3 +43,16 @@
   to = "/tr/:splat"
   status = 301
   force = true
+
+# Pro / phrase packs: functions bundle the private PDFs; they are never published in dist/
+[functions]
+  included_files = ["private/packs/*.pdf"]
+[[headers]]
+  for = "/pro-success.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/pro-restore.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
