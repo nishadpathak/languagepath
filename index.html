@@ -1809,7 +1809,7 @@ html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir=
 </noscript>
 <header><div class="htop">
   <button class="brandbtn" onclick="go('home')" title="Go to home" aria-label="LanguagePath — go to home">
-    <img class="logo" src="/logo.png" alt="LanguagePath" height="40">
+    <img class="logo" src="/logo-header-light.png" alt="LanguagePath" height="40">
     <h1 class="sr-only">LanguagePath</h1>
   </button>
   <button id="themeBtn" class="themebtn" onclick="toggleTheme()" title="Toggle light / dark" aria-label="Toggle light or dark mode">☀️</button>
@@ -3925,7 +3925,7 @@ const TP_PROGRAMS={
   transfers: {label:"🚐 Airport transfer",  link:"https://intui.tpk.ro/uKlnIpBL" /* Intui.travel airport transfers */},
   carrental: {label:"🚗 Car rental",       link:"https://localrent.tpk.ro/S2HbNLJ4" /* Localrent */},
   luggage:   {label:"🧳 Luggage storage",   link:"https://radicalstorage.tpk.ro/XtrVEy3G" /* Radical Storage */},
-  compensair:{label:"or Compensair",       link:"https://compensair.tpk.ro/QSVjhAy2", noSub:true /* Compensair (second flight-compensation option) */},
+  compensair:{label:"or Compensair",       link:"https://compensair.tpk.ro/QSVjhAy2" /* Compensair (second flight-compensation option) */},
   citypass:  {label:"🎫 City pass",         link:"https://gocity.tpk.ro/wwBQlscq" /* Go City attraction passes */},
   airhelp:   {label:"Flight delayed or cancelled? Check compensation with AirHelp", link:"https://airhelp.tpk.ro/oFLECFJA" /* AirHelp */}
 };
@@ -3943,7 +3943,6 @@ function tpSub(s){ return String(s||"site").toLowerCase().replace(/[^a-z0-9_]+/g
 function tpLink(kind,sub){
   const p=TP_PROGRAMS[kind]; if(!p||!p.link) return ""; if(kind==="hotels") sub=tpSub(sub)+"_hotels";
   if(/570982|emrldtp\./i.test(p.link)) return "";   // hard guard: wrong account / known-malicious loader
-  if(p.noSub) return p.link;   // Compensair: tpk.ro redirects to "compensair.com?sub_id…" (no slash) when a sub_id is passed
   return p.link+(p.link.indexOf("?")>=0?"&":"?")+"sub_id="+encodeURIComponent(tpSub(sub));
 }
 function tpClick(kind,sub){ try{ track("affiliate_click", kind+"|"+tpSub(sub)); }catch(e){} }
@@ -9171,8 +9170,15 @@ if(PACKS[activeLang] && PACKS[activeLang]._lazy){
     ["Sinhala",/[\u0D80-\u0DFF]/,"si",0],["Thai",/[\u0E00-\u0E7F]/,"th",0],["Lao",/[\u0E80-\u0EFF]/,"lo",0],["Tibetan",/[\u0F00-\u0FFF]/,"bo",0],["Myanmar",/[\u1000-\u109F]/,"my",0],["Georgian",/[\u10A0-\u10FF]/,"ka",0],
     ["Ethiopic",/[\u1200-\u139F]/,"am",0],["Khmer",/[\u1780-\u17FF]/,"km",0],["Armenian",/[\u0530-\u058F]/,"hy",0],["Greek",/[\u0370-\u03FF]/,"el",0],["Cyrillic",/[\u0400-\u04FF]/,"ru",0]];
   const ANY=new RegExp("["+SCRIPTS.map(x=>x[1].source.slice(1,-1)).join("")+"]");
-  let NATIVE=null; function nativeMap(){ if(NATIVE)return NATIVE; NATIVE={}; try{ for(const k of Object.keys(PACKS)){ const q=PACKS[k]; if(q&&q.native&&q.tts) NATIVE[String(q.native).trim()]=q.tts.split("-")[0]; } (typeof EXTRA_LANGS!=="undefined"?EXTRA_LANGS:[]).forEach(e=>{ if(e[2]&&e[4]) NATIVE[String(e[2]).trim()]=String(e[4]).split("-")[0]; }); }catch(e){} return NATIVE; }
-  function langFor(txt){ const nm=nativeMap()[String(txt).trim()]; if(nm){ return [nm, /^(ar|he|fa|ur|ps|yi|dv|ku|sd|ug)$/.test(nm)?1:0]; } for(const [n,re,code,rtl] of SCRIPTS){ if(re.test(txt)){ let l=code; try{ const p=PACKS[activeLang], t=p&&(p.tts||"").split("-")[0]; if(t){ const same=SCRIPTS.find(x=>x[2]===t); if(same? same[0]===n : true) l=t; if(n==="Arabic"&&/^(fa|ur|ps|ku|ug|sd)$/.test(t)) l=t; if(n==="Cyrillic"&&/^(uk|be|bg|sr|mk|kk|ky|mn|tg)$/.test(t)) l=t; if(n==="Devanagari"&&/^(mr|ne|sa)$/.test(t)) l=t; if(n==="Hebrew"&&t==="yi") l=t; if(n==="Ethiopic"&&t==="ti") l=t; } }catch(e){} return [l,rtl]; } } return null; }
+  let NMAP=null; function nativeMap(){ if(NMAP)return NMAP; NMAP={}; try{ const G=(typeof NATIVE!=="undefined")?NATIVE:{}; for(const k of Object.keys(G)){ const q=PACKS[k]; if(q&&q.tts) NMAP[String(G[k]).trim()]=q.tts.split("-")[0]; } for(const k of Object.keys(PACKS)){ const q=PACKS[k]; if(q&&q.native&&q.tts) NMAP[String(q.native).trim()]=q.tts.split("-")[0]; } (typeof EXTRA_LANGS!=="undefined"?EXTRA_LANGS:[]).forEach(e=>{ if(e[2]&&e[4]) NMAP[String(e[2]).trim()]=String(e[4]).split("-")[0]; }); }catch(e){} return NMAP; }
+  const RTL_CODES=/^(ar|he|fa|ur|ps|yi|dv|ku|sd|ug|syr)$/;
+  function scriptOf(txt){ for(const x of SCRIPTS) if(x[1].test(txt)) return x; return null; }
+  function langFor(txt){
+    const nm=nativeMap()[String(txt).trim()]; if(nm) return [nm, RTL_CODES.test(nm)?1:0];      // language-picker labels: their own language
+    const sc=scriptOf(txt); if(!sc) return null; let l=sc[2];
+    try{ const p=PACKS[activeLang], t=p&&(p.tts||"").split("-")[0], ps=p&&scriptOf(String(p.native||"")+" "+String(((p.pocket||[])[0]||{}).tr||"")+" "+String(((p.lessons||[])[0]||{}).title||"")); if(t&&ps&&ps[0]===sc[0]) l=t; }catch(e){}   // page language only when it uses this script
+    return [l, sc[3]];
+  }
   const SKIP={SCRIPT:1,STYLE:1,NOSCRIPT:1,TEXTAREA:1,INPUT:1,SELECT:1,OPTION:1,TITLE:1,svg:1,SVG:1};
   function tag(root){
     if(!root||!root.ownerDocument&&root!==document)return;
@@ -9181,7 +9187,7 @@ if(PACKS[activeLang] && PACKS[activeLang]._lazy){
     for(const t of nodes){
       const el=t.parentElement; if(!el||SKIP[el.tagName]||el.closest("[data-lp-lt],svg"))continue;
       const own=el.closest("[lang]"); const lf=langFor(t.nodeValue); if(!lf)continue; const [l,rtl]=lf;
-      if(own&&own!==document.documentElement&&own.getAttribute("lang")===l){ if(rtl&&!own.closest("[dir=rtl],[dir=auto]")) own.setAttribute("dir","rtl"); continue; }
+      if(own&&own!==document.documentElement&&own.getAttribute("lang")===l){ const d=own.getAttribute("dir"); if(rtl&&d!=="rtl"&&d!=="auto") own.setAttribute("dir","rtl"); if(!rtl&&d==="rtl") own.setAttribute("dir","ltr"); continue; }
       const letters=(el.textContent.match(/\p{L}/gu)||[]).length, foreign=(el.textContent.match(new RegExp(ANY.source,"g"))||[]).length;
       if(el.childElementCount===0&&letters&&foreign/letters>0.6&&el!==document.body){ el.setAttribute("lang",l); if(rtl&&el.getAttribute("dir")!=="auto") el.setAttribute("dir","rtl"); el.setAttribute("data-lp-lt",""); continue; }
       // mixed English + foreign text: wrap each foreign run
