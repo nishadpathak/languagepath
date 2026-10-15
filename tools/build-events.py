@@ -269,7 +269,7 @@ def kit_page():
     b.append('<div class="card"><p style="font-size:22px;font-weight:800;margin:0">$19 <span style="font-size:14px;color:var(--muted);font-weight:400">one-time · 18-page PDF · yours to keep</span></p><p><a class="buy" data-sku="pack_business_kit" href="#">Get the Business Travel Kit — $19</a></p><p class="disc">Secure checkout by Stripe. After paying you get a download link straight away, and you can restore it any time on <a href="/pro-restore.html">Restore purchase</a>.</p></div>')
     b.append("<h2>What's inside</h2><ul>")
     for s in secs:
-        b.append(f'<li><b>{E(s["title"])} ({E(s["lang"])})</b>: {", ".join(E(g[0]).lower() for g in s["groups"])}; etiquette on {", ".join(E(e[0]).lower() for e in s["etiquette"])}; small-talk do\'s and don\'ts.</li>')
+        b.append(f'<li><b>{E(s["title"])} ({E(s["lang"])})</b>: {", ".join(E(g[0][0].lower() + g[0][1:]) for g in s["groups"])}; etiquette on {", ".join(E(e[0][0].lower() + e[0][1:]) for e in s["etiquette"])}; small-talk do\'s and don\'ts.</li>')
     b.append("</ul><p>Each section covers meeting basics, numbers and money, taxis and hotels, and a do's and don'ts list for small talk, so you can walk into a first meeting prepared. The India section also explains the Indian business English you will hear, and how lakhs and crores work.</p>")
     b.append("<h2>A taste of the phrases</h2>")
     for s in secs:
