@@ -62,7 +62,7 @@
   <p>Use this form for questions about the courses, corrections to a lesson or guide, partnership enquiries, or privacy requests. If you are reporting an error, please include the page address.</p>
   <form name="contact" method="POST" action="/contact.html#sent" data-netlify="true" netlify-honeypot="bot_field">
     <input type="hidden" name="form-name" value="contact">
-    <p style="display:none"><label>Leave this empty <input name="bot_field"></label></p>
+    <p class="hp-trap" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"><label>Leave this empty <input name="bot_field" id="bot_field" tabindex="-1" autocomplete="off" value=""></label></p>
     <label for="c-name">Your name</label><input id="c-name" name="name" autocomplete="name" required>
     <label for="c-email">Your email</label><input id="c-email" type="email" name="email" autocomplete="email" required>
     <label for="c-topic">Topic</label><select id="c-topic" name="topic"><option>Question about a course</option><option>Correction / error report</option><option>Partnership or advertising</option><option>Privacy request</option><option>Other</option></select>
@@ -70,6 +70,7 @@
     <label for="c-msg">Message</label><textarea id="c-msg" name="message" rows="6" required></textarea>
     <button type="submit">Send message</button>
   </form>
+<script>document.querySelector('form[name="contact"]').addEventListener("submit",function(e){var t=this.querySelector('[name="bot_field"]');if(t&&t.value){e.preventDefault();return false;}});</script>
   <h2>Other ways to reach us</h2>
   <p>Email: <a href="mailto:languagepathorg@gmail.com">languagepathorg@gmail.com</a></p>
   <p>LanguagePath.org is operated by <b>LanguagePath</b>, an independent, international company. See <a href="/about.html">About</a>, our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Use</a>.</p>

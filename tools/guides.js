@@ -209,7 +209,7 @@ function buildGuides(data) {
     if (wo.length) s.push(`<h2>Common mistakes and things to watch out for</h2><ul>${wo.join("")}</ul>`);
     if (cultureList.length) s.push(`<h2>Culture and etiquette</h2>${cultureHTML(cultureList)}`);
     const trip = (data.trip || {})[code];
-    if (trip) { const where = trip[0] === trip[1] ? trip[0] : trip[1] + ", " + trip[0]; s.push(tripBox(where, "guide_" + code, `If you are learning ${esc(name)} for a visit to ${esc(where)}, the phrases above are the ones you will use first on the ground.${trav ? ` Our <a href="/travel/${trav.slug}/${trav.cities[0].slug}">${esc(trav.cities[0].name)} phrasebook</a> collects the travel situations in one place.` : ""}`)); }
+    if (trip) { const where = trip[0] === trip[1] ? trip[0] : trip[1] + ", " + trip[0]; /* the app shell already shows the #tpHome trip card on language homes: text only here, no second card */ s.push(`<p>If you are learning ${esc(name)} for a visit to ${esc(where)}, the phrases above are the ones you will use first on the ground.${trav ? ` Our <a href="/travel/${trav.slug}/${trav.cities[0].slug}">${esc(trav.cities[0].name)} phrasebook</a> collects the travel situations in one place.` : ""}</p>`); }
     if (dlgs.length) s.push(`<h2>Example dialogues</h2>${dlgs.slice(0, 3).map(dialogueHTML).join("")}`);
     out["/" + code] = { kind: "language", html: article("/" + code, "language", `Learning ${name}: a practical guide`, s.join("\n")) };
   }
