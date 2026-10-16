@@ -1,49 +1,17 @@
 {
   "name": "languagepath",
-  "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": ">=20"
-  },
+  "description": "LanguagePath.org static PWA + build-time prerender",
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
-    "start": "next start",
-    "lint": "eslint",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "e2e": "node scripts/e2e.mjs",
-    "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio",
-    "postinstall": "prisma generate"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "build": "node tools/bake-buy-links.js && node tools/prerender.js && node tools/build-lesson-pages.js && node tools/strip-comments.js && node tools/write-build-info.js",
+    "check": "node tools/bake-buy-links.js --check && node tools/check-no-secrets.js && node tools/check-noindex-routes.js && node tools/validate-sitemap.js && node tools/check-visual-path.js && node tools/check-prerender.js && node tools/check-affiliates.js && node tools/check-content-depth.js && node tools/check-stripe.js && node tools/check-no-personal.js && node tools/check-castilian.js"
   },
   "dependencies": {
-    "@prisma/client": "^6.16.2",
-    "bcryptjs": "^3.0.3",
-    "jose": "^6.2.12",
-    "next": "16.3.5",
-    "prisma": "^6.16.2",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "stripe": "^22.6.2",
-    "zod": "^4.6.5"
+    "@netlify/blobs": "^8.1.0"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.5",
-    "puppeteer-core": "^25.11.0",
-    "tailwindcss": "^4",
-    "tsx": "^4.23.13",
-    "typescript": "^5",
-    "vitest": "^3.2.4"
+    "esbuild": "^0.24.2",
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^23.11.1"
   }
 }
