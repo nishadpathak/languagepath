@@ -1,188 +1,56 @@
 # LanguagePath
 
-Free language learning by constructing sentences: reason one out, say it aloud, then reveal. The core trainer stays free. Optional **Pro** is the only paid offer: Stripe Checkout (monthly/yearly) → webhook → cloud progress sync, streak backup, and AI chat quota.
+<p align="center"><img src="logo.png" alt="LanguagePath" width="360"></p>
 
-Courses are **original beginner sequences** (Spanish, French, German, Portuguese). They were not scraped from languagepath.org.
+An offline-friendly language trainer built around one idea: you don't memorize phrases, you *reason them out* — the teacher hands you a piece, asks you to build something, you say it aloud, then reveal and check. Every step reuses what you already built.
 
-## What is free (no account, no card)
+**Serve it** (e.g. Netlify / GitHub Pages) — it's a single-page offline-first PWA with **real per-language URLs** (`/spanish`, `/spanish/lessons`) and a Netlify SPA fallback already configured in `netlify.toml`. No build step. It runs fully offline once hosted via `sw.js`.
 
-- Full lessons: understand a piece → construct → speak → reveal
-- Streak and XP for sentences you built and spoke (`localStorage`)
-- Path race (80-day clock; misses cost a day)
-- Intensive mode (longer chains, speak-before-reveal, ~25 min session)
-- **Lessons are never paywalled**
+## Languages
 
-## What Pro adds (one offer)
+The dropdown lists **69 free courses**, all fully built — no account, no key:
 
-Create an account, pay with Stripe Checkout, wait for the webhook. Then:
+- **The flagship 9** (30+ lessons each): 🇨🇳 Mandarin · 🇸🇦 Arabic · 🇫🇷 French · 🇩🇪 German · 🇵🇹 Portuguese · 🇪🇸 Spanish · 🇹🇷 Turkish · 🇮🇳 Telugu · 🇮🇷 Farsi
+- **60 more**, each a full 12-lesson course: Bengali, Dutch, Greek, Gujarati, Hebrew, Hindi, Indonesian, Italian, Japanese, Kannada, Korean, Malay, Marathi, Polish, Punjabi, Romanian, Russian, Swahili, Swedish, Tamil, Thai, Ukrainian, Urdu, Vietnamese, Tagalog, Javanese, Hausa, Burmese, Azerbaijani, Amharic, Nepali, Serbian, Sinhala, Khmer, Lao, Hungarian, Zulu, Czech, Bulgarian, Armenian, Georgian, Somali, Yoruba, Igbo, Catalan, Finnish, Danish, Norwegian, Malayalam, Odia, Pashto, Uzbek, Oromo, Cantonese, Sundanese, Kurdish, Afrikaans, Kazakh, Slovak, Belarusian
 
-| Pro entitlement | Free |
-| --- | --- |
-| Cloud progress sync (`GET`/`PUT /api/sync`) | Local only |
-| Streak backup on the user row | Browser only |
-| GrokBot chat quota | 3 messages / month if signed in; 80 monthly Pro / 120 yearly Pro |
+Right-to-left scripts (Arabic, Farsi, Hebrew, Urdu, Pashto) render automatically. The app opens on Mandarin by default.
 
-Lessons, Path, and Intensive stay available either way.
+## What's inside each pack
 
-## Setup without Stripe (trainer is usable)
+- **Lessons** — graduated lessons that build sentences from pieces
+- **🗣️ Conversation practice** — role-play each scenario line by line: see the cue, say it out loud, reveal, compare
+- **Recall** — spaced repetition (Leitner ladder) surfaces items right before you'd forget; **🎤 Say it & check** uses your browser's speech recognition to verify your pronunciation (Chrome/Edge)
+- **Listen** — audio-only comprehension drills, with an optional **dictation** field (type what you hear, accent-insensitive)
+- **Shadow** — speak-along lines to train rhythm and accent, with a **🎤 Check me** speech check
+- **Dialogues** — full real-world conversations, line by line
+- **Quiz** — multiple-choice, typing, and **🧩 fill-the-blank (cloze)** challenges
+- **Build** — generative practice that combines two sentences you've already learned; **🛠️ Remix** makes brand-new sentences from known parts
+- **Chunks** — capture your own phrases; they flow into Recall, Listen, Shadow and Quiz
+- **Phrases / Culture / Sounds / Resources** — grab-and-go reference and comprehensible-input links
+- **Hub** — the same phrase across all your languages, showing shared roots, plus one cross-language review session
 
-```bash
-cp .env.example .env
-# Required even without Stripe:
-#   AUTH_SECRET   openssl rand -base64 32
-#   DATABASE_URL  file:./dev.db
-npm install
-npx prisma db push
-npm run db:seed   # optional: demo@languagepath.test / languagepath
-npm run dev
-```
+## Make it yours
 
-Open [http://localhost:3000](http://localhost:3000) and start a course. No login needed.
+Everything below is optional and stored **only in your own browser** — nothing is shared. Set it in **🌐 Hub → 👤 Your profile**:
 
-### Run a course locally
+- **Your name** — fills the "my name is…" examples across every language (defaults to "Alex").
+- **Languages you already speak** — e.g. "Spanish, Hindi, French" (powers the upcoming ✨ memory bridges).
+- **🌓 Light / dark** — toggle in the header; your choice is remembered (dark by default).
 
-1. `npm run dev`
-2. Open [http://localhost:3000/learn](http://localhost:3000/learn)
-3. Pick a language. Spanish is the flagship (10 lessons). French is next (10). German and Portuguese are shorter (8 each).
-4. A lesson is ~10 minutes: understand a piece → construct a new sentence → say it aloud → reveal → listen → rebuild.
-5. From the course hub you can also open **Recall** (spaced review of sentences you already built), **Build** (brand-new lines from known pieces), **Dialogue**, and **Pocket phrases**.
-6. Toggle **Intensive** in a lesson or open `/intensive` for the longer speak-before-reveal chain.
+**AI features — coming soon.** ✨ Memory bridges, the 🤖 conversation partner, and full 🧩 generative AI Build practice are wired in but dormant until the backend launches (set `AI_ENDPOINT` in `index.html` to enable). Everything else works fully offline with no account or key.
 
-First Spanish lesson stays at `/learn/es/es-want`.
+## Data & sync
 
-```bash
-npm test
-npm run lint
-npm run build
-```
+Progress lives in the browser's `localStorage`, per language. Use the Hub's **Export / Import** buttons to back up or move to another device. TTS uses the device's built-in voices; pick your preferred voice per language in the **Voice** card on the Method tab.
 
-## Stripe test keys (copy these five)
+## Files
 
-Use **Test mode** in the Stripe Dashboard. Production keys are the same names with `sk_live_` / `pk_live_` / live `price_` / `whsec_`.
-
-1. [API keys](https://dashboard.stripe.com/test/apikeys) → copy:
-   - `STRIPE_SECRET_KEY=sk_test_...`
-   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...` (Checkout is Stripe-hosted; this is unused in the client today)
-2. [Products](https://dashboard.stripe.com/test/products) → **Add product** named `LanguagePath Pro` → two recurring prices:
-   - Monthly, USD **9.00** → `STRIPE_PRICE_MONTHLY=price_...`
-   - Yearly, USD **72.00** → `STRIPE_PRICE_YEARLY=price_...`
-3. Webhook signing secret:
-   - Local: `stripe listen --forward-to localhost:3000/api/stripe/webhook` → copy `whsec_...`
-   - Production: Workbench → Webhooks → `https://YOUR_DOMAIN/api/stripe/webhook` → signing secret
-
-Paste into `.env` (no quotes needed unless the value has spaces):
-
-```bash
-APP_URL=http://localhost:3000
-STRIPE_SECRET_KEY=sk_test_REPLACE_ME
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_REPLACE_ME
-STRIPE_PRICE_MONTHLY=price_REPLACE_ME
-STRIPE_PRICE_YEARLY=price_REPLACE_ME
-STRIPE_WEBHOOK_SECRET=whsec_REPLACE_ME
-```
-
-Restart `npm run dev` after changing `.env`.
-
-CLI equivalent for prices:
-
-```bash
-stripe products create --name "LanguagePath Pro"
-stripe prices create --product prod_XXX --currency usd --unit-amount 900 --recurring-interval month
-stripe prices create --product prod_XXX --currency usd --unit-amount 7200 --recurring-interval year
-```
-
-### Checkout → webhook → Pro
-
-1. `npm run dev` and `stripe listen --forward-to localhost:3000/api/stripe/webhook` are both running.
-2. Sign up at `/signup`.
-3. Open `/pricing` → monthly or yearly. You go to Stripe Checkout (not a card form on this site).
-4. Pay with test card `4242 4242 4242 4242`, any future expiry, any CVC.
-5. Stripe sends `checkout.session.completed` (and subscription events) to `POST /api/stripe/webhook`.
-6. You land on `/account?checkout=success`. The page polls `/api/me` until `plan=pro`.
-7. `PUT /api/sync` starts succeeding. Chat quota jumps. Lessons were never gated.
-
-Events handled:
-
-- `checkout.session.completed` — attach customer + subscription, mark Pro
-- `customer.subscription.created` / `updated` — plan, interval, status, period end
-- `customer.subscription.deleted` — back to free (lessons still work)
-- `invoice.paid` — reset the AI chat counter for the new period
-
-If keys are missing, Checkout returns **503** with a README hint. The trainer keeps working.
-
-Customer portal: Pro accounts → **Manage billing** on `/account`.
-
-### Local Pro without a Stripe account (webhook mock)
-
-For automated tests only. **Never enable in production.**
-
-```bash
-# .env
-ALLOW_WEBHOOK_MOCK=1
-```
-
-Then, while logged in:
-
-```bash
-curl -X POST http://localhost:3000/api/dev/simulate-checkout \
-  -H 'Content-Type: application/json' \
-  --cookie 'lp_session=...' \
-  -d '{"interval":"month"}'
-```
-
-That runs the **same** `handleStripeEvent` path as a real `checkout.session.completed`.
-
-```bash
-npx tsx scripts/simulate-webhook.ts   # Pro on a throwaway DB user
-npm run e2e                           # Chrome: signup → pricing → mock webhook → Pro
-```
-
-`npm run e2e` needs `npm run dev`, Google Chrome, and `ALLOW_WEBHOOK_MOCK=1`.
-
-## GrokBot (conversation partner)
-
-LanguagePath’s in-app partner at `/chat`. It stays A1–A2 and reuses sentences from the current course.
-
-```bash
-# .env — get a key at https://console.x.ai
-XAI_API_KEY=xai-...
-GROK_MODEL=grok-4.7   # optional; this is the default
-```
-
-Restart `npm run dev`. Sign in (free accounts get 3 messages / month). Without `XAI_API_KEY`, GrokBot still answers with a local beginner tutor so lessons and the UI keep working. `OPENAI_API_KEY` is only used if xAI is unset.
-
-## Intensive mode
-
-Toggle it in a lesson, on `/account`, or open `/intensive`.
-
-- Extra construct/rebuild chain after the daily lesson
-- Reveal stays locked until **I said it aloud**
-- Power session is a 25:00 clock over every construct and rebuild step in the course
-
-## Production-ready vs needs Stripe keys
-
-**Ready without Stripe keys**
-
-- Free lessons, Path, Intensive, streak/XP
-- Signup / login
-- Pricing page (Checkout button explains missing keys)
-- Webhook handler code, Pro flag, cloud sync API, chat quota math
-
-**Needs Stripe test keys to exercise money movement**
-
-- Hosted Checkout redirect
-- Signed webhook from Stripe (or Stripe CLI `listen`)
-- Customer portal
-
-**Needs live keys + HTTPS only for production charges**
-
-- `sk_live_` / live prices / live `whsec_`
-- `APP_URL` = your public origin
-- `ALLOW_WEBHOOK_MOCK` must stay unset
-
-## Notes
-
-- Signed-out progress: `localStorage` key `languagepath.progress.v1`
-- Speech: browser `speechSynthesis` (`es-ES` / `fr-FR` / `de-DE` / `pt-PT`)
-- Path uses the last course you opened (Spanish, French, German, or Portuguese)
-- Optional `XAI_API_KEY` — GrokBot (conversation partner) via `https://api.x.ai/v1/chat/completions`. `GROK_MODEL` defaults to `grok-4.7`. If unset, `OPENAI_API_KEY` is a fallback. With neither key, a local beginner tutor still replies and quota still counts. Lessons stay free.
+- `index.html` — the app shell (markup, styles, and the lesson-player engine)
+- `courses.js` — all 60 authored course packs (one per language)
+- `data.js` — base course & per-language phrase data, loaded before the shell
+- `sw.js` — service worker for offline use when hosted
+- `manifest.json` + `icons/` — PWA install manifest and install icons (any + maskable)
+- `logo.png` (wordmark), `og-image.png`, `apple-touch-icon.png`, `favicon.ico`, `icon.png` — brand and app-icon assets
+- `privacy.html`, `terms.html`, `about.html` — legal & about pages
+- `robots.txt`, `sitemap.xml` — SEO
+- `ads.txt` — Google AdSense publisher verification

@@ -1,0 +1,293 @@
+/* ---- odia ---- */
+window.LP_COURSES = window.LP_COURSES || {};
+window.LP_COURSES["odia"] = {
+  name: 'Odia',
+  flag: '🇮🇳',
+  tts: 'or-IN',
+  dir: 'ltr',
+  native: 'ଓଡ଼ିଆ',
+  soundTitle: 'Odia sounds & spelling',
+  soundIntro: 'Odia has its own beautiful Brahmic alphabet. A few sounds don\'t exist in English — especially the breathy (aspirated) consonants, the curled retroflex sounds, and a rare "ḷ" and flap "ṛ". Learn these and you\'ll be understood.',
+  grammar: '<p>Odia word order follows <b>Subject–Object–Verb</b>: <i>mote pani darakara</i> (to me water is-needed = "I want water"). To say you <b>want / need</b> something, say <i>mote ... darakara</i> — "to me ... is needed." The polite <b>you</b> is <i>apana</i>; use it with strangers and elders. Plurals are usually clear from context, so you don\'t have to memorize plural endings. Odia is written left-to-right in its own Brahmic script and is an <b>Indo-Aryan</b> language — a close sibling to Bengali, Assamese and Hindi.</p>',
+  bridges: '<div class="note">🇧🇩 <b>Bengali & Assamese speakers.</b> Odia is your close cousin — same Brahmic script family and tons of shared words: <i>pani, bhat, ma, bhai</i>. You can read a lot of it within days.</div><div class="note">🇮🇳 <b>Hindi/Urdu speakers.</b> Odia shares many Sanskrit roots with your language — <i>nam, pani, cha</i> all feel familiar, even though the script looks different. You\'ll learn it fast.</div><div class="note">🇬🇧 <b>English.</b> Odia borrows plenty of English words too: <i>menu, ticket, bus, police, station</i> — you\'ll hear them everywhere.</div>',
+  lessons: [
+    { id:1, title:'Greetings & being polite', focus:'ନମସ୍କାର · ଧନ୍ୟବାଦ · କୃପା କରି',
+      steps:[
+        {t:'say',text:'The very first word you\'ll use: <span class="inline-tr">ନମସ୍କାର</span> — namaskara, "hello." It also works as a polite goodbye. Say it out loud.',tr:'ନମସ୍କାର'},
+        {t:'words',items:[{tr:'ନମସ୍କାର',pr:'na-MAS-ka-ra',en:'hello / greetings'},{tr:'ଧନ୍ୟବାଦ',pr:'dha-nya-BA-da',en:'thank you'},{tr:'କୃପା କରି',pr:'KRI-pa ka-ri',en:'please'},{tr:'ଭଲ',pr:'BHA-la',en:'good'}]},
+        {t:'chal',en:'Hello, thank you',tr:'ନମସ୍କାର, ଧନ୍ୟବାଦ',pr:'na-MAS-ka-ra, dha-nya-BA-da',morph:['ନମସ୍କାର = hello','ଧନ୍ୟବାଦ = thank you']},
+        {t:'say',text:'To ask how someone is (polite): <span class="inline-tr">ଆପଣ କେମିତି ଅଛନ୍ତି?</span> — apana kemiti achhanti?',tr:'ଆପଣ କେମିତି ଅଛନ୍ତି?'},
+        {t:'chal',en:'How are you? (polite)',tr:'ଆପଣ କେମିତି ଅଛନ୍ତି?',pr:'a-po-na KE-mi-ti a-CHHAN-ti',morph:['ଆପଣ = you (polite)','କେମିତି = how','ଅଛନ୍ତି? = are (you)?']},
+        {t:'words',items:[{tr:'ଭଲ ଅଛି, ଧନ୍ୟବାଦ',pr:'BHA-la a-CHHI, dha-nya-BA-da',en:'I\'m well, thanks'},{tr:'ଆପଣ',pr:'a-po-na',en:'you (polite)'},{tr:'ବିଦାୟ',pr:'bi-DA-ya',en:'goodbye (formal)'}]},
+        {t:'chal',en:'I\'m well, thank you',tr:'ଭଲ ଅଛି, ଧନ୍ୟବାଦ',pr:'BHA-la a-CHHI, dha-nya-BA-da',morph:['ଭଲ ଅଛି = I\'m well','ଧନ୍ୟବାଦ = thank you']}
+      ],
+      blocks:['<code>ନମସ୍କାର</code> = hello','<code>ଧନ୍ୟବାଦ</code> = thank you','<code>କୃପା କରି</code> = please','<code>ବିଦାୟ</code> = goodbye (formal)'] },
+    { id:2, title:'Being polite', focus:'ଧନ୍ୟବାଦ · କୃପା କରି · ମାଫ୍ କରନ୍ତୁ · ହଁ · ନା',
+      steps:[
+        {t:'say',text:'The two politeness words you\'ll use constantly: <span class="inline-tr">କୃପା କରି</span> (please) and <span class="inline-tr">ଧନ୍ୟବାଦ</span> (thank you).',tr:'କୃପା କରି'},
+        {t:'words',items:[{tr:'କୃପା କରି',pr:'KRI-pa ka-ri',en:'please'},{tr:'ଧନ୍ୟବାଦ',pr:'dha-nya-BA-da',en:'thank you'},{tr:'ମାଫ୍ କରନ୍ତୁ',pr:'maaf KA-ran-tu',en:'sorry / excuse me'},{tr:'ଠିକ୍ ଅଛି',pr:'THIK a-CHHI',en:'OK / all right'}]},
+        {t:'chal',en:'Please, thank you',tr:'କୃପା କରି, ଧନ୍ୟବାଦ',pr:'KRI-pa ka-ri, dha-nya-BA-da',morph:['କୃପା କରି = please','ଧନ୍ୟବାଦ = thank you']},
+        {t:'say',text:'To apologize or get someone\'s attention: <span class="inline-tr">ମାଫ୍ କରନ୍ତୁ</span> — maaf karantu, "sorry" / "excuse me."',tr:'ମାଫ୍ କରନ୍ତୁ'},
+        {t:'words',items:[{tr:'ହଁ',pr:'ha',en:'yes'},{tr:'ନା',pr:'na',en:'no'},{tr:'ଭଲ',pr:'BHA-la',en:'good'}]},
+        {t:'chal',en:'No, thank you',tr:'ନା, ଧନ୍ୟବାଦ',pr:'na, dha-nya-BA-da',morph:['ନା = no','ଧନ୍ୟବାଦ = thank you']},
+        {t:'chal',en:'OK, good',tr:'ଠିକ୍ ଅଛି, ଭଲ',pr:'THIK a-CHHI, BHA-la',morph:['ଠିକ୍ ଅଛି = OK','ଭଲ = good']}
+      ],
+      blocks:['<code>କୃପା କରି</code> = please','<code>ଧନ୍ୟବାଦ</code> = thank you','<code>ମାଫ୍ କରନ୍ତୁ</code> = sorry','<code>ହଁ</code> / <code>ନା</code> = yes / no'] },
+    { id:3, title:'Numbers 1–10', focus:'ଏକ · ଦୁଇ · ତିନି · ଦଶ',
+      steps:[
+        {t:'say',text:'Numbers are the fastest win. Count along: <span class="inline-tr">ଏକ, ଦୁଇ, ତିନି</span> — eka, dui, tini.',tr:'ଏକ'},
+        {t:'words',items:[{tr:'ଏକ',pr:'E-ka',en:'1'},{tr:'ଦୁଇ',pr:'du-i',en:'2'},{tr:'ତିନି',pr:'TI-ni',en:'3'},{tr:'ଚାରି',pr:'CHA-ri',en:'4'},{tr:'ପାଞ୍ଚ',pr:'PAN-cha',en:'5'}]},
+        {t:'chal',en:'One, two, three',tr:'ଏକ, ଦୁଇ, ତିନି',pr:'E-ka, du-i, TI-ni',morph:['ଏକ = one','ଦୁଇ = two','ତିନି = three']},
+        {t:'say',text:'Six to ten: <span class="inline-tr">ଛଅ, ସାତ, ଆଠ, ନଅ, ଦଶ</span> — chhaa, sata, atha, naa, dasha.',tr:'ଛଅ'},
+        {t:'words',items:[{tr:'ଛଅ',pr:'CHA-ya',en:'6'},{tr:'ସାତ',pr:'SA-ta',en:'7'},{tr:'ଆଠ',pr:'A-tha',en:'8'},{tr:'ନଅ',pr:'na-a',en:'9'},{tr:'ଦଶ',pr:'DA-sha',en:'10'}]},
+        {t:'chal',en:'One, five, ten',tr:'ଏକ, ପାଞ୍ଚ, ଦଶ',pr:'E-ka, PAN-cha, DA-sha',morph:['ଏକ = one','ପାଞ୍ଚ = five','ଦଶ = ten']},
+        {t:'say',text:'To ask the price: <span class="inline-tr">କେତେ?</span> — kete?, "how much?"',tr:'କେତେ?'},
+        {t:'chal',en:'How much is it?',tr:'କେତେ?',pr:'ke-TE',morph:['କେତେ? = how much?']}
+      ],
+      blocks:['ଏକ = 1 · ଦୁଇ = 2 · ତିନି = 3','ପାଞ୍ଚ = 5 · ଦଶ = 10','<code>କେତେ?</code> = how much?'] },
+    { id:4, title:'"I want" — mote ... darakara', focus:'ମୋତେ ... ଦରକାର · ଦିଅ',
+      steps:[
+        {t:'say',text:'The phrase to want or need anything: <span class="inline-tr">ମୋତେ ... ଦରକାର</span> — mote ... darakara, literally "to me ... is needed."',tr:'ମୋତେ'},
+        {t:'words',items:[{tr:'ମୋତେ ... ଦରକାର',pr:'MO-te ... DA-ra-ka-ra',en:'I want / I need ...'},{tr:'... ଦରକାର ନାହିଁ',pr:'DA-ra-ka-ra NA-hi',en:'I don\'t need / want'},{tr:'ଦିଅ',pr:'di-a',en:'give'}]},
+        {t:'chal',en:'I want a coffee',tr:'ମୋତେ କଫି ଦରକାର',pr:'MO-te KA-fi DA-ra-ka-ra',morph:['ମୋତେ ... ଦରକାର = I want','କଫି = coffee']},
+        {t:'say',text:'To ask for something politely, put the thing first and add <span class="inline-tr">ଦିଅ</span> — dia, "give." <span class="inline-tr">ପାଣି ଦିଅ</span> = "give me water."',tr:'ଦିଅ'},
+        {t:'chal',en:'Give me water',tr:'ପାଣି ଦିଅ',pr:'PA-ni di-a',morph:['ପାଣି = water','ଦିଅ = give']},
+        {t:'say',text:'To say you don\'t need something: <span class="inline-tr">ମୋତେ ... ଦରକାର ନାହିଁ</span> — mote ... darakara nahi.',tr:'ଦରକାର ନାହିଁ'},
+        {t:'chal',en:'I need a doctor',tr:'ମୋତେ ଡାକ୍ତର ଦରକାର',pr:'MO-te DAK-ta-ra DA-ra-ka-ra',morph:['ମୋତେ ... ଦରକାର = I need','ଡାକ୍ତର = doctor']}
+      ],
+      blocks:['<code>ମୋତେ ... ଦରକାର</code> = I want / need ...','<code>ଦିଅ</code> = give','<code>... ଦରକାର ନାହିଁ</code> = I don\'t need'] },
+    { id:5, title:'Food & drink', focus:'ପାଣି · ଭାତ · ଚା · କଫି',
+      steps:[
+        {t:'say',text:'In Odisha, <span class="inline-tr">ଭାତ</span> (rice) and <span class="inline-tr">ମାଛ</span> (fish) are the everyday staple. Say them out loud.',tr:'ଭାତ'},
+        {t:'words',items:[{tr:'ଭାତ',pr:'BHA-ta',en:'rice'},{tr:'ମାଛ',pr:'MA-chhi',en:'fish'},{tr:'ଦହି',pr:'DA-hi',en:'yogurt / curd'},{tr:'ଡାଲି',pr:'DA-li',en:'lentil soup'},{tr:'ପାଣି',pr:'PA-ni',en:'water',link:'≈ Bengali/Hindi pani (water)'},{tr:'ଚା',pr:'cha',en:'tea',link:'≈ English chai (tea)'}]},
+        {t:'chal',en:'I want rice and fish',tr:'ମୋତେ ଭାତ ଓ ମାଛ ଦରକାର',pr:'MO-te BHA-ta o MA-chhi DA-ra-ka-ra',morph:['ଭାତ = rice','ଓ = and','ମାଛ = fish','ଦରକାର = want / need']},
+        {t:'say',text:'Your go-to drinks are <span class="inline-tr">ଚା</span> (tea) and <span class="inline-tr">କଫି</span> (coffee).',tr:'ଚା'},
+        {t:'words',items:[{tr:'ଚା',pr:'cha',en:'tea'},{tr:'କଫି',pr:'KA-fi',en:'coffee',link:'≈ English coffee'},{tr:'ଦୁଧ',pr:'dudh',en:'milk'},{tr:'ବିଲ',pr:'BI-la',en:'the bill',link:'≈ English bill'}]},
+        {t:'chal',en:'A tea, please',tr:'ଏକ ଚା, କୃପା କରି',pr:'E-ka cha, KRI-pa ka-ri',morph:['ଏକ = one','ଚା = tea','କୃପା କରି = please']},
+        {t:'say',text:'To ask for the bill: <span class="inline-tr">ବିଲ ଦିଅ</span>. For \'delicious\', say <span class="inline-tr">ସ୍ୱାଦିଷ୍ଟ</span> (swadishta).',tr:'ବିଲ ଦିଅ'},
+        {t:'chal',en:'It\'s delicious!',tr:'ବହୁତ ସ୍ୱାଦିଷ୍ଟ!',pr:'ba-HU-ta swa-DIS-ta',morph:['ବହୁତ = very','ସ୍ୱାଦିଷ୍ଟ = delicious']}
+      ],
+      blocks:['<code>ଭାତ</code> = rice · <code>ମାଛ</code> = fish','<code>ଚା</code> = tea · <code>ପାଣି</code> = water','<code>ବିଲ ଦିଅ</code> = the bill, please'] },
+    { id:6, title:'Getting around', focus:'କେଉଁଠି? · ଡାହାଣ · ବାମ · ସିଧା',
+      steps:[
+        {t:'say',text:'The most useful question in any city: <span class="inline-tr">କେଉଁଠି?</span> — keunthi?, "where?" Put the place before it.',tr:'କେଉଁଠି?'},
+        {t:'words',items:[{tr:'କେଉଁଠି?',pr:'KE-u-nthi',en:'where?'},{tr:'ସ୍ଟେସନ',pr:'ste-SHON',en:'the station',link:'≈ English station'},{tr:'ବସ୍ ଷ୍ଟପ୍',pr:'bas stop',en:'the bus stop',link:'≈ English bus stop'},{tr:'ବାଥରୁମ',pr:'BATH-room',en:'the bathroom'}]},
+        {t:'chal',en:'Where is the station?',tr:'ସ୍ଟେସନ କେଉଁଠି?',pr:'ste-SHON KE-u-nthi',morph:['ସ୍ଟେସନ = the station','କେଉଁଠି? = where?']},
+        {t:'chal',en:'Where is the bathroom?',tr:'ବାଥରୁମ କେଉଁଠି?',pr:'BATH-room KE-u-nthi',morph:['ବାଥରୁମ = the bathroom','କେଉଁଠି? = where?']},
+        {t:'say',text:'Directions: <span class="inline-tr">ଡାହାଣ</span> (to the right), <span class="inline-tr">ବାମ</span> (to the left), <span class="inline-tr">ସିଧା</span> (straight ahead).',tr:'ସିଧା'},
+        {t:'words',items:[{tr:'ଡାହାଣ',pr:'DA-ha-na',en:'to the right'},{tr:'ବାମ',pr:'BA-ma',en:'to the left'},{tr:'ସିଧା',pr:'SI-dha',en:'straight ahead'}]},
+        {t:'chal',en:'Straight ahead',tr:'ସିଧା',pr:'SI-dha',morph:['ସିଧା = straight ahead']},
+        {t:'chal',en:'To the right',tr:'ଡାହାଣ',pr:'DA-ha-na',morph:['ଡାହାଣ = to the right']}
+      ],
+      blocks:['<code>କେଉଁଠି?</code> = where?','<code>ଡାହାଣ</code> / <code>ବାମ</code> = right / left','<code>ସିଧା</code> = straight ahead'] },
+    { id:7, title:'Questions & "do you have"', focus:'ଆପଣଙ୍କ ପାଖରେ ... ଅଛି କି? · ଅଛି କି?',
+      steps:[
+        {t:'say',text:'To ask "do you have…?", use <span class="inline-tr">ଆପଣଙ୍କ ପାଖରେ ... ଅଛି କି?</span> — apananka pakhare ... achhi ki? Pop the thing in the middle.',tr:'ଆପଣଙ୍କ ପାଖରେ ... ଅଛି କି?'},
+        {t:'chal',en:'Do you have a menu?',tr:'ଆପଣଙ୍କ ପାଖରେ ମେନୁ ଅଛି କି?',pr:'a-po-NAN-ka PA-kha-re ME-nu a-CHHI ki',morph:['ଆପଣଙ୍କ ପାଖରେ = do you have','ମେନୁ = menu','ଅଛି କି? = is (it) there?']},
+        {t:'say',text:'For "is there…?", use <span class="inline-tr">… ଅଛି କି?</span> — achhi ki? For wifi: <span class="inline-tr">ୱାଇଫାଇ ଅଛି କି?</span>',tr:'ଅଛି କି?'},
+        {t:'chal',en:'Is there wifi?',tr:'ୱାଇଫାଇ ଅଛି କି?',pr:'WAI-fai a-CHHI ki',morph:['ୱାଇଫାଇ = wifi','ଅଛି କି? = is there?']},
+        {t:'words',items:[{tr:'କଣ?',pr:'ka-na',en:'what'},{tr:'କେତେ?',pr:'ke-TE',en:'how much'},{tr:'ଅଛି',pr:'a-CHHI',en:'there is'},{tr:'ନାହିଁ',pr:'NA-hi',en:'there is not / don\'t have'}]},
+        {t:'say',text:'<span class="inline-tr">ମୁଁ ବୁଝିଲି ନାହିଁ</span> — mu bujhili nahi, "I don\'t understand."',tr:'ମୁଁ ବୁଝିଲି ନାହିଁ'},
+        {t:'chal',en:'I don\'t understand',tr:'ମୁଁ ବୁଝିଲି ନାହିଁ',pr:'mu bu-JHI-li NA-hi',morph:['ମୁଁ = I','ବୁଝିଲି = understood','ନାହିଁ = not']}
+      ],
+      blocks:['<code>ଆପଣଙ୍କ ପାଖରେ ... ଅଛି କି?</code> = do you have …?','<code>… ଅଛି କି?</code> = is there …?','<code>ନାହିଁ</code> = there is not / I don\'t have'] },
+    { id:8, title:'Family & people', focus:'ମା · ବାପା · ଭାଇ · ଭଉଣୀ · ସାଙ୍ଗ',
+      steps:[
+        {t:'say',text:'Family words: <span class="inline-tr">ମା</span> (mother), <span class="inline-tr">ବାପା</span> (father), <span class="inline-tr">ଭାଇ</span> (brother), <span class="inline-tr">ଭଉଣୀ</span> (sister).',tr:'ମା'},
+        {t:'words',items:[{tr:'ମା',pr:'ma',en:'mother'},{tr:'ବାପା',pr:'BA-pa',en:'father'},{tr:'ଭାଇ',pr:'bhai',en:'brother',link:'≈ Hindi/Bengali bhai (brother)'},{tr:'ଭଉଣୀ',pr:'BHA-u-ni',en:'sister'},{tr:'ପରିବାର',pr:'pa-ri-BA-ra',en:'family'}]},
+        {t:'chal',en:'My mother',tr:'ମୋ ମା',pr:'mo ma',morph:['ମୋ = my','ମା = mother']},
+        {t:'say',text:'<span class="inline-tr">ମୋ</span> = my. Family is <span class="inline-tr">ପରିବାର</span>, and friend is <span class="inline-tr">ସାଙ୍ଗ</span> (sanga).',tr:'ମୋ'},
+        {t:'words',items:[{tr:'ମୋ',pr:'mo',en:'my'},{tr:'ଆପଣଙ୍କ',pr:'a-po-NAN-ka',en:'your (polite)'},{tr:'ସାଙ୍ଗ',pr:'SANG-a',en:'friend'}]},
+        {t:'chal',en:'I have a friend',tr:'ମୋର ଜଣେ ସାଙ୍ଗ ଅଛି',pr:'MO-ra ja-NE SANG-a a-CHHI',morph:['ମୋର = I have / my','ଜଣେ = a (person)','ସାଙ୍ଗ = friend','ଅଛି = have']},
+        {t:'chal',en:'I have a brother',tr:'ମୋର ଜଣେ ଭାଇ ଅଛି',pr:'MO-ra ja-NE bhai a-CHHI',morph:['ମୋର = I have / my','ଜଣେ = a (person)','ଭାଇ = brother','ଅଛି = have']}
+      ],
+      blocks:['<code>ମା</code> / <code>ବାପା</code> = mother / father','<code>ଭାଇ</code> / <code>ଭଉଣୀ</code> = brother / sister','<code>ସାଙ୍ଗ</code> = friend'] },
+    { id:9, title:'Time, days & weather', focus:'ଆଜି · ଆସନ୍ତାକାଲି · ଗରମ · ବର୍ଷା',
+      steps:[
+        {t:'say',text:'<span class="inline-tr">ଆଜି</span> = today, <span class="inline-tr">ଆସନ୍ତାକାଲି</span> = tomorrow, <span class="inline-tr">ଗତକାଲି</span> = yesterday.',tr:'ଆଜି'},
+        {t:'words',items:[{tr:'ଆଜି',pr:'A-ji',en:'today'},{tr:'ଆସନ୍ତାକାଲି',pr:'a-san-ta-KA-li',en:'tomorrow'},{tr:'ଗତକାଲି',pr:'ga-ta-KA-li',en:'yesterday'},{tr:'ସକାଳ',pr:'sa-KA-la',en:'morning'}]},
+        {t:'chal',en:'See you tomorrow',tr:'ଆସନ୍ତାକାଲି ଦେଖା ହେବ',pr:'a-san-ta-KA-li DE-kha HE-ba',morph:['ଆସନ୍ତାକାଲି = tomorrow','ଦେଖା ହେବ = will meet']},
+        {t:'say',text:'Ask about the weather: <span class="inline-tr">ଆଜି ଆବହାୱା କେମିତି ଅଛି?</span> — "how\'s the weather today?"',tr:'ଆବହାୱା'},
+        {t:'words',items:[{tr:'ଆବହାୱା',pr:'a-ba-HA-wa',en:'weather'},{tr:'ବର୍ଷା',pr:'BAR-sha',en:'rain'},{tr:'ଗରମ',pr:'GA-ra-ma',en:'hot'},{tr:'ଶୀତ',pr:'SI-ta',en:'cold'}]},
+        {t:'chal',en:'It\'s hot',tr:'ବହୁତ ଗରମ',pr:'ba-HU-ta GA-ra-ma',morph:['ବହୁତ = very','ଗରମ = hot']},
+        {t:'say',text:'Days of the week: <span class="inline-tr">ରବିବାର</span> (Sunday), <span class="inline-tr">ସୋମବାର</span> (Monday).',tr:'ରବିବାର'},
+        {t:'words',items:[{tr:'ରବିବାର',pr:'RA-bi-ba-ra',en:'Sunday'},{tr:'ସୋମବାର',pr:'SO-ma-ba-ra',en:'Monday'}]},
+        {t:'chal',en:'Good morning!',tr:'ଶୁଭ ସକାଳ!',pr:'SHUBHA sa-KA-la',morph:['ଶୁଭ = good','ସକାଳ = morning']}
+      ],
+      blocks:['<code>ଆଜି</code> / <code>ଆସନ୍ତାକାଲି</code> = today / tomorrow','<code>ରବିବାର</code> = Sunday · <code>ସୋମବାର</code> = Monday','<code>ଗରମ</code> / <code>ଶୀତ</code> = hot / cold'] },
+    { id:10, title:'Small talk & your name', focus:'ମୋ ନାମ __NAME__ · ଆପଣଙ୍କ ନାମ କଣ?',
+      steps:[
+        {t:'say',text:'Introduce yourself: <span class="inline-tr">ମୋ ନାମ __NAME__</span> — mo nama __NAME__, "My name is __NAME__."',tr:'ମୋ ନାମ __NAME__'},
+        {t:'chal',en:'My name is __NAME__',tr:'ମୋ ନାମ __NAME__',pr:'mo NA-ma __NAME__',morph:['ମୋ = my','ନାମ = name','__NAME__ = your name']},
+        {t:'say',text:'To ask someone\'s name: <span class="inline-tr">ଆପଣଙ୍କ ନାମ କଣ?</span> — apananka nama kana?',tr:'ଆପଣଙ୍କ ନାମ କଣ?'},
+        {t:'chal',en:'What\'s your name?',tr:'ଆପଣଙ୍କ ନାମ କଣ?',pr:'a-po-NAN-ka NA-ma ka-na',morph:['ଆପଣଙ୍କ = your','ନାମ = name','କଣ = what']},
+        {t:'say',text:'"Pleased to meet you" is <span class="inline-tr">ଆପଣଙ୍କୁ ଭେଟି ଭଲ ଲାଗିଲା</span> — apananku bheti bhala lagila.',tr:'ଆପଣଙ୍କୁ ଭେଟି ଭଲ ଲାଗିଲା'},
+        {t:'words',items:[{tr:'ଆପଣ କେମିତି ଅଛନ୍ତି?',pr:'a-po-na KE-mi-ti a-CHHAN-ti',en:'how are you? (polite)'},{tr:'ମୁଁ ଭଲ ଅଛି',pr:'mu BHA-la a-CHHI',en:'I\'m well'},{tr:'ଆପଣଙ୍କୁ ଭେଟି ଭଲ ଲାଗିଲା',pr:'a-po-NAN-ku BHE-ti BHA-la LA-gi-la',en:'pleased to meet you'}]},
+        {t:'chal',en:'Very good',tr:'ବହୁତ ଭଲ',pr:'ba-HU-ta BHA-la',morph:['ବହୁତ = very','ଭଲ = good']},
+        {t:'chal',en:'Pleased to meet you',tr:'ଆପଣଙ୍କୁ ଭେଟି ଭଲ ଲାଗିଲା',pr:'a-po-NAN-ku BHE-ti BHA-la LA-gi-la',morph:['ଆପଣଙ୍କୁ = to you','ଭେଟି = to meet','ଭଲ ଲାଗିଲା = felt good']}
+      ],
+      blocks:['<code>ମୋ ନାମ __NAME__</code> = my name is __NAME__','<code>ଆପଣଙ୍କ ନାମ କଣ?</code> = what\'s your name?','<code>ଆପଣଙ୍କୁ ଭେଟି ଭଲ ଲାଗିଲା</code> = pleased to meet you'] },
+    { id:11, title:'Health & emergency', focus:'ସାହାଯ୍ୟ! · ଡାକ୍ତର · ମୁଁ ବୁଝିଲି ନାହିଁ',
+      steps:[
+        {t:'say',text:'The most important word if you need help: <span class="inline-tr">ସାହାଯ୍ୟ!</span> — sahajya!, "Help!"',tr:'ସାହାଯ୍ୟ!'},
+        {t:'words',items:[{tr:'ସାହାଯ୍ୟ!',pr:'sa-HAY-jya',en:'Help!'},{tr:'ଡାକ୍ତର',pr:'DAK-ta-ra',en:'the doctor',link:'≈ English doctor'},{tr:'ହସପିଟାଲ',pr:'has-PI-ta-la',en:'the hospital'},{tr:'ଅସୁସ୍ଥ',pr:'a-SUS-tha',en:'sick'}]},
+        {t:'chal',en:'Help!',tr:'ସାହାଯ୍ୟ!',pr:'sa-HAY-jya',morph:['ସାହାଯ୍ୟ = help']},
+        {t:'say',text:'To say you\'re unwell: <span class="inline-tr">ମୁଁ ଅସୁସ୍ଥ</span> — mu asustha, "I\'m sick."',tr:'ମୁଁ ଅସୁସ୍ଥ'},
+        {t:'chal',en:'I\'m sick',tr:'ମୁଁ ଅସୁସ୍ଥ',pr:'mu a-SUS-tha',morph:['ମୁଁ = I','ଅସୁସ୍ଥ = sick']},
+        {t:'say',text:'<span class="inline-tr">ମୁଁ ବୁଝିଲି ନାହିଁ</span> = "I don\'t understand."',tr:'ମୁଁ ବୁଝିଲି ନାହିଁ'},
+        {t:'words',items:[{tr:'ଜରୁରୀ',pr:'ja-RO-ri',en:'emergency'},{tr:'ପୁଲିସ',pr:'pu-LI-si',en:'police',link:'≈ English police'},{tr:'ମୋତେ ଡାକ୍ତର ଦରକାର',pr:'MO-te DAK-ta-ra DA-ra-ka-ra',en:'I need a doctor'}]},
+        {t:'chal',en:'I need a doctor',tr:'ମୋତେ ଡାକ୍ତର ଦରକାର',pr:'MO-te DAK-ta-ra DA-ra-ka-ra',morph:['ମୋତେ ... ଦରକାର = I need','ଡାକ୍ତର = doctor']}
+      ],
+      blocks:['<code>ସାହାଯ୍ୟ!</code> = Help!','<code>ଡାକ୍ତର</code> = doctor','<code>ମୁଁ ବୁଝିଲି ନାହିଁ</code> = I don\'t understand','<code>ଜରୁରୀ</code> = emergency'] },
+    { id:12, title:'Tying it together', focus:'A capstone scene — build each line',
+      steps:[
+        {t:'say',text:'Great — you\'ve built a real toolbox. This capstone uses only the words you\'ve met. Build each line yourself before revealing.'},
+        {t:'chal',en:'Hello, how are you?',tr:'ନମସ୍କାର, ଆପଣ କେମିତି ଅଛନ୍ତି?',pr:'na-MAS-ka-ra, a-po-na KE-mi-ti a-CHHAN-ti',morph:['ନମସ୍କାର = hello','ଆପଣ କେମିତି ଅଛନ୍ତି? = how are you?']},
+        {t:'chal',en:'I want a tea, please',tr:'ମୋତେ ଚା ଦରକାର, କୃପା କରି',pr:'MO-te cha DA-ra-ka-ra, KRI-pa ka-ri',morph:['ମୋତେ ... ଦରକାର = I want','ଚା = tea','କୃପା କରି = please']},
+        {t:'chal',en:'Where is the station?',tr:'ସ୍ଟେସନ କେଉଁଠି?',pr:'ste-SHON KE-u-nthi',morph:['ସ୍ଟେସନ = the station','କେଉଁଠି? = where?']},
+        {t:'chal',en:'How much is it?',tr:'କେତେ?',pr:'ke-TE',morph:['କେତେ? = how much?']},
+        {t:'chal',en:'Delicious! Thank you!',tr:'ସ୍ୱାଦିଷ୍ଟ! ଧନ୍ୟବାଦ!',pr:'swa-DIS-ta, dha-nya-BA-da',morph:['ସ୍ୱାଦିଷ୍ଟ = delicious','ଧନ୍ୟବାଦ = thank you']}
+      ],
+      blocks:['You built: greetings, ordering, directions, prices, thanks — a full day out in Odia.'] },
+    { id:13, title:'Airport & tickets', focus:'ବିମାନବନ୍ଦର · ପାସପୋର୍ଟ · ଟିକେଟ୍ · ଗେଟ୍',
+      steps:[
+        {t:'say',text:'You have landed. The building is the <span class="inline-tr">ବିମାନବନ୍ଦର</span>. Your document is a <span class="inline-tr">ପାସପୋର୍ଟ</span>.',tr:'ବିମାନବନ୍ଦର'},
+        {t:'words',items:[{tr:'ବିମାନବନ୍ଦର',pr:'bi-MAA-na-ban-da-ra',en:'airport'},{tr:'ପାସପୋର୍ଟ',pr:'PAAS-port',en:'passport'},{tr:'ଟିକେଟ୍',pr:'TI-ket',en:'ticket'},{tr:'ଗେଟ୍',pr:'geyt',en:'gate'}]},
+        {t:'chal',en:'Where is the airport?',tr:'ବିମାନବନ୍ଦର କେଉଁଠି?',pr:'bi-MAA-na-ban-da-ra KE-u-nthi',morph:['ବିମାନବନ୍ଦର = airport','କେଉଁଠି? = where?']},
+        {t:'chal',en:'Here is my passport',tr:'ଏଇ ମୋ ପାସପୋର୍ଟ',pr:'ei mo PAAS-port',morph:['ଏଇ = this / here','ମୋ = my','ପାସପୋର୍ଟ = passport']},
+        {t:'chal',en:'A ticket, please',tr:'ଗୋଟିଏ ଟିକେଟ୍, କୃପା କରି',pr:'GO-TI-e TI-ket, KRI-pa ka-ri',morph:['ଗୋଟିଏ ଟିକେଟ୍ = a ticket','କୃପା କରି = please']},
+        {t:'chal',en:'Where is the gate?',tr:'ଗେଟ୍ କେଉଁଠି?',pr:'geyt KE-u-nthi',morph:['ଗେଟ୍ = gate','କେଉଁଠି? = where?']}
+      ],
+      blocks:['<code>ବିମାନବନ୍ଦର</code> = airport','<code>ପାସପୋର୍ଟ</code> = passport','<code>ଟିକେଟ୍</code> = ticket'] },
+    { id:14, title:'The taxi', focus:'ଟ୍ୟାକ୍ସି · ଯିବି · ହୋଟେଲ · ରୁହନ୍ତୁ',
+      steps:[
+        {t:'say',text:'The driver is waiting. <span class="inline-tr">ଟ୍ୟାକ୍ସି</span> is a loanword. Tell them <span class="inline-tr">ମୁଁ ହୋଟେଲକୁ ଯିବି</span>.',tr:'ଟ୍ୟାକ୍ସି'},
+        {t:'words',items:[{tr:'ଟ୍ୟାକ୍ସି',pr:'TYAAK-si',en:'taxi'},{tr:'ଡ୍ରାଇଭର',pr:'DRAI-bhar',en:'driver'},{tr:'ମୁଁ ଯିବି',pr:'mun JI-bi',en:'I will go'},{tr:'ଏଠି ରୁହନ୍ତୁ',pr:'e-THI ru-han-tu',en:'stop here'}]},
+        {t:'chal',en:'Taxi, please',tr:'ଟ୍ୟାକ୍ସି, କୃପା କରି',pr:'TYAAK-si, KRI-pa ka-ri',morph:['ଟ୍ୟାକ୍ସି = taxi','କୃପା କରି = please']},
+        {t:'chal',en:'I want to go to the hotel',tr:'ମୁଁ ହୋଟେଲକୁ ଯିବି',pr:'mun HO-tel-ku JI-bi',morph:['ମୁଁ = I','ହୋଟେଲକୁ = to the hotel','ଯିବି = will go']},
+        {t:'chal',en:'Stop here, please',tr:'ଏଠି ରୁହନ୍ତୁ, କୃପା କରି',pr:'e-THI ru-han-tu, KRI-pa ka-ri',morph:['ଏଠି = here','ରୁହନ୍ତୁ = please stop','କୃପା କରି = please']},
+        {t:'chal',en:'How much is it?',tr:'କେତେ ଟଙ୍କା?',pr:'ke-TE TA-N-ka',morph:['କେତେ = how much','ଟଙ୍କା = rupees / tanka']}
+      ],
+      blocks:['<code>ମୁଁ …କୁ ଯିବି</code> = I will go to …','<code>ଏଠି ରୁହନ୍ତୁ</code> = stop here'] },
+    { id:15, title:'The hotel', focus:'ବୁକିଂ · କୋଠରି · ଚାବି · ରାତି',
+      steps:[
+        {t:'say',text:'At the desk: <span class="inline-tr">ମୋର ବୁକିଂ ଅଛି</span> — I have a reservation.',tr:'ବୁକିଂ'},
+        {t:'words',items:[{tr:'ହୋଟେଲ',pr:'HO-tel',en:'hotel'},{tr:'ବୁକିଂ',pr:'BOOK-ing',en:'reservation'},{tr:'କୋଠରି',pr:'KO-tha-ri',en:'room'},{tr:'ଚାବି',pr:'CHAA-bi',en:'key'},{tr:'ଗୋଟିଏ ରାତି',pr:'GO-TI-e RAA-ti',en:'one night'}]},
+        {t:'chal',en:'I have a reservation',tr:'ମୋର ବୁକିଂ ଅଛି',pr:'mo-ra BOOK-ing a-CHHI',morph:['ମୋର = my','ବୁକିଂ = reservation','ଅଛି = there is']},
+        {t:'chal',en:'A room for one night, please',tr:'ଗୋଟିଏ ରାତିର କୋଠରି, କୃପା କରି',pr:'GO-TI-e RAA-ti-ra KO-tha-ri, KRI-pa ka-ri',morph:['ଗୋଟିଏ ରାତିର = for one night','କୋଠରି = room','କୃପା କରି = please']},
+        {t:'chal',en:'The key, please',tr:'ଚାବି, କୃପା କରି',pr:'CHAA-bi, KRI-pa ka-ri',morph:['ଚାବି = key','କୃପା କରି = please']},
+        {t:'chal',en:'Where is my room?',tr:'ମୋ କୋଠରି କେଉଁଠି?',pr:'mo KO-tha-ri KE-u-nthi',morph:['ମୋ କୋଠରି = my room','କେଉଁଠି? = where?']}
+      ],
+      blocks:['<code>ବୁକିଂ</code> = reservation','<code>କୋଠରି</code> = room','<code>ଚାବି</code> = key'] },
+    { id:16, title:'Ask for help', focus:'ବୁଝିପାରୁନି · ଧୀରେ · ଇଂରାଜୀ',
+      steps:[
+        {t:'say',text:'When Odia is too fast: <span class="inline-tr">ଧୀରେ କୁହନ୍ତୁ, କୃପା କରି</span> — speak slowly, please.',tr:'ଧୀରେ'},
+        {t:'words',items:[{tr:'ଧୀରେ କୁହନ୍ତୁ',pr:'DHEE-re ku-han-tu',en:'speak slowly'},{tr:'ଆଉଥରେ',pr:'AA-u-tha-re',en:'again'},{tr:'ଇଂରାଜୀ',pr:'ing-RAA-ji',en:'English'},{tr:'ସାହାଯ୍ୟ କରିପାରିବେ?',pr:'saa-HAAJ-ya ka-ri-paa-ri-be',en:'can you help?'}]},
+        {t:'chal',en:'I don\'t understand',tr:'ମୁଁ ବୁଝିପାରୁନି',pr:'mun bu-jhi-paa-ru-ni',morph:['ମୁଁ = I','ବୁଝିପାରୁନି = cannot understand']},
+        {t:'chal',en:'Speak slowly, please',tr:'ଧୀରେ କୁହନ୍ତୁ, କୃପା କରି',pr:'DHEE-re ku-han-tu, KRI-pa ka-ri',morph:['ଧୀରେ = slowly','କୁହନ୍ତୁ = please speak','କୃପା କରି = please']},
+        {t:'chal',en:'Can you help me?',tr:'ମୋତେ ସାହାଯ୍ୟ କରିପାରିବେ କି?',pr:'MO-te saa-HAAJ-ya ka-ri-paa-ri-be ki',morph:['ମୋତେ = me','ସାହାଯ୍ୟ କରିପାରିବେ = can you help','କି = question']},
+        {t:'chal',en:'Do you speak English?',tr:'ଆପଣ ଇଂରାଜୀ କହନ୍ତି କି?',pr:'aa-po-na ing-RAA-ji ka-han-ti ki',morph:['ଆପଣ = you','ଇଂରାଜୀ = English','କହନ୍ତି କି? = do you speak?']}
+      ],
+      blocks:['<code>ଧୀରେ କୁହନ୍ତୁ</code> = speak slowly','<code>ଆପଣ ଇଂରାଜୀ କହନ୍ତି କି?</code> = do you speak English?'] }
+  ],
+  dialogues: [
+    { id:'cafe', title:'☕ At a café', emoji:'☕', turns:[
+      {who:'You',tr:'ନମସ୍କାର! ଏକ ଚା, କୃପା କରି।',pr:'na-MAS-ka-ra, E-ka cha, KRI-pa ka-ri',en:'Hello! A tea, please.'},
+      {who:'Waiter',tr:'ଦୁଧ ମିଶାଇବି?',pr:'dudh mi-SHA-i-bi',en:'Shall I add milk?'},
+      {who:'You',tr:'ହଁ, କୃପା କରି।',pr:'ha, KRI-pa ka-ri',en:'Yes, please.'},
+      {who:'Waiter',tr:'ଏଇ ନିଅ। ଦଶ ଟଙ୍କା ହେଲା।',pr:'ei ni-a, DA-sha TA-N-ka HE-la',en:'Here you are. That\'s ten rupees.'},
+      {who:'You',tr:'ଧନ୍ୟବାଦ!',pr:'dha-nya-BA-da',en:'Thank you!'}
+    ]},
+    { id:'transport', title:'🚉 At the station', emoji:'🚉', turns:[
+      {who:'You',tr:'ମାଫ୍ କରନ୍ତୁ, ସ୍ଟେସନ କେଉଁଠି?',pr:'maaf KA-ran-tu, ste-SHON KE-u-nthi',en:'Excuse me, where\'s the station?'},
+      {who:'Local',tr:'ସେଠାରେ, ସିଧା।',pr:'se-THA-re, SI-dha',en:'There, straight ahead.'},
+      {who:'You',tr:'ଧନ୍ୟବାଦ। ଭୁବନେଶ୍ୱରକୁ ଗୋଟିଏ ଟିକେଟ୍, କୃପା କରି।',pr:'dha-nya-BA-da, BHU-ba-ne-SHWA-ra-ku GO-TI-e TI-ket, KRI-pa ka-ri',en:'Thanks. A ticket to Bhubaneswar, please.'},
+      {who:'Ticket',tr:'ପଚାଶ ଟଙ୍କା। ଟ୍ରେନ୍ ସାତଟାରେ।',pr:'pa-CHASH TA-N-ka, TREN SA-TA-ta-re',en:'Fifty rupees. The train is at seven.'},
+      {who:'You',tr:'ଧନ୍ୟବାଦ!',pr:'dha-nya-BA-da',en:'Thanks!'}
+    ]},
+    { id:'restaurant', title:'🍛 At a restaurant', emoji:'🍛', turns:[
+      {who:'Waiter',tr:'ନମସ୍କାର! ଟେବୁଲ୍ ଦରକାର?',pr:'na-MAS-ka-ra, TE-bul DA-ra-ka-ra',en:'Hello! Do you need a table?'},
+      {who:'You',tr:'ହଁ, ଦୁଇଜଣ।',pr:'ha, DU-i-ja-na',en:'Yes, for two.'},
+      {who:'You',tr:'ମେନୁ, କୃପା କରି।',pr:'ME-nu, KRI-pa ka-ri',en:'The menu, please.'},
+      {who:'You',tr:'ମୋତେ ଭାତ ଓ ମାଛ ଦରକାର।',pr:'MO-te BHA-ta o MA-chhi DA-ra-ka-ra',en:'I\'d like rice and fish.'},
+      {who:'Waiter',tr:'ବହୁତ ଭଲ! ଖୁସିରେ ଖାଆନ୍ତୁ!',pr:'ba-HU-ta BHA-la, KHU-si-re KHA-an-tu',en:'Excellent! Enjoy your meal!'}
+    ]},
+    { id:'market', title:'🛍️ At a market', emoji:'🛍️', turns:[
+      {who:'You',tr:'ଏହାର ଦାମ କେତେ?',pr:'e-HA-ra DA-ma ke-TE',en:'How much is this?'},
+      {who:'Seller',tr:'ଚାଳିଶ ଟଙ୍କା।',pr:'CHA-li-sha TA-N-ka',en:'Forty rupees.'},
+      {who:'You',tr:'ବହୁତ ବେଶି! କମ୍ କରନ୍ତୁ!',pr:'ba-HU-ta BE-si, kam KA-ran-tu',en:'Too much! Reduce the price!'},
+      {who:'Seller',tr:'ଠିକ୍ ଅଛି, ତିରିଶ ଟଙ୍କା।',pr:'THIK a-CHHI, TI-ri-sha TA-N-ka',en:'OK, thirty rupees.'},
+      {who:'You',tr:'ଠିକ୍ ଅଛି, ମୁଁ ନେଉଛି।',pr:'THIK a-CHHI, mu NE-u-chhi',en:'OK, I\'ll take it.'}
+    ]}
+  ],
+  pocket: [
+    {tr:'ନମସ୍କାର',pr:'na-MAS-ka-ra',en:'Hello',c:'Greetings'},
+    {tr:'ଶୁଭ ସକାଳ',pr:'SHUBHA sa-KA-la',en:'Good morning',c:'Greetings'},
+    {tr:'ବିଦାୟ',pr:'bi-DA-ya',en:'Goodbye',c:'Greetings'},
+    {tr:'ଆପଣ କେମିତି ଅଛନ୍ତି?',pr:'a-po-na KE-mi-ti a-CHHAN-ti',en:'How are you?',c:'Greetings'},
+    {tr:'ମୁଁ ଭଲ ଅଛି, ଧନ୍ୟବାଦ',pr:'mu BHA-la a-CHHI, dha-nya-BA-da',en:'I\'m well, thanks',c:'Greetings'},
+    {tr:'ମୋ ନାମ __NAME__',pr:'mo NA-ma __NAME__',en:'My name is __NAME__',c:'Greetings'},
+    {tr:'କୃପା କରି',pr:'KRI-pa ka-ri',en:'Please',c:'Courtesy'},
+    {tr:'ଧନ୍ୟବାଦ',pr:'dha-nya-BA-da',en:'Thank you',c:'Courtesy'},
+    {tr:'ମାଫ୍ କରନ୍ତୁ',pr:'maaf KA-ran-tu',en:'Sorry / excuse me',c:'Courtesy'},
+    {tr:'ହଁ',pr:'ha',en:'Yes',c:'Courtesy'},
+    {tr:'ନା',pr:'na',en:'No',c:'Courtesy'},
+    {tr:'ଠିକ୍ ଅଛି',pr:'THIK a-CHHI',en:'OK',c:'Courtesy'},
+    {tr:'ଏକ',pr:'E-ka',en:'1',c:'Numbers'},
+    {tr:'ଦୁଇ',pr:'du-i',en:'2',c:'Numbers'},
+    {tr:'ତିନି',pr:'TI-ni',en:'3',c:'Numbers'},
+    {tr:'ଚାରି',pr:'CHA-ri',en:'4',c:'Numbers'},
+    {tr:'ପାଞ୍ଚ',pr:'PAN-cha',en:'5',c:'Numbers'},
+    {tr:'ଦଶ',pr:'DA-sha',en:'10',c:'Numbers'},
+    {tr:'ଭାତ',pr:'BHA-ta',en:'rice',c:'Food'},
+    {tr:'ମାଛ',pr:'MA-chhi',en:'fish',c:'Food'},
+    {tr:'ପାଣି',pr:'PA-ni',en:'water',c:'Food'},
+    {tr:'ଚା',pr:'cha',en:'tea',c:'Food'},
+    {tr:'କଫି',pr:'KA-fi',en:'coffee',c:'Food'},
+    {tr:'ବିଲ ଦିଅ',pr:'BI-la di-a',en:'the bill, please',c:'Food'},
+    {tr:'କେଉଁଠି?',pr:'KE-u-nthi',en:'Where?',c:'Directions'},
+    {tr:'ଡାହାଣ',pr:'DA-ha-na',en:'to the right',c:'Directions'},
+    {tr:'ବାମ',pr:'BA-ma',en:'to the left',c:'Directions'},
+    {tr:'ସିଧା',pr:'SI-dha',en:'straight ahead',c:'Directions'},
+    {tr:'ସ୍ଟେସନ କେଉଁଠି?',pr:'ste-SHON KE-u-nthi',en:'Where is the station?',c:'Directions'},
+    {tr:'କେତେ?',pr:'ke-TE',en:'how much is it?',c:'Shopping'},
+    {tr:'କମ୍ କରନ୍ତୁ',pr:'kam KA-ran-tu',en:'reduce the price',c:'Shopping'},
+    {tr:'ସାହାଯ୍ୟ!',pr:'sa-HAY-jya',en:'Help!',c:'Emergency'},
+    {tr:'ମୁଁ ବୁଝିଲି ନାହିଁ',pr:'mu bu-JHI-li NA-hi',en:'I don\'t understand',c:'Emergency'},
+    {tr:'ମୋତେ ଡାକ୍ତର ଦରକାର',pr:'MO-te DAK-ta-ra DA-ra-ka-ra',en:'I need a doctor',c:'Emergency'},
+    {tr:'ବାଥରୁମ କେଉଁଠି?',pr:'BATH-room KE-u-nthi',en:'Where is the bathroom?',c:'Emergency'},
+    {tr:'ଆଜି',pr:'A-ji',en:'today',c:'Time'},
+    {tr:'ଆସନ୍ତାକାଲି',pr:'a-san-ta-KA-li',en:'tomorrow',c:'Time'},
+    {tr:'ବିମାନବନ୍ଦର',pr:'bi-MAA-na-ban-da-ra',en:'airport',c:'Travel'},
+    {tr:'ପାସପୋର୍ଟ',pr:'PAAS-port',en:'passport',c:'Travel'},
+    {tr:'ମୁଁ ହୋଟେଲକୁ ଯିବି',pr:'mun HO-tel-ku JI-bi',en:'I want to go to the hotel',c:'Travel'},
+    {tr:'ମୋର ବୁକିଂ ଅଛି',pr:'mo-ra BOOK-ing a-CHHI',en:'I have a reservation',c:'Travel'},
+    {tr:'ଧୀରେ କୁହନ୍ତୁ, କୃପା କରି',pr:'DHEE-re ku-han-tu, KRI-pa ka-ri',en:'Speak slowly, please',c:'Travel'}
+  ],
+  pocketCats: ['Greetings','Courtesy','Numbers','Food','Directions','Shopping','Emergency','Time', 'Travel'],
+  culture: [
+    {icon:'🏛️',title:'Odisha, the soul of the east',body:'On India\'s eastern coast, Odisha is famed for ancient temples, golden beaches and a rich, distinct culture. The capital Bhubaneswar is called the "City of Temples."'},
+    {icon:'🛕',title:'Jagannath & Puri',body:'The Jagannath temple in Puri is one of the holiest Hindu sites. Each summer its famous Rath Yatra (chariot festival) pulls enormous decorated chariots through the streets — a spectacle like no other.'},
+    {icon:'💃',title:'Odissi dance',body:'Odissi is one of India\'s classical dance forms, born in Odisha\'s temples. Graceful, sculptural poses and flowing movements tell stories of the gods. It\'s mesmerizing to watch.'},
+    {icon:'🗣️',title:'An Indo-Aryan cousin',body:'Odia belongs to the Indo-Aryan family, closely related to Bengali and Assamese. The scripts look different, but huge amounts of everyday vocabulary — pani (water), bhat (rice), bhai (brother) — line up.'},
+    {icon:'🍽️',title:'Rice & fish, every day',body:'The Odia plate is built on rice (ଭାତ) and fish (ମାଛ), often with dal and a tangy side. Local sweets like <i>chhena poda</i> (a baked cheese cake) are a must-try.'},
+    {icon:'🎉',title:'Festivals and colour',body:'Odisha loves a celebration. From the huge Jagannath Rath Yatra to the harvest festival <i>Raja</i> with swings and sweets, and the coastal Konark dance festival — there\'s colour all year.'}
+  ],
+  sounds: [
+    {l:'ଳ (ḷa)',say:'a retroflex "l": curl the tongue back — to English ears it can sound like a short "r".',ex:'ଫଳ = phaḷa (fruit) · ଗଳା = gaḷā (throat)',voice:'ଫଳ'},
+    {l:'ଢ଼ (ṛha)',say:'a retroflex flap "r": a quick tap of the tongue, like a single rolled r.',ex:'ଅଢ଼େଇ = aṛhei (two and a half)',voice:'ଅଢ଼େଇ'},
+    {l:'ଖ (kha)',say:'aspirated "k": say "k" with a strong puff of breath.',ex:'ଖରା = khara (sunlight) · ଖିଆ = khia (a meal)',voice:'ଖରା'},
+    {l:'ଘ (gha)',say:'aspirated "g": "g" plus a breath, like the "gh" sound.',ex:'ଘର = ghara (house)',voice:'ଘର'},
+    {l:'ଛ (chha)',say:'aspirated "ch": "ch" with a big puff of air.',ex:'ଛଅ = chhaa (six)',voice:'ଛଅ'},
+    {l:'ଶ (sha)',say:'a soft "sh" as in "she" — the tongue near the roof of the mouth.',ex:'ଶୁଭ = shubha (auspicious)',voice:'ଶୁଭ'},
+    {l:'ଷ (ṣa)',say:'a harder "sh": tongue curled back, closer to the "s" sound.',ex:'ଦୋଷ = dōṣa (fault) · ଷଠି = ṣaṭhi (sixty)',voice:'ଦୋଷ'},
+    {l:'ଭ (bha)',say:'aspirated "b": "b" plus a breath, like the "bh" in "abhor".',ex:'ଭାତ = bhata (rice) · ଭଲ = bhala (good)',voice:'ଭାତ'}
+  ],
+  resources: [
+    {icon:'🗣️',t:'Easy Odia conversations',d:'Real street interviews with native speakers and subtitles — great for natural Odia.',q:'Odia street interviews native speakers'},
+    {icon:'🐢',t:'Slow Odia for beginners',d:'Clear, slow and friendly everyday lessons from native speakers.',q:'learn Odia language for beginners slow'},
+    {icon:'📚',t:'Everyday Odia phrases',d:'Short lessons on the phrases you\'ll actually use — from greetings to shopping.',q:'learn Odia phrases for beginners'},
+    {icon:'🎧',t:'Odia songs & audio',d:'Songs and audio are a fun, hands-free way to train your ear for the sounds.',q:'Odia songs for learners'},
+    {icon:'💬',t:'Odia pronunciation practice',d:'Practice the tricky breathy, retroflex and ḷ/ṛ sounds with targeted drills.',q:'Odia pronunciation practice'}
+  ]
+};

@@ -1,0 +1,74 @@
+# Build: tools/prerender.js writes one static HTML file per sitemap route into dist/,
+# plus dist/404.html and dist/_redirects (app-only views -> app shell).
+# There is deliberately NO "/* -> /index.html 200" catch-all any more: unknown URLs return a real 404.
+[build]
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Trust: these intake/admin routes must never be indexed (server-enforced)
+[[headers]]
+  for = "/admin"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+[[headers]]
+  for = "/join"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+[[headers]]
+  for = "/request"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Security headers (safe subset; a strict CSP needs careful allow-listing for inline scripts + AdSense/gtag/Travelpayouts)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "microphone=(self), camera=(), geolocation=(), payment=()"
+
+# Content-hashed bundles (tools/prerender.js): safe to cache forever
+[[headers]]
+  for = "/assets/v/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Turkish course lives at /tr; /turkish is a common guess
+[[redirects]]
+  from = "/events"
+  to = "/events/visiting/"
+  status = 301
+
+[[redirects]]
+  from = "/events/"
+  to = "/events/visiting/"
+  status = 301
+
+[[redirects]]
+  from = "/turkish"
+  to = "/tr"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/turkish/*"
+  to = "/tr/:splat"
+  status = 301
+  force = true
+
+# Pro / phrase packs: functions bundle the private PDFs; they are never published in dist/
+[functions]
+  included_files = ["private/packs/*.pdf"]
+[[headers]]
+  for = "/pro-success.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+[[headers]]
+  for = "/pro-restore.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
