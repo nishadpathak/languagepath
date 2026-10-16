@@ -6,11 +6,20 @@ const fs = require("fs"), path = require("path"), { execFileSync } = require("ch
 const root = path.join(__dirname, ".."), RX = /nishad|pathak|\bNMP\b|nmp[\s-]?dmcc|\bDMCC\b|nishadpathak|87636132/i;
 const hits = [];
 // LanguagePath is international: no company-location claims (travel/event content about Dubai is fine)
-const LOC = /based in (Dubai|the UAE|the United Arab Emirates)|operated by[^.<]{0,60}(Dubai|United Arab Emirates)|LanguagePath team \(Dubai\)|independent company based in/i;
+const LOC = /based in (Dubai|the UAE|the United Arab Emirates)|operated by[^.<]{0,60}(Dubai|United Arab Emirates)|LanguagePath team \(Dubai\)|independent company based in|(headquartered|registered|incorporated|located) in (Dubai|the UAE|the United Arab Emirates)|(Dubai|UAE)-based (company|team|startup)|laws of (the )?(UAE|United Arab Emirates|Dubai)|courts of (Dubai|the UAE)/i;
+/* personal-name schema/meta: no Person types, founders, or authors other than LanguagePath */
+const ORG = "LanguagePath";
+function schema(f, t) { const R = path.relative(root, f);
+  if (/"@type"\s*:\s*"Person"/.test(t)) hits.push(R + ": Person-type schema");
+  if (/"(founder|founders|employee|creator|contactPoint\w*Name)"\s*:/.test(t)) hits.push(R + ": founder/creator/employee schema");
+  for (const m of t.matchAll(/"author"\s*:\s*(\{[^}]*\}|"[^"]*")/g)) if (!m[1].includes('"' + ORG + '"')) hits.push(R + ": author not " + ORG + ": " + m[1].slice(0, 80));
+  for (const m of t.matchAll(/<meta\s+(?:name|property)="(?:author|article:author|book:author)"\s+content="([^"]*)"/gi)) if (m[1] !== ORG) hits.push(R + ": meta author " + m[1]);
+  for (const m of t.matchAll(/rel="author"[^>]*>([^<]*)</g)) if (m[1].trim() && m[1].trim() !== ORG) hits.push(R + ": rel=author " + m[1]); }
 function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const f = path.join(d, e.name); if (e.isDirectory()) walk(f); else check(f); } }
 function check(f) {
   if (/\.(html|js|css|json|xml|txt|svg|webmanifest|md)$|_redirects$|_headers$/.test(f)) { const t = fs.readFileSync(f, "utf8"); const m = t.match(RX); if (m) hits.push(path.relative(root, f) + ": " + m[0]);
     const lm = t.match(LOC); if (lm) hits.push(path.relative(root, f) + ": company location claim: " + lm[0]);
+    if (/\.(html|json)$/.test(f)) schema(f, t);
     if (f.includes("dist") && (/\.html$/.test(f) && /<!--(?!\[if)/.test(t) || /\.(js|css)$/.test(f) && /\/\*\s*[A-Za-z]{2}|(^|[;{}\s])\/\/ [A-Z][a-z]+ [a-z]+ [a-z]+/m.test(t))) hits.push(path.relative(root, f) + ": unstripped comment"); }
   else if (f.endsWith(".pdf")) pdf(f);
 }
@@ -19,7 +28,9 @@ function pdf(f) {
   try { txt = execFileSync("pdftotext", [f, "-"], { encoding: "utf8" }) + "\n" + execFileSync("pdfinfo", [f], { encoding: "utf8" }); }
   catch (e) { hits.push(path.relative(root, f) + ": pdftotext/pdfinfo unavailable — cannot verify"); return; }
   const raw = fs.readFileSync(f).toString("latin1"); const m = (txt.match(RX) || raw.match(RX)); if (m) hits.push(path.relative(root, f) + ": " + m[0]);
+  const au = txt.match(/^Author:\s*(.+)$/m); if (au && au[1].trim() !== ORG) hits.push(path.relative(root, f) + ": PDF Author " + au[1].trim());
   const lm = txt.match(LOC); if (lm) hits.push(path.relative(root, f) + ": company location claim: " + lm[0]);
+    if (/\.(html|json)$/.test(f)) schema(f, t);
 }
 for (const d of ["dist", "private/packs"]) if (fs.existsSync(path.join(root, d))) walk(path.join(root, d));
 if (hits.length) { console.error("BRAND GUARD FAIL — personal names/aliases found:\n - " + hits.join("\n - ")); process.exit(1); }

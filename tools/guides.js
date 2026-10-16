@@ -182,7 +182,7 @@ function buildGuides(data) {
     if (/travel|taxi|restaurant|food|hotel|transport|directions|shopping|uae|gulf/.test(slug)) {
       const trv = travelByLang[lang], trip = (data.trip || {})[lang];
       const where = trv ? trv.cities[0].name : trip ? (trip[0] === trip[1] ? trip[0] : trip[1] + ", " + trip[0]) : "";
-      if (where) s.push(tripBox(where, "guide_" + lang + "_" + slug, `Put these ${esc(name)} phrases to work on a real trip.${trv ? ` See also the <a href="/travel/${trv.slug}/${trv.cities[0].slug}">${esc(trv.cities[0].name)} phrasebook</a>.` : ""}`));
+      /* app shell already renders the #tpTopic trip card here: text only, no second card */ if (where) s.push(`<p>Put these ${esc(name)} phrases to work on a real trip.${trv ? ` See also the <a href="/travel/${trv.slug}/${trv.cities[0].slug}">${esc(trv.cities[0].name)} phrasebook</a>.` : ""}</p>`);
     }
     out["/" + lang + "/" + slug] = { kind: "topic", html: article("/" + lang + "/" + slug, "topic", `${plain(c.title)}: notes and examples`, s.join("\n")) };
   }
