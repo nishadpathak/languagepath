@@ -3657,7 +3657,10 @@ function renderHeroChips(){ try{lpRenderHome();}catch(e){} const box=document.ge
    from the path (per language, per local day, in localStorage). "Start" always jumps to the first open step. */
 function lpDayKey(){ const d=new Date(); return activeLang+"_"+d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
 function lpDayGet(){ try{ return JSON.parse(localStorage.getItem("lp_day_"+lpDayKey())||"{}"); }catch(e){ return {}; } }
-function lpDaySet(k){ try{ const o=lpDayGet(); o[k]=1; localStorage.setItem("lp_day_"+lpDayKey(),JSON.stringify(o)); }catch(e){} }
+function lpYmd(d){ return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+function lpStreakGet(){ try{ const o=JSON.parse(localStorage.getItem("lp_streak")||"{}"); const y=new Date(); y.setDate(y.getDate()-1); if(o.last!==lpYmd(new Date())&&o.last!==lpYmd(y)) o.n=0; return {n:o.n||0,last:o.last||"",best:o.best||0}; }catch(e){ return {n:0,last:"",best:0}; } }
+function lpStreakBump(){ try{ const s=lpStreakGet(), t=lpYmd(new Date()); if(s.last===t) return; s.n=(s.n||0)+1; s.last=t; s.best=Math.max(s.best||0,s.n); localStorage.setItem("lp_streak",JSON.stringify(s)); try{ track("daily_path_done",activeLang+"/"+s.n); }catch(e){} }catch(e){} }
+function lpDaySet(k){ try{ const o=lpDayGet(); o[k]=1; localStorage.setItem("lp_day_"+lpDayKey(),JSON.stringify(o)); if(lpDaySteps().every(x=>o[x.k])) lpStreakBump(); }catch(e){} }
 function lpNextLessonId(){ const p=PACKS[activeLang]; if(!p||!p.lessons)return null; const L=p.lessons.find(l=>!state.done.includes(l.id)); return L?L.id:null; }
 function lpDaySteps(){ const due=langDue(activeLang), nx=lpNextLessonId(); const st=[];
   if(due>0) st.push({k:"review",label:`Review <b>${due}</b> due sentence${due>1?"s":""}`,sub:"bring them back before you forget",run:"go('recall')"});
@@ -3676,9 +3679,9 @@ function todayPathHtml(){
     return `<div class="card lp-daily" style="position:relative;overflow:hidden">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
         <h3 style="margin:0">🔥 ${greeting}: today's ${p.name} path</h3>
-        <span class="duepill" style="margin:0">${n}/${steps.length} today · ${done}/${p.lessons.length} lessons</span>
+        <span class="duepill" style="margin:0">${n}/${steps.length} today · ${done}/${p.lessons.length} lessons · 🔥 ${lpStreakGet().n}-day streak</span>
       </div>
-      <p style="color:var(--muted);font-size:13px;margin:0 0 10px">About 5–10 minutes, in this order.</p>
+      ${n>=steps.length?`<p class="lp-daydone" style="margin:0 0 10px;padding:8px 10px;border-radius:10px;background:var(--panel2)">✅ <b>Done for today.</b> Your streak is ${lpStreakGet().n} day${lpStreakGet().n===1?"":"s"}. Come back tomorrow to keep it going.</p>`:`<p style="color:var(--muted);font-size:13px;margin:0 0 10px">About 5–10 minutes, in this order: review, next lesson, build, listen.</p>`}
       ${steps.map((s,i)=>`<button class="todo" onclick="lpDayRun('${s.k}')" style="${o[s.k]?"opacity:.6":""}">${o[s.k]?"✅":(i+1)+"."} ${s.label} <span style="color:var(--muted)">: ${s.sub}</span></button>`).join("")}
       ${activeLang==="mandarin"&&(state.built||0)>=2?`<button class="todo" onclick="go('seeit')">👁️ Bonus: See It, visual Mandarin vocab</button>`:""}
       <div class="row-btns" style="margin-top:6px"><button class="btn" onclick="lpDayStart()">${n===0?"▶ Start today's path":n<steps.length?"▶ Continue: next step":"✓ Done for today, go again"}</button></div>

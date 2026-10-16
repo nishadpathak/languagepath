@@ -192,6 +192,10 @@ function build(route, m) {
     fs.mkdirSync(path.dirname(out), { recursive: true });
     let outH = build(r.route, r); const tg = /<h1 class="t" style="margin:6px 0 10px">([\s\S]*?)<\/h1>/; // one h1 per page: home tagline is an h1 only when the home view is active
     if (!/<section class="view active" id="view-home"/.test(outH) && (outH.match(/<h1[\s>]/g) || []).length > 1) outH = outH.replace(tg, '<p class="t" style="margin:6px 0 10px">$1</p>');
+    const tm = r.route.match(/^\/travel\/([a-z-]+)\/([a-z-]+)$/), TL = { istanbul: "Turkish", madrid: "Spanish", barcelona: "Spanish", lisbon: "Portuguese", beijing: "Mandarin Chinese", shanghai: "Mandarin Chinese", dubai: "Arabic", "abu-dhabi": "Arabic" };
+    if (tm && TL[tm[2]]) { const L = TL[tm[2]], sub = ("guide_travel_" + tm[1] + "_" + tm[2]).replace(/-/g, "_"), anchor = '<h2 class="vtitle">🧠 How this works';
+      const box = `<aside class="lp-tutor-slot" style="margin:18px 0;padding:12px 14px;border:1px solid #d9e1ec;border-radius:12px"><b>Practise ${L} with a real tutor before your trip</b><br>Book 1-to-1 ${L} lessons on italki and arrive ready to order, ask directions and bargain. <a href="https://www.italki.com/affshare?ref=af34057391" target="_blank" rel="sponsored nofollow noopener" onclick="tpClick('italki','${sub}')">Find a ${L} tutor on italki</a><p class="disc" style="font-size:12px;margin:6px 0 0">This is a partner link. LanguagePath may earn a commission if you book through it, at no extra cost to you.</p></aside>`;
+      if (!outH.includes(anchor)) throw new Error("italki anchor missing on " + r.route); outH = outH.replace(anchor, box + anchor); }
     fs.writeFileSync(out, outH);
   }
   // Real 404 page (static, no app boot so it never renders a fake page)
