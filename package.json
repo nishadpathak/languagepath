@@ -3,7 +3,7 @@
   "private": true,
   "description": "LanguagePath.org static PWA + build-time prerender",
   "scripts": {
-    "build": "node tools/bake-buy-links.js && node tools/prerender.js && node tools/build-lesson-pages.js && node tools/strip-comments.js && node tools/write-build-info.js && node tools/check-no-personal.js",
+    "build": "node tools/bake-buy-links.js && node tools/prerender.js && node tools/build-lesson-pages.js && node tools/build-extra-pages.js && node tools/strip-comments.js && node tools/write-build-info.js && node tools/check-no-personal.js",
     "check": "node tools/bake-buy-links.js --check && node tools/check-no-secrets.js && node tools/check-noindex-routes.js && node tools/validate-sitemap.js && node tools/check-visual-path.js && node tools/check-prerender.js && node tools/check-affiliates.js && node tools/check-content-depth.js && node tools/check-stripe.js && node tools/check-no-personal.js && node tools/check-castilian.js"
   },
   "dependencies": {
