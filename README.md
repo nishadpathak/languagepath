@@ -54,3 +54,7 @@ Progress lives in the browser's `localStorage`, per language. Use the Hub's **Ex
 - `privacy.html`, `terms.html`, `about.html` — legal & about pages
 - `robots.txt`, `sitemap.xml` — SEO
 - `ads.txt` — Google AdSense publisher verification
+
+## Production
+
+Production deploys from **main** (since 20 Oct 2026). Build with `npm run build`, deploy with `npx -y netlify-cli deploy --prod --no-build --dir=dist --functions netlify/functions --site fb414cb1-b1c9-42a2-85ed-efed0d851ca7`. Keep GitHub main in step with every prod deploy.

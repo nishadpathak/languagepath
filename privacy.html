@@ -53,17 +53,15 @@
 <main>
   <a class="back" href="/">← Back to LanguagePath</a>
   <h1>Privacy Policy</h1>
-  <p class="updated">Last updated: August 2026</p>
+  <p class="updated">Last updated: 20 October 2026</p>
 
   <p>LanguagePath is a free language-learning web app. This page explains, plainly, what happens to your data.</p>
 
   <h2>The short version</h2>
-  <div class="card">
-    <p style="margin:0">LanguagePath has no accounts, no sign-up, and no server that stores your personal information. Your lesson progress lives only in your own browser. The only outside party involved is Google, which may show ads on this site. Advertising is <b>only loaded after you consent</b> — you can reject it at any time and the site stays fully usable.</p>
-  </div>
+  <p>LanguagePath has no accounts and no sign-up. Your lesson progress lives only in your own browser. Outside services are used only where described below: Stripe for payments, OpenRouter for the optional AI practice chat, Google (AdSense ads and Google Analytics, only after you consent) and affiliate partners when you click their links.</p>
 
   <h2>What we store, and where</h2>
-  <p>Everything LanguagePath needs to remember about you — which lessons you've finished, your streak, your saved phrases, your optional name and the languages you already speak — is saved using your browser's <b>local storage</b>, on your own device. It is never uploaded to a server we run, because we don't run one. Clearing your browser data or using "Export progress" / "Import progress" (in the Hub tab) is the only way this data moves anywhere.</p>
+  <p>Everything LanguagePath needs to remember about you — which lessons you've finished, your streak, your saved phrases, your optional name and the languages you already speak — is saved using your browser's <b>local storage</b>, on your own device. Your learning progress is never uploaded to our server. If you buy Pro or a pack, your licence key is also saved in local storage so the browser stays unlocked. Clearing your browser data or using "Export progress" / "Import progress" (in the Hub tab) is the only way this data moves anywhere.</p>
 
   <h2>Advertising (Google AdSense)</h2>
   <p>This site is free and ad-supported. On your first visit you'll see a short consent banner: <b>Accept ads</b> loads Google AdSense; <b>Reject</b> loads nothing and hides the banner. Your choice is remembered in your browser (local storage). If you accept, Google and its advertising partners may use cookies or similar identifiers on your device to:</p>
@@ -77,17 +75,25 @@
   <h2>Affiliate links (Travelpayouts)</h2>
   <p>Some travel and language pages show partner links through Travelpayouts, an affiliate network (flights, hotels, tours, travel eSIMs, travel insurance). A link only adds a page label (a "sub-ID" such as <code>travel_uae_dubai</code>) so we can see which page a booking came from; it contains no personal data. When you click one, you leave LanguagePath and the partner\'s and Travelpayouts\' own privacy policies apply, including any cookies they set on their sites. Any embedded Travelpayouts search widget loads only after you accept the consent banner and only when it scrolls into view. If you accepted analytics, we record an anonymous "affiliate link clicked" event (link type and page label only).</p>
 
+  <p>Some language pages also show a tutor link to italki, an affiliate partner. It carries only a referral code; italki's own privacy policy and cookies apply once you are on their site.</p>
+
   <h2>Analytics</h2>
-  <p>LanguagePath can optionally use Cloudflare Web Analytics — a cookie-free, privacy-first analytics service that does not track individuals across sites. At the time of writing this is not yet turned on for this site; if it's enabled in the future, it will only ever report anonymous, aggregate traffic counts (e.g. how many people opened a lesson), never anything tied to you personally.</p>
+  <p>If you accept the consent banner, LanguagePath loads Google Analytics 4 (with IP anonymisation) to count page views and anonymous events such as "lesson opened" or "affiliate link clicked". Google Analytics sets cookies (for example <code>_ga</code>) on your device. If you reject, it is not loaded. Cloudflare Web Analytics is supported by the code but is not turned on for this site.</p>
+
+  <h2 id="payments">Payments (Stripe)</h2>
+  <p>Purchases of LanguagePath Pro and phrase packs are handled by Stripe on Stripe's own checkout pages. Your card details go directly to Stripe; <strong>LanguagePath never sees or stores your card number</strong>. When a payment completes, Stripe tells our server, and we keep a small purchase record — the Stripe checkout session ID, what you bought, the subscription status and expiry, and the email address you gave Stripe — so we can issue and check your licence key, renew or end Pro, and answer support requests. This record is stored in our hosting provider's (Netlify) storage. Stripe's own privacy policy applies to the data Stripe processes.</p>
+
+  <h2 id="ai">AI practice (OpenRouter)</h2>
+  <p>The optional AI conversation practice sends the messages you type, plus the lesson words you are practising, through our server to OpenRouter, which routes them to an AI model to generate a reply. No name, email or account is attached by us. Don't type personal information into the practice chat. OpenRouter's and the model provider's policies apply to that processing. If you don't use AI practice, nothing is sent.</p>
 
   <h2>Microphone & speech</h2>
   <p>Some drills offer an optional "say it and check" feature using your browser's built-in speech recognition. This audio is processed by your browser/device (or its manufacturer's speech service, e.g. Chrome uses Google's) to produce text — LanguagePath never records, stores, or transmits your voice itself. This feature only activates when you tap the microphone button, and only your browser decides how that audio is handled.</p>
 
   <h2>Children's privacy</h2>
-  <p>LanguagePath does not knowingly collect personal information from anyone, of any age — see above: there is no account system and nothing is sent to a server we control. If you're a parent with concerns about ads shown to a younger learner, browser-level content controls or an ad blocker are the most direct fix, since ad personalization is entirely Google's system, not ours.</p>
+  <p>LanguagePath does not knowingly collect personal information from anyone, of any age — there is no account system, and the only data that reaches our server is the purchase record and AI practice messages described above. If you're a parent with concerns about ads shown to a younger learner, browser-level content controls or an ad blocker are the most direct fix, since ad personalization is entirely Google's system, not ours.</p>
 
   <h2>Changes to this policy</h2>
-  <p>If this policy changes, the "Last updated" date at the top of this page will change too. We don't send notifications for this, since we don't have any way to contact you (no accounts, remember?).</p>
+  <p>If this policy changes, the "Last updated" date at the top of this page will change too. We don't send notifications for this.</p>
 
   <h2>Contact</h2>
   <p>Questions about this policy or the app itself: <a href="mailto:languagepathorg@gmail.com">languagepathorg@gmail.com</a>.</p>
