@@ -1881,6 +1881,9 @@ html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir=
       <div class="lp-head"><div><h2>Travel phrasebooks</h2><p>The phrases you actually need — greetings, taxis, restaurants, emergencies — for the city you're visiting.</p></div><a class="lp-more" href="/travel">All destinations →</a></div>
       <div class="lp-cities" id="lpCities"></div>
     </div>
+    <div class="lp-sec lp-pro-cta" id="lpProCta" style="border:1px solid var(--line);border-radius:14px;padding:14px 16px">
+      <div class="lp-head"><div><h2>⭐ LanguagePath Pro</h2><p>Everything stays free. Pro removes ads, unlocks the whole course offline, exports your progress and gives you 10× more AI practice a day. $4.99/month or $29/year, cancel anytime.</p></div><a class="lp-more" href="/pro.html?from=home">See Pro →</a></div>
+    </div>
     <div id="voyageHub" style="margin-top:-6px"></div>
     <div id="seeItHub" style="margin-top:-6px"></div>
     <div id="todayPath" style="margin-top:-6px"></div>
@@ -2108,6 +2111,7 @@ html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir=
      · <a href="/learn-english/" style="color:var(--muted);text-decoration:none">Learn English</a>
      · <a href="/request" style="color:var(--muted);text-decoration:none">Find Language Services</a>
      · <a href="/join" style="color:var(--muted);text-decoration:none">List Your Services</a>
+     · <a href="/pro.html?from=footer" style="color:var(--muted);text-decoration:none">⭐ Pro</a>
     <div style="margin-top:8px;color:var(--muted);opacity:.7">LanguagePath — reason out real sentences · Free · No account</div>
   </footer>
   <section class="view" id="view-progress"></section>
@@ -5155,7 +5159,7 @@ function renderLessonDone(){
         <div class="row-btns" style="justify-content:center">
           <button class="btn big" onclick="startLessonReview()">🎯 Test yourself on this lesson</button>
           <button class="btn ghost" onclick="openLesson(${curL.id+1})">Next lesson →</button>
-        </div></div>`;
+        </div>${lpIsPro()?"":`<div class="lp-pro-end" style="margin:14px auto 0;max-width:520px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;font-size:13.5px;color:var(--muted);text-align:left">⭐ Enjoying the course? <b>LanguagePath Pro</b> removes ads, adds offline study and more AI practice. $4.99/month or $29/year. <a href="/pro.html?from=lesson-end-${activeLang}" style="color:var(--accent);font-weight:700;text-decoration:none">See Pro →</a></div>`}</div>`;
   } else if(justFinishedCore){
     // 30→31 handoff for Mandarin/German/Arabic: mark the core as its own real finish line, then offer the bonus arc as a choice, not an automatic next lesson.
     document.getElementById("player").innerHTML=back+`
@@ -9170,7 +9174,7 @@ if(PACKS[activeLang] && PACKS[activeLang]._lazy){
   const _done=renderLessonDone;
   renderLessonDone=function(){ _done.apply(this,arguments); try{
     const n=Object.values(MASTER||{}).reduce((a,st)=>a+((st&&st.done&&st.done.length)||0),0);
-    if(!lpIsPro()&&n&&n%3===0&&!snoozed("lesson")){ const box=document.querySelector("#view-lesson .lesson-done, #view-lesson")||document.querySelector("section.view.active"); if(box) box.insertAdjacentHTML("beforeend",nudge("Nice streak! Pro takes the ads away, lets you download the whole course for offline study, and exports your progress.","lesson")); }
+    if(!lpIsPro()&&n&&n%3===0&&!snoozed("lesson")&&!document.querySelector(".lp-pro-end")){ const box=document.querySelector("#view-lesson .lesson-done, #view-lesson")||document.querySelector("section.view.active"); if(box) box.insertAdjacentHTML("beforeend",nudge("Nice streak! Pro takes the ads away, lets you download the whole course for offline study, and exports your progress.","lesson")); }
   }catch(e){} };
   // 3) phrase-pack card on city pages
   const _tr=renderTravel;
