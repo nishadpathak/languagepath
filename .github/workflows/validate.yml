@@ -21,6 +21,10 @@ jobs:
         run: node tools/check-no-secrets.js
       - name: Travelpayouts affiliate guard
         run: node tools/check-affiliates.js
+      - name: Install deps
+        run: npm ci || npm install
+      - name: Build site (sitemap validator checks dist/)
+        run: npm run build
       - name: Sitemap + language-code validator
         run: node tools/validate-sitemap.js
       - name: Inline app script parses
