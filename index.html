@@ -1811,7 +1811,7 @@ html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir=
 </noscript>
 <header><div class="htop">
   <button class="brandbtn" onclick="go('home')" title="Go to home" aria-label="LanguagePath — go to home">
-    <img class="logo" src="/logo-header-light.png" alt="LanguagePath" height="40">
+    <img class="logo" src="/logo-header-light.png" alt="LanguagePath" width="40" height="40">
     <p class="sr-only">LanguagePath</p>
   </button>
   <button id="themeBtn" class="themebtn" onclick="toggleTheme()" title="Toggle light / dark" aria-label="Toggle light or dark mode">☀️</button>
@@ -4736,10 +4736,15 @@ function renderVoyage(){
         </div>`;
     }
   }
+  /* Only jump to the top when a new city/challenge opens. Re-renders inside the same challenge (tile tap, Check, Reveal, I said it) keep the scroll position. */
+  const vKey=(stop&&stop.city||"")+"|"+voyageState.chal+"|"+(voyageState.chals?voyageState.chals.length:0), keep=voyageState._vKey===vKey, y0=window.scrollY;
   sec.innerHTML=body;
+  sec.querySelectorAll("button:not([type])").forEach(b=>b.type="button");
   voyageBindMap(stop);
-  if(!voyageState.fb){ const inp=document.getElementById("voyageInput"); if(inp) setTimeout(()=>inp.focus(),60); }
-  window.scrollTo(0,0);
+  if(!voyageState.fb){ const inp=document.getElementById("voyageInput"); if(inp) setTimeout(()=>inp.focus({preventScroll:true}),60); }
+  sec.style.overflowAnchor="none";
+  if(keep){ window.scrollTo(0,y0); requestAnimationFrame(()=>{ if(window.scrollY!==y0) window.scrollTo(0,y0); }); } else window.scrollTo(0,0);
+  voyageState._vKey=vKey;
 }
 
 function renderRealLife(){
