@@ -85,8 +85,8 @@ try{ k.value=localStorage.getItem(LIC)||""; }catch(e){}
 document.getElementById("b").onclick=async()=>{ const key=k.value.trim(); if(!key)return; out.textContent="Checking…";
  try{ const r=await fetch("/.netlify/functions/verify-license",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key})}); const j=await r.json().catch(()=>({}));
   if(!r.ok) throw new Error(j.error||"That key isn't valid.");
-  lpStore(j.license||key);
-  out.innerHTML=(j.kind==="pro"?"<p>✓ <b>Pro</b> is active until "+new Date(j.exp*1000).toLocaleDateString()+".</p>":(j.proExpired?"<p>Your Pro subscription has ended. <a href='/pro.html'>Renew</a></p>":""))+((j.downloads||[]).length?"<h2>Your phrase packs</h2><ul>"+lpDl(j.downloads)+"</ul>":"");
+  if(j.kind==="tef"){ try{ localStorage.setItem("lp_tef_license",j.license||key); }catch(e){} } else lpStore(j.license||key);
+  out.innerHTML=(j.kind==="tef"?"<p>✓ <b>TEF/TCF practice grader</b> is active until "+new Date(j.exp*1000).toLocaleDateString()+". <a href='/tef-grader/'>Open the grader</a></p>":"")+(j.kind==="pro"?"<p>✓ <b>Pro</b> is active until "+new Date(j.exp*1000).toLocaleDateString()+".</p>":(j.proExpired?"<p>Your Pro subscription has ended. <a href='/pro.html'>Renew</a></p>":""))+((j.downloads||[]).length?"<h2>Your phrase packs</h2><ul>"+lpDl(j.downloads)+"</ul>":"");
  }catch(e){ out.innerHTML="<p>"+esc(e.message)+"</p>"; } };
 </script>
 </body>

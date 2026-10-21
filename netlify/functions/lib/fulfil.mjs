@@ -6,30 +6,38 @@ import { getSession, putSession, getSubLink, putSubLink } from "./store.mjs";
 const GRACE = 3 * 86400, now = () => Math.floor(Date.now() / 1000);
 const PERIOD = { month: 31 * 86400, year: 366 * 86400 };
 export const downloadsFor = packs => (packs || []).map(c => ({ city: c.replace(/-/g, " ").replace(/\b\w/g, m => m.toUpperCase()), title: EXTRA_PACKS[c] || (c.replace(/-/g, " ").replace(/\b\w/g, m => m.toUpperCase()) + " Phrase Pack"), url: "/.netlify/functions/download?t=" + encodeURIComponent(issueDownload(c)) }));
-const mint = r => issueLicense({ kind: r.kind, skus: [r.product], packs: r.packs, sid: r.session_id, ...(r.kind === "pro" ? { exp: r.expiry } : {}), iat: now() });
+const mint = r => issueLicense({ kind: r.kind, skus: [r.product], packs: r.packs, sid: r.session_id, ...(r.expiry ? { exp: r.expiry } : {}), iat: now() });
 export async function onCheckout(s) {
-  const product = PLINKS[s.payment_link];
+  const linkProduct = PLINKS[s.payment_link], meta = (s.metadata && s.metadata.lp_product) || null;
+  // Only our own Payment Links are fulfilled; lp_product metadata must agree with the link when present.
+  const product = linkProduct && (!meta || meta === linkProduct) ? linkProduct : null;
   if (!product || !SKUS[product]) return { skipped: "not a LanguagePath payment link" };
   if (!(s.status === "complete" && (s.payment_status === "paid" || s.payment_status === "no_payment_required"))) return { skipped: "payment not completed yet" };
   const prev = await getSession(s.id); if (prev && prev.license) return { ok: true, dup: true };   // idempotent on retries
   const sku = SKUS[product];
   const rec = { session_id: s.id, product, kind: sku.kind, packs: sku.packs || [], city: (sku.packs || []).length === 1 ? sku.packs[0] : (sku.packs ? "all" : null),
-    expiry: sku.kind === "pro" ? now() + PERIOD[sku.recurring] + GRACE : null, status: "active",
+    expiry: sku.recurring ? now() + PERIOD[sku.recurring] + GRACE : null, status: "active",
     email: (s.customer_details && s.customer_details.email) || s.customer_email || null, subscription: s.subscription || null };
   rec.license = mint(rec);
   await putSession(rec); if (rec.subscription) await putSubLink(rec.subscription, rec.session_id);
   return { ok: true };
 }
+// Renewals/cancellations: the record keeps its own product; kind is re-derived from the catalogue (pro vs tef), and
+// subscription metadata lp_product (when Stripe sends it) is used as a fallback for records missing a product.
+function fixKind(rec, meta) { if (!rec.product && meta && SKUS[meta]) rec.product = meta; if (SKUS[rec.product]) rec.kind = SKUS[rec.product].kind; return rec; }
+const metaOf = o => (o && o.metadata && o.metadata.lp_product) || (o && o.subscription_details && o.subscription_details.metadata && o.subscription_details.metadata.lp_product) || (o && o.parent && o.parent.subscription_details && o.parent.subscription_details.metadata && o.parent.subscription_details.metadata.lp_product) || null;
 async function bySub(subId) { const l = subId && await getSubLink(subId); return l ? getSession(l.session_id) : null; }
 export async function onInvoicePaid(inv) {
   const subId = inv.subscription || (inv.parent && inv.parent.subscription_details && inv.parent.subscription_details.subscription);
-  const rec = await bySub(subId); if (!rec) return { skipped: "unknown subscription" };   // first invoice can precede checkout; checkout sets the initial expiry
+  const rec0 = await bySub(subId); if (!rec0) return { skipped: "unknown subscription" };   // first invoice can precede checkout; checkout sets the initial expiry
+  const rec = fixKind(rec0, metaOf(inv));
   const end = Math.max(...((inv.lines && inv.lines.data) || []).map(l => (l.period && l.period.end) || 0), 0);
   if (end && end + GRACE > (rec.expiry || 0)) { rec.expiry = end + GRACE; rec.status = "active"; rec.license = mint(rec); await putSession(rec); }
   return { ok: true };
 }
 export async function onSubscriptionDeleted(sub) {
-  const rec = await bySub(sub.id); if (!rec) return { skipped: "unknown subscription" };
+  const rec0 = await bySub(sub.id); if (!rec0) return { skipped: "unknown subscription" };
+  const rec = fixKind(rec0, metaOf(sub));
   const end = sub.ended_at || sub.canceled_at || now();
   rec.status = "canceled"; rec.expiry = Math.min(rec.expiry || end, end + GRACE); rec.license = mint(rec); await putSession(rec);
   return { ok: true };

@@ -12,5 +12,6 @@ export const PLINKS = {
   "plink_1UQhVZ2YHcFlJstOoPXPWVHq": "pack_abu_dhabi",
   "plink_1UQhVb2YHcFlJstO9qNSM7Xd": "pack_istanbul",
   "plink_1UQhVe2YHcFlJstObYvpHBqt": "pack_lisbon",
-  "plink_1UQnfw2YHcFlJstOAQfiiNUW": "pack_business_kit"
+  "plink_1UQnfw2YHcFlJstOAQfiiNUW": "pack_business_kit",
+  "plink_1USrkO2YHcFlJstOZN40uxbp": "tef_grader_monthly"
 };

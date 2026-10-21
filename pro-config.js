@@ -15,6 +15,7 @@ window.LP_PRO_CONFIG = {
     pack_abu_dhabi: "https://buy.stripe.com/28E6oA6C4dNP3VK0iSfYY0m",
     pack_istanbul: "https://buy.stripe.com/aFadR2aSkaBD3VKfdMfYY0n",
     pack_lisbon: "https://buy.stripe.com/6oUcMYaSkfVXfEs4z8fYY0o",
-    pack_business_kit: "https://buy.stripe.com/7sY6oA2lO8tv9g4c1AfYY0q"
+    pack_business_kit: "https://buy.stripe.com/7sY6oA2lO8tv9g4c1AfYY0q",
+    tef_grader_monthly: "https://buy.stripe.com/fZu3coe4weRTbocfdMfYY0X"
   }
 };

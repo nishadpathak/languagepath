@@ -10,6 +10,6 @@ export default async function handler(req) {
   if (!p) return Response.json({ valid: false, error: "This key isn't valid. Check it was copied completely." }, { status: 400 });
   let rec = null; try { rec = p.sid && await getSession(p.sid); } catch (e) {}
   const view = rec ? publicView(rec) : { license: key, kind: p.kind, packs: p.packs || [], exp: p.exp || null, downloads: downloadsFor(p.packs) };
-  if (view.kind === "pro" && !(view.exp > Date.now() / 1000) && !(view.packs || []).length) return Response.json({ valid: false, error: "This Pro subscription has ended. You can renew at languagepath.org/pro." }, { status: 410 });
+  if ((view.kind === "pro" || view.kind === "tef") && !(view.exp > Date.now() / 1000) && !(view.packs || []).length) return Response.json({ valid: false, error: view.kind === "tef" ? "This TEF/TCF grader subscription has ended. You can renew at languagepath.org/tef-grader/." : "This Pro subscription has ended. You can renew at languagepath.org/pro." }, { status: 410 });
   return Response.json({ valid: true, ...view }, { headers: { "cache-control": "no-store" } });
 }
