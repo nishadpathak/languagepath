@@ -12,6 +12,7 @@ export const PACK_FILE = c => `${c}.pdf`; // private/packs/<city>.pdf (never in 
 export const SKUS = {
   pro_monthly: { kind: "pro", name: "LanguagePath Pro (monthly)", amount: 499, recurring: "month" },
   pro_yearly: { kind: "pro", name: "LanguagePath Pro (yearly)", amount: 2900, recurring: "year" },
+  tef_grader_monthly: { kind: "tef", name: "LanguagePath TEF/TCF Practice Grader (monthly)", amount: 2900, recurring: "month" },
   pack_bundle: { kind: "pack", name: "Travel Phrase Pack bundle (all 8 cities)", amount: 1900, packs: CITIES.map(c => c[1]) },
   pack_business_kit: { kind: "pack", name: "Business Travel Kit (Gulf Arabic, Mandarin, Hindi; PDF)", amount: 1900, packs: ["business-kit"] },
   ...Object.fromEntries(CITIES.map(([, slug, city, lang]) => ["pack_" + slug.replace(/-/g, "_"), { kind: "pack", name: `${city} Travel Phrase Pack (${lang}, PDF)`, amount: 900, packs: [slug] }]))

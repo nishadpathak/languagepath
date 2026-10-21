@@ -28,7 +28,7 @@ for (const r of urls) {
   if (!t) errs.push("no title " + r); else (titles[t] = titles[t] || []).push(r);
   if (!d) errs.push("no description " + r); else (descs[d] = descs[d] || []).push(r);
   if (c !== "https://languagepath.org" + r) errs.push("canonical " + r + " -> " + c);
-  const act = (r.startsWith("/events/") || r.startsWith("/learn-english/") || r === "/business-travel-kit/") ? h.match(/<main>([\s\S]*?)<\/main>/) : h.match(/<section class="view active" id="view-[a-z]+">([\s\S]*?)<\/section>/);
+  const act = (r.startsWith("/events/") || r.startsWith("/learn-english/") || r === "/business-travel-kit/" || r === "/tef-grader/") ? h.match(/<main>([\s\S]*?)<\/main>/) : h.match(/<section class="view active" id="view-[a-z]+">([\s\S]*?)<\/section>/);
   const txt = act ? act[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : "";
   if (txt.length < 80) errs.push("thin/empty content " + r + " (" + txt.length + ")");
 }

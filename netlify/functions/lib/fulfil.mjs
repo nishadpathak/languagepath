@@ -6,7 +6,7 @@ import { getSession, putSession, getSubLink, putSubLink } from "./store.mjs";
 const GRACE = 3 * 86400, now = () => Math.floor(Date.now() / 1000);
 const PERIOD = { month: 31 * 86400, year: 366 * 86400 };
 export const downloadsFor = packs => (packs || []).map(c => ({ city: c.replace(/-/g, " ").replace(/\b\w/g, m => m.toUpperCase()), title: EXTRA_PACKS[c] || (c.replace(/-/g, " ").replace(/\b\w/g, m => m.toUpperCase()) + " Phrase Pack"), url: "/.netlify/functions/download?t=" + encodeURIComponent(issueDownload(c)) }));
-const mint = r => issueLicense({ kind: r.kind, skus: [r.product], packs: r.packs, sid: r.session_id, ...(r.kind === "pro" ? { exp: r.expiry } : {}), iat: now() });
+const mint = r => issueLicense({ kind: r.kind, skus: [r.product], packs: r.packs, sid: r.session_id, ...(r.expiry ? { exp: r.expiry } : {}), iat: now() });
 export async function onCheckout(s) {
   const product = PLINKS[s.payment_link];
   if (!product || !SKUS[product]) return { skipped: "not a LanguagePath payment link" };
@@ -14,7 +14,7 @@ export async function onCheckout(s) {
   const prev = await getSession(s.id); if (prev && prev.license) return { ok: true, dup: true };   // idempotent on retries
   const sku = SKUS[product];
   const rec = { session_id: s.id, product, kind: sku.kind, packs: sku.packs || [], city: (sku.packs || []).length === 1 ? sku.packs[0] : (sku.packs ? "all" : null),
-    expiry: sku.kind === "pro" ? now() + PERIOD[sku.recurring] + GRACE : null, status: "active",
+    expiry: sku.recurring ? now() + PERIOD[sku.recurring] + GRACE : null, status: "active",
     email: (s.customer_details && s.customer_details.email) || s.customer_email || null, subscription: s.subscription || null };
   rec.license = mint(rec);
   await putSession(rec); if (rec.subscription) await putSubLink(rec.subscription, rec.session_id);
