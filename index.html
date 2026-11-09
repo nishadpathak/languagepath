@@ -3773,17 +3773,16 @@ async function submitRequest(){
   try{track("service_request_completed", sent?"server":"local");}catch(e){}
   const d=document.getElementById("rq_done"); if(d)d.style.display="block";
 }
-function unlockAdmin(){ try{ if(document.getElementById("ad_code")&&document.getElementById("ad_code").value==="languagepath"){ localStorage.setItem("lp_admin","1"); renderAdmin(); } else alert("Incorrect code."); }catch(e){} }
+/* Admin moderation is intentionally NOT implemented in the public SPA.
+   Review submitted records in the authenticated Netlify Forms dashboard.
+   A client-side passcode or localStorage flag cannot protect an admin interface. */
+function unlockAdmin(){ renderAdmin(); }
 function renderAdmin(){
   const sec=document.getElementById("view-admin"); if(!sec)return;
-  document.title="Review queue";
-  if(!localStorage.getItem("lp_admin")){ sec.innerHTML='<div class="card"><h2>Restricted</h2><p style="color:var(--muted);font-size:13.5px">This is an internal review queue. Enter the access code to continue.</p><input id="ad_code" type="password" placeholder="Access code" style="width:100%;padding:11px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)"><div class="row-btns" style="margin-top:10px"><button class="btn" onclick="unlockAdmin()">Unlock</button></div></div>'; window.scrollTo(0,0); return; }
-  const rows=(k)=>{ const a=leadStore(k); if(!a.length)return `<p style="color:var(--muted)">None yet.</p>`;
-    return a.map(x=>`<div class="card" style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><b>${escHtml(x.name||x.pair||x.service||"item")}</b><span class="duepill">${x.status||"submitted"}</span></div><div style="font-size:12.5px;color:var(--muted);margin-top:6px">${escHtml(x.type||x.service)} · ${escHtml(x.languages||x.pair||"")} · ${escHtml(x.country||"")}</div><div class="row-btns" style="margin-top:8px">${LEAD_STATUS.slice(LEAD_STATUS.indexOf(x.status||"submitted")+1).map(st=>`<button class="btn ghost" onclick="setStatus('${k}','${x.id}','${st}')">${st}</button>`).join("")}</div></div>`).join(""); };
-  sec.innerHTML=`<div class="card"><h2>Provider intake</h2>${rows("lp_providers")}</div><div class="card"><h2>Service demand</h2>${rows("lp_requests")}</div>`;
-  window.scrollTo(0,0);
+  document.title="LanguagePath administration";
+  sec.innerHTML='<div class="card"><h2>Administration unavailable here</h2><p>Provider and service submissions are reviewed through the authenticated hosting dashboard. This public page does not provide administrative access.</p><a href="/">Return to LanguagePath</a></div>';
 }
-function setStatus(k,id,st){ const a=leadStore(k).map(x=>x.id===id?{...x,status:st}:x); saveLeads(k,a); renderAdmin(); }
+function setStatus(){ return false; }
 function renderLibrary(){
   const sec=document.getElementById("view-library"); if(!sec)return;
   document.title="Learning Library — LanguagePath"; try{track("library_page_view");}catch(e){}
@@ -8709,9 +8708,35 @@ function exportProgress(){
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="languagepath-progress.json"; document.body.appendChild(a); a.click(); a.remove();
   }catch(e){ alert("Export failed."); }
 }
+function validProgressImport(obj){
+  if(!obj||typeof obj!=="object"||Array.isArray(obj))return false;
+  const keys=Object.keys(obj);
+  if(keys.length>100)return false;
+  return keys.every(k=>{
+    if(!Object.prototype.hasOwnProperty.call(PACKS,k))return false;
+    const v=obj[k];
+    if(!v||typeof v!=="object"||Array.isArray(v))return false;
+    if(v.done!==undefined&&(!Array.isArray(v.done)||v.done.length>10000||!v.done.every(n=>Number.isSafeInteger(n)&&n>=0)))return false;
+    if(v.chunks!==undefined&&(!Array.isArray(v.chunks)||v.chunks.length>2000||!v.chunks.every(c=>c&&typeof c==="object"&&!Array.isArray(c)&&typeof c.tr==="string"&&c.tr.length<=1000&&typeof c.en==="string"&&c.en.length<=1000&&(c.pr===undefined||(typeof c.pr==="string"&&c.pr.length<=1000)))))return false;
+    if(v.srs!==undefined&&(!v.srs||typeof v.srs!=="object"||Array.isArray(v.srs)||Object.keys(v.srs).length>10000))return false;
+    if(v.lastLesson!==undefined&&(!Number.isSafeInteger(v.lastLesson)||v.lastLesson<0))return false;
+    return true;
+  });
+}
 function importProgress(input){
-  const f=input.files&&input.files[0]; if(!f)return; const r=new FileReader();
-  r.onload=()=>{ try{ const obj=JSON.parse(r.result); if(typeof obj!=="object")throw 0; MASTER=obj; save(); loadLangState(activeLang); buildChalIndex(); alert("✅ Progress imported."); renderHub(); }catch(e){ alert("Couldn't read that file — is it a languagepath-progress.json export?"); } };
+  const f=input.files&&input.files[0]; if(!f)return;
+  if(f.size>2*1024*1024){alert("Progress file is too large.");return;}
+  const r=new FileReader();
+  r.onload=()=>{ try{
+    const obj=JSON.parse(r.result);
+    if(!validProgressImport(obj))throw new Error("Invalid progress format");
+    const previous=MASTER;
+    MASTER=obj;
+    try{save();loadLangState(activeLang);buildChalIndex();renderHub();}
+    catch(e){MASTER=previous;save();loadLangState(activeLang);buildChalIndex();throw e;}
+    alert("✅ Progress imported.");
+  }catch(e){alert("Couldn't read that file — is it a valid LanguagePath progress export?");}
+  };
   r.readAsText(f);
 }
 
