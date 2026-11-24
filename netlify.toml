@@ -72,3 +72,29 @@
   for = "/pro-restore.html"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/admin.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/join.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/request.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/pro-success"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/pro-restore"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
