@@ -1,0 +1,35 @@
+name: Package audited LanguagePath release
+on:
+  pull_request:
+    branches: [audit/pre-tef-release-candidate-20261124]
+permissions:
+  contents: read
+jobs:
+  package:
+    if: github.head_ref == 'audit/release-artifact-20261124'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 0209a08ec68746f57c88867ea8e70f827ab90ea1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build
+      - run: npm run check
+      - run: node tools/check-pwa.js
+      - name: Confirm exact release SHA and included scope
+        run: |
+          node -e 'const fs=require("node:fs"); const b=require("./dist/build.json"); if(b.commit!=="0209a08ec68746f57c88867ea8e70f827ab90ea1"||fs.existsSync("dist/tef-grader")||fs.existsSync("netlify/functions/tef-grade.mjs")||fs.existsSync("dist/events/visiting/gitex-2026"))process.exit(1); console.log("AUDITED RELEASE",b.commit)'
+          tar -czf languagepath-public-dist.tgz dist/
+          sha256sum languagepath-public-dist.tgz > languagepath-public-dist.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: languagepath-audit-0209a08
+          path: |
+            languagepath-public-dist.tgz
+            languagepath-public-dist.sha256
+          if-no-files-found: error
+          retention-days: 3
