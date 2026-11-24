@@ -227,12 +227,17 @@ def page(s):
     b.append("</main>\n" + FOOT)
     return "\n".join(b)
 
+# The GITEX bonus is a hand-authored practice page, not an event travel guide template.
+GITEX_BONUS = "gitex-2026/"
+
 def hub():
     url = "https://languagepath.org/events/visiting/"
     t = "Visiting for a trade show: venue tips, etiquette and phrases | LanguagePath"
-    d = "Practical guides for business visitors to energy and power trade shows in Dubai, Abu Dhabi, Muscat, Riyadh, Shanghai, Greater Noida and Mumbai: venues, transport, etiquette and key phrases."
+    d = "Practical guides for business visitors to technology, energy and power trade shows in Dubai, Abu Dhabi, Muscat, Riyadh, Shanghai, Greater Noida and Mumbai: venues, transport, etiquette and key phrases."
     wp = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Visiting for a trade show", "url": url, "dateModified": UPDATED}
     b = [head(t, d, url, '<script type="application/ld+json">' + json.dumps(wp) + "</script>"), "<h1>Visiting for a trade show</h1><p class=\"disc\">Last updated " + UPD_TXT + "</p><p class=\"lead\">Short, practical guides for business visitors: how to reach the venue, how meetings usually run in the host country, and the local-language phrases that help on the show floor.</p><ul class=\"hub\">"]
+    if os.path.isfile(os.path.join(ROOT, "events", "visiting", GITEX_BONUS, "index.html")):
+        b.append(f'<li><a href="/events/visiting/{GITEX_BONUS}"><b>GITEX Global Dubai 2026: free Arabic booth practice</b></a><br><span class="disc">7–11 December 2026 · Dubai, UAE · A three-minute LanguagePath visitor bonus</span></li>')
     for s in sorted(SHOWS, key=lambda x: x["start"]):
         b.append(f'<li><a href="/events/visiting/{s["slug"]}/"><b>{E(s["name"])}</b></a><br><span class="disc">{s["dates"]} · {E(s["city"])}, {E(s["country"])} · {E(s["venue"])}</span></li>')
     b.append("</ul><p>More shows will be added once their dates and venues are confirmed.</p></main>\n" + FOOT)
@@ -245,7 +250,7 @@ for s in SHOWS:
 open(os.path.join(base, "index.html"), "w", encoding="utf8").write(hub())
 sm = os.path.join(ROOT, "sitemap.xml"); x = open(sm, encoding="utf8").read()
 x = re.sub(r"\s*<url><loc>https://languagepath.org/events/[^<]*</loc>.*?</url>", "", x)
-add = "".join(f"\n  <url><loc>https://languagepath.org/events/visiting/{u}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>" for u in [""] + [s["slug"] + "/" for s in SHOWS])
+add = "".join(f"\n  <url><loc>https://languagepath.org/events/visiting/{u}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>" for u in [""] + ([GITEX_BONUS] if os.path.isfile(os.path.join(base, GITEX_BONUS, "index.html")) else []) + [s["slug"] + "/" for s in SHOWS])
 x = x.replace("\n</urlset>", add + "\n</urlset>"); open(sm, "w", encoding="utf8").write(x)
 print("events:", len(SHOWS), "pages + hub")
 
