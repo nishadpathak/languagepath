@@ -41,6 +41,22 @@
   .back{display:none}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:20px 0}
   .lead{font-size:17px;color:var(--noteTxt);line-height:1.6}
+  .method-demo{margin-top:20px;border-top:1px solid var(--line);padding-top:12px;scroll-margin-top:16px}
+  .method-demo summary{min-height:44px;padding:10px 0;color:var(--accent);font-weight:700;cursor:pointer}
+  .method-demo h3{font-size:16px;margin:16px 0 6px}
+  .method-demo p{margin:8px 0}
+  .method-demo [hidden]{display:none!important}
+  .method-pieces{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px;padding:0;list-style:none}
+  .method-pieces li{margin:0;padding:5px 10px;border-radius:8px;background:var(--panel2)}
+  .method-pieces b,.method-answer b{color:var(--accent)}
+  .method-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+  .method-demo button,.method-start{min-height:44px;max-width:100%;padding:8px 12px;border:1px solid var(--accent);border-radius:8px;background:var(--panel2);color:var(--txt);font:inherit;cursor:pointer}
+  .method-demo button[aria-disabled="true"]{border-color:var(--line);cursor:default}
+  .method-demo button[aria-pressed="true"],.method-start{background:var(--accent);color:var(--onAccent)}
+  .method-start{display:inline-flex;align-items:center;font-weight:700;text-decoration:none}
+  .method-demo :focus-visible{outline:3px solid var(--txt);outline-offset:3px}
+  .method-output,.method-answer{min-height:45px;padding:9px 12px;background:var(--panel2);border-radius:8px;overflow-wrap:anywhere}
+  .method-feedback{font-weight:700}
   footer.lp-foot{text-align:center;padding:30px 15px 24px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
   footer.lp-foot a{color:var(--muted);text-decoration:none}
 </style>
@@ -70,6 +86,39 @@
   <div class="card">
     <p>Most courses make you memorise phrases. LanguagePath assumes you can <i>reason</i> them out. You learn a few small pieces, then assemble real sentences yourself, say them aloud, and only then reveal and check the answer. Because you built them, you remember them — and spaced review brings them back just before you would forget.</p>
     <p>The core loop: <b>Understand → Construct → Say → Hear → Rebuild.</b></p>
+    <details id="try-the-method" class="method-demo">
+      <summary>Try it in 60 seconds: build a Spanish sentence</summary>
+      <div id="method-exercise" hidden>
+        <h3>1. Learn the pieces</h3>
+        <ul class="method-pieces">
+          <li><b lang="es">la estación</b> = the station</li>
+          <li><b lang="es">dónde</b> = where</li>
+          <li><b lang="es">está</b> = is (for location)</li>
+        </ul>
+        <h3>2. Build it and say it</h3>
+        <p id="method-instructions">How do you ask <strong>“Where is the station?”</strong> Tap the pieces in order. To remove a piece, tap it again. Say your sentence out loud before you check it. No microphone is needed.</p>
+        <div class="method-actions" role="group" aria-label="Spanish sentence pieces" aria-describedby="method-instructions">
+          <button type="button" lang="es" data-piece="is" aria-pressed="false">está</button>
+          <button type="button" lang="es" data-piece="station" aria-pressed="false">la estación</button>
+          <button type="button" lang="es" data-piece="where" aria-pressed="false">dónde</button>
+        </div>
+        <p class="method-output" id="method-sentence" aria-live="polite">Your sentence will appear here.</p>
+        <h3>3. Compare and try again</h3>
+        <div class="method-actions">
+          <button id="method-check" type="button" aria-disabled="true">Check my sentence</button>
+          <button id="method-reveal" type="button" aria-controls="method-answer" aria-expanded="false">Show the answer</button>
+          <button id="method-reset" type="button" aria-disabled="true">Start over</button>
+        </div>
+        <p class="method-feedback" id="method-feedback" role="status"></p>
+        <div class="method-answer" id="method-answer" hidden>
+          <p><b lang="es">¿Dónde está la estación?</b></p>
+          <p>Where is the station? <span>(Roughly: DOHN-deh ehs-TAH lah ehs-tah-SYOHN, in Latin American Spanish.)</span></p>
+          <p>Use <strong lang="es">está</strong> to ask where something is. Try building it again without looking.</p>
+        </div>
+      </div>
+      <noscript><p>Try putting <span lang="es">dónde</span> (where), <span lang="es">la estación</span> (the station) and <span lang="es">está</span> (is, for location) in order. Say the question aloud.</p><details><summary>Show the answer</summary><p lang="es">¿Dónde está la estación?</p></details></noscript>
+      <p><a class="method-start" href="/spanish/lesson-1">Start Spanish Lesson 1</a></p>
+    </details>
   </div>
 
   <h2>Editorial approach</h2>
@@ -98,5 +147,72 @@
     <div style="margin-top:6px;opacity:.7">© 2026 LanguagePath</div>
   </footer>
 
+<script>
+(function () {
+  const demo = document.getElementById('try-the-method');
+  const exercise = document.getElementById('method-exercise');
+  const pieces = [...exercise.querySelectorAll('[data-piece]')];
+  const sentence = document.getElementById('method-sentence');
+  const check = document.getElementById('method-check');
+  const reveal = document.getElementById('method-reveal');
+  const reset = document.getElementById('method-reset');
+  const feedback = document.getElementById('method-feedback');
+  const answer = document.getElementById('method-answer');
+  const picked = [];
+
+  function showAnswer(show) {
+    answer.hidden = !show;
+    reveal.setAttribute('aria-expanded', String(show));
+    reveal.textContent = show ? 'Hide the answer' : 'Show the answer';
+  }
+  function updateSentence() {
+    pieces.forEach(piece => piece.setAttribute('aria-pressed', String(picked.includes(piece))));
+    if (picked.length) {
+      const spanish = document.createElement('span');
+      const words = picked.map(piece => piece.textContent.trim()).join(' ');
+      spanish.lang = 'es';
+      spanish.textContent = '¿' + words.charAt(0).toUpperCase() + words.slice(1) + (picked.length === pieces.length ? '?' : '');
+      sentence.replaceChildren(spanish);
+    } else {
+      sentence.textContent = 'Your sentence will appear here.';
+    }
+    check.setAttribute('aria-disabled', String(picked.length !== pieces.length));
+    reset.setAttribute('aria-disabled', String(!picked.length && answer.hidden));
+  }
+  pieces.forEach(piece => piece.addEventListener('click', () => {
+    const index = picked.indexOf(piece);
+    showAnswer(false);
+    if (index < 0) picked.push(piece);
+    else picked.splice(index, 1);
+    feedback.textContent = '';
+    updateSentence();
+  }));
+  check.addEventListener('click', () => {
+    if (picked.length !== pieces.length) return;
+    if (picked.map(piece => piece.dataset.piece).join(' ') === 'where is station') {
+      showAnswer(true);
+      feedback.textContent = 'Correct! Say the question one more time.';
+    } else {
+      feedback.textContent = 'Not quite. Start with “where”, then “is”, then “the station”. Change the order or show the answer.';
+    }
+    updateSentence();
+  });
+  reveal.addEventListener('click', () => {
+    showAnswer(answer.hidden);
+    feedback.textContent = answer.hidden ? '' : 'Answer: ¿Dónde está la estación?';
+    updateSentence();
+  });
+  reset.addEventListener('click', () => {
+    if (!picked.length && answer.hidden) return;
+    picked.length = 0;
+    showAnswer(false);
+    updateSentence();
+    feedback.textContent = 'Cleared. Pick the pieces to try again.';
+    pieces[0].focus();
+  });
+  exercise.hidden = false;
+  if (location.hash === '#try-the-method') demo.open = true;
+})();
+</script>
 </body>
 </html>
