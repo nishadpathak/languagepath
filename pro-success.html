@@ -64,7 +64,9 @@
 <script>(function(){try{if(document.documentElement.getAttribute("data-theme")==="light"){document.querySelector(".lp-htop .logo").src="/logo-header.png";document.getElementById("themeBtn").textContent="🌙";}}catch(e){}})();</script>
 <main>
 
-<h1>Thank you!</h1><div id="out"><p>Confirming your payment with Stripe…</p></div>
+<h1>Your LanguagePath purchase</h1>
+<div id="out" aria-live="polite"><p>Confirming your payment. Keep this page open while we check with Stripe.</p></div>
+<p><a href="/pro-restore.html">Restore purchase</a> · <a href="/contact.html#billing-help">Billing help</a></p>
 </main>
 <footer class="lp-foot">
     <a href="/about.html">About</a><span style="margin:0 7px">·</span><a href="/privacy.html">Privacy</a><span style="margin:0 7px">·</span><a href="/terms.html">Terms</a><span style="margin:0 7px">·</span><a href="/contact.html">Contact</a>
@@ -77,16 +79,19 @@
 <script>
 const LIC="lp_pro_license";
 function lpStore(k){ try{ localStorage.setItem(LIC,k); localStorage.setItem("lp_pro_checked",Date.now()); }catch(e){} }
-function lpDl(list){ return (list||[]).map(d=>`<li><a href="${d.url}">${d.title||d.city+" Phrase Pack"} (PDF)</a> <span style="color:var(--muted);font-size:13px">— link valid 48 h; restore any time for a new one</span></li>`).join(""); }
+function lpDl(list){ return (list||[]).map(d=>`<li><a href="${d.url}">${d.title||d.city+" Phrase Pack"} (PDF)</a> <span style="color:var(--muted);font-size:13px">(link expires after 48 hours)</span></li>`).join(""); }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 const sid=new URLSearchParams(location.search).get("session_id")||"", out=document.getElementById("out");
 async function go(n){ try{ const r=await fetch("/.netlify/functions/license?session_id="+encodeURIComponent(sid)); const j=await r.json().catch(()=>({}));
-  if((r.status===202||r.status===502)&&n<20) return setTimeout(()=>go(n+1),2500);
-  if(!r.ok) throw new Error(j.error||"We couldn't confirm this purchase yet.");
+  if(r.status===202||r.status===502){
+    if(n<20) return setTimeout(()=>go(n+1),2500);
+    throw new Error("We haven’t confirmed your purchase yet.");
+  }
+  if(!r.ok || typeof j.license!=="string" || !j.license.trim()) throw new Error(j.error||"We couldn’t confirm this purchase yet.");
   if(j.kind==="tef"){ try{ localStorage.setItem("lp_tef_license",j.license); }catch(e){} } else lpStore(j.license);
-  out.innerHTML=`<p class="lead">Your purchase is active in this browser${j.email?" (receipt sent to "+esc(j.email)+")":""}.</p>${j.kind==="tef"?"<p>✓ <b>TEF/TCF practice grader</b> is on in this browser. <a href='/tef-grader/'>Open the grader</a>.</p>":""}${j.kind==="pro"?"<p>✓ <b>Pro</b> is on: ads are off, offline download and CSV export are in Settings, and you have 100 AI turns a day.</p>":""}${(j.downloads||[]).length?"<h2>Your phrase packs</h2><ul>"+lpDl(j.downloads)+"</ul>":""}<h2>Your licence key</h2><p>Save it somewhere safe — paste it on <a href="/pro-restore.html">Restore purchase</a> on any device.</p><div class="key">${esc(j.license)}</div><p><a href="/">← Back to learning</a></p>`;
- }catch(e){ out.innerHTML="<p>"+esc(e.message)+"</p><p>If you were charged, don't worry — refresh in a minute, or <a href='/contact.html'>contact us</a> with your Stripe receipt.</p>"; } }
-if(/^cs_(test|live)_/.test(sid)) go(0); else out.innerHTML="<p>No checkout session found. Already bought? <a href='/pro-restore.html'>Restore your purchase</a>.</p>";
+  out.innerHTML=`<p class="lead">Purchase confirmed.</p><h2>Your licence key</h2><p><strong>Copy and save this key before you leave.</strong> You’ll need it to restore access on another device or after clearing your browser data.</p><div class="key">${esc(j.license)}</div>${(j.downloads||[]).length?"<h2>Download your PDFs</h2><p>Download and save your files now. If a link expires, use your licence key to restore your purchase and get a fresh link.</p><ul>"+lpDl(j.downloads)+"</ul>":""}${j.kind==="tef"?"<p><a href='/tef-grader/'>Open the TEF/TCF practice grader</a></p>":""}${j.kind==="pro"?"<p>Pro includes ad-free learning, offline downloads and CSV export in Settings, and 100 AI practice turns a day.</p>":""}<p><a href="/">← Back to learning</a></p>`;
+ }catch(e){ out.innerHTML="<p>"+esc(e.message)+"</p><p>If you were charged, don’t pay again. Refresh this page once in a minute. If you still don’t see a key, use Billing help below.</p>"; } }
+if(/^cs_(test|live)_/.test(sid)) go(0); else out.innerHTML="<p>No checkout session was found. If you already paid, use Restore purchase if you have a key, or Billing help if you don’t.</p>";
 </script>
 </body>
 </html>
