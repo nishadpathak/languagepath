@@ -48,6 +48,8 @@ function serve() { return new Promise(res => { const s = http.createServer((q, r
       let h = tpl.replace(/<title>[^<]*<\/title>/, `<title>${E(title)}</title>`)
         .replace(/(<meta name="description" content=")[^"]*/, "$1" + E(desc)).replace(/(<meta property="og:title" content=")[^"]*/, "$1" + E(title))
         .replace(/(<meta property="og:description" content=")[^"]*/, "$1" + E(desc)).replace(/(<meta property="og:url" content=")[^"]*/g, "$1" + url)
+        .replace(/(<meta name="twitter:title" content=")[^"]*/, (_, prefix) => prefix + E(title))
+        .replace(/(<meta name="twitter:description" content=")[^"]*/, (_, prefix) => prefix + E(desc))
         .replace(/(<link rel="canonical" href=")[^"]*/, "$1" + url).replace(/data-prerendered="[^"]*"/, `data-prerendered="/${code}/lesson-${L.id}"`)
         .replace(/data-canonical="[^"]*"/, `data-canonical="${url}"`).replace(/ data-ads="1"/, "")
         .replace(/<meta name="robots" content="[^"]*">/, `<meta name="robots" content="${indexable ? "index,follow" : "noindex,follow"}">`)
@@ -59,8 +61,8 @@ function serve() { return new Promise(res => { const s = http.createServer((q, r
     }
   }
   const smF = path.join(dist, "sitemap.xml"); let sm = fs.readFileSync(smF, "utf8").replace(/\s*<url><loc>[^<]*\/lesson-\d+<\/loc>[\s\S]*?<\/url>/g, "");
-  const today = new Date().toISOString().slice(0, 10);
-  sm = sm.replace("</urlset>", smAdd.map(u => `  <url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).join("\n") + "\n</urlset>");
+  // Build date is not the date a lesson's content changed. Omit lastmod when not known.
+  sm = sm.replace("</urlset>", smAdd.map(u => `  <url><loc>${u}</loc></url>`).join("\n") + "\n</urlset>");
   fs.writeFileSync(smF, sm); fs.writeFileSync(path.join(dist, "lesson-pages.json"), JSON.stringify(smAdd, null, 1));
   console.log(`LESSON PAGES: ${n} static lesson pages for ${Object.keys(data).length} languages; ${smAdd.length} in sitemap, ${thin} thin (noindex,follow)`);
 })().catch(e => { console.error(e); process.exit(1); });
