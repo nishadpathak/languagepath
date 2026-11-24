@@ -37,3 +37,5 @@ jobs:
           new Function(main);
           console.log("MAIN SCRIPT OK");
           '
+      - name: PWA and response header regression
+        run: node tools/check-pwa.js
