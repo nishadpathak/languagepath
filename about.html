@@ -71,7 +71,7 @@
   <h1>About LanguagePath</h1>
   <p class="updated">Figure it out. Say it. Remember it.</p>
 
-  <p class="lead">LanguagePath is a free website for learning languages by <b>constructing</b> sentences rather than memorising them. It covers 69 languages, with travel phrasebooks for the cities people visit most.</p>
+  <p class="lead">LanguagePath is a free website for learning languages by <b>constructing</b> sentences rather than memorising them. It covers 69 languages, with travel phrasebooks for the cities people visit most. <a href="#try-the-method">Try the method in 60 seconds</a>.</p>
 
   <h2>Who runs LanguagePath</h2>
   <div class="card">
@@ -211,7 +211,11 @@
     pieces[0].focus();
   });
   exercise.hidden = false;
-  if (location.hash === '#try-the-method') demo.open = true;
+  function openFromLink() {
+    if (location.hash === '#try-the-method') demo.open = true;
+  }
+  window.addEventListener('hashchange', openFromLink);
+  openFromLink();
 })();
 </script>
 </body>
