@@ -1717,6 +1717,25 @@ input[type=text]:focus,.search:focus,select:focus,input#voiceSel:focus{box-shado
   .demo-word{font-size:19px;font-weight:800;color:var(--green);unicode-bidi:plaintext}
   .demo-q{font-size:15px;font-weight:700;margin:12px 0 4px}
   .demo-a{font-size:22px;font-weight:800;color:var(--gold);margin-top:12px;padding:12px 14px;background:var(--blueBg);border:1px solid var(--blueLine);border-radius:12px;animation:fade .3s;unicode-bidi:plaintext}
+  .starter,.starter-options,.starter-resume{max-width:40rem;margin:14px 0 0}
+  .starter{padding:14px 16px;text-align:start}
+  .starter h2{margin:0;font-size:1.16rem;line-height:1.3}
+  .starter-k{margin:0 0 4px;color:var(--gold);font-size:.76rem;font-weight:700}
+  .starter .demo-q{margin:5px 0}
+  .starter .demo-row{flex-wrap:wrap;gap:4px 10px;margin:3px 0}
+  .starter .demo-label{min-width:4rem}
+  .starter .demo-pr,.starter-resume span{font-size:.85rem;color:var(--muted)}
+  .starter .row-btns{justify-content:flex-start;gap:6px;margin-top:9px}
+  .starter .demo-a{font-size:1.25rem;margin-top:8px}
+  .starter .demo-a p{margin:4px 0 0;color:var(--txt);font-size:.9rem;font-weight:500;line-height:1.45}
+  .starter .btn,.starter-resume .btn,.starter-options summary{min-height:44px}
+  .starter [hidden],.starter-resume[hidden]{display:none!important}
+  .starter-resume{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap}
+  .starter-options summary{padding:9px 0;cursor:pointer;color:var(--accent);font-weight:650}
+  .starter .demo-q:focus-visible,.starter .demo-a:focus-visible,.starter-options summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .starter-privacy{margin:5px 0 0}
+  @media(prefers-reduced-motion:reduce){.starter .demo-a{animation:none}}
+
 
 
   /* grouped nav (reduces feature overload) */
@@ -1864,14 +1883,38 @@ html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir=
       <span class="k">Free · No account · <b id="heroLangs">dozens of</b> languages</span>
       <h1 class="t" style="margin:6px 0 10px">Figure it out. Say it. <em>Remember it.</em></h1>
       <div class="d">Don't memorize the language — learn to <b>build</b> it. Construct real sentences yourself, then say them out loud.</div>
-      <form class="lp-search" role="search" onsubmit="event.preventDefault();lpSearchGo()">
-        <label for="lpSearch" class="sr-only">Which language do you want to learn?</label>
-        <input id="lpSearch" type="search" autocomplete="off" placeholder="Which language do you want to learn? e.g. Spanish, Japanese…" oninput="lpSearchRender(this.value)" aria-controls="lpSearchRes">
-        <button class="btn" type="submit">Start</button>
-      </form>
-      <div class="lp-sres" id="lpSearchRes" role="listbox" aria-label="Matching languages"></div>
-      <div class="hero-langs" id="heroChips"></div>
-      <div class="hero-cta"><button class="btn" onclick="go('lessons')">Start learning free</button><button class="btn ghost" onclick="go('voyage')">🎮 Play Path</button><span class="hero-note">Your progress stays private in your browser</span></div>
+      <div class="starter-resume" id="homeResume" hidden>
+        <button type="button" class="btn" id="homeResumeBtn" onclick="resumeOrStart(true)">Continue course</button>
+        <span id="homeResumeNote">On this device</span>
+      </div>
+      <div class="card demo starter" id="heroDemo" role="region" aria-labelledby="demoTitle">
+        <p class="starter-k" id="demoLead">Build Challenge · Mandarin · 30 seconds</p>
+        <h2 id="demoTitle">Build your first sentence</h2>
+        <p class="demo-q" id="demoPrompt" tabindex="-1">Say or think: “I want coffee.”</p>
+        <div class="demo-row"><span class="demo-label">I want</span><bdi class="demo-word" id="demoWant" lang="zh" dir="auto">我要</bdi><span class="demo-pr" id="demoWantPr">wǒ yào</span></div>
+        <div class="demo-row"><span class="demo-label" id="demoItem">coffee</span><bdi class="demo-word" id="demoCoffee" lang="zh" dir="auto">咖啡</bdi><span class="demo-pr" id="demoItemPr">kāfēi</span></div>
+        <div class="demo-a" id="demoA" role="group" aria-label="Answer and explanation" tabindex="-1" hidden>
+          <bdi id="demoAnswer" lang="zh" dir="auto"></bdi>
+          <p id="demoWhy"></p>
+        </div>
+        <div class="row-btns starter-actions">
+          <button type="button" class="btn" id="demoRevealBtn" onclick="demoReveal()">Check my answer</button>
+          <button type="button" class="btn" id="demoNextBtn" onclick="demoNext()" hidden>Try a variation</button>
+          <button type="button" class="btn ghost" id="demoStartBtn" onclick="resumeOrStart(true)">Skip to Mandarin lessons</button>
+        </div>
+      </div>
+      <details class="starter-options">
+        <summary>Choose a different language or explore</summary>
+        <form class="lp-search" role="search" onsubmit="event.preventDefault();lpSearchGo()">
+          <label for="lpSearch" class="sr-only">Which language do you want to learn?</label>
+          <input id="lpSearch" type="search" autocomplete="off" placeholder="Search for a language…" oninput="lpSearchRender(this.value)" aria-controls="lpSearchRes">
+          <button class="btn" type="submit">Choose</button>
+        </form>
+        <div class="lp-sres" id="lpSearchRes" role="listbox" aria-label="Matching languages"></div>
+        <div class="hero-langs" id="heroChips"></div>
+        <div class="hero-cta"><button class="btn ghost" onclick="go('voyage')">🎮 Play Path</button></div>
+      </details>
+      <p class="hero-note starter-privacy">No account. Your lesson progress stays in this browser.</p>
     </div>
     <div class="lp-sec" id="lpPopular">
       <div class="lp-head"><div><h2>Popular languages</h2><p>Pick one and build your first sentence in under a minute.</p></div><button class="lp-more" onclick="openHub()">All languages →</button></div>
@@ -1889,20 +1932,6 @@ html[data-pack-dir="rtl"] .tr,html[data-pack-dir="rtl"] .big,html[data-pack-dir=
     <div id="todayPath" style="margin-top:-6px"></div>
     <div id="mapHub" style="margin-top:-6px"></div>
     <div id="langMapLanded"></div>
-    <div class="card demo" id="heroDemo" style="margin-top:-6px">
-      <span class="pill" style="color:var(--gold);font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px">🎯 Build Challenge</span>
-      <h3 style="margin-top:6px">Build a sentence you've never seen</h3>
-      <p id="demoLead" style="color:var(--muted);font-size:13.5px;margin:0 0 12px">You already know two words. Can you construct a brand-new sentence from them?</p>
-      <div class="demo-row"><span class="demo-label">I want</span><span class="demo-word" id="demoWant">quiero</span></div>
-      <div class="demo-row"><span class="demo-label">coffee</span><span class="demo-word" id="demoCoffee">café</span></div>
-      <div class="demo-q">So how would you say <em>“I want coffee.”</em>?</div>
-      <div class="row-btns"><button class="btn" id="demoRevealBtn" onclick="demoReveal()">Reveal it</button><button class="btn ghost" onclick="demoNext()" id="demoNextBtn" style="display:none">Build another</button></div>
-      <div class="demo-a" id="demoA" style="display:none"></div>
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-        <b style="color:var(--txt)">That's LanguagePath.</b>
-        <button class="btn" id="demoStartBtn" onclick="switchLang('spanish');go('lessons')">Start Spanish free →</button>
-      </div>
-    </div>
     <div class="card" style="margin-top:14px">
       <span class="pill" style="color:var(--gold);font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:10.5px">The LanguagePath Method™</span>
       <h3 style="margin:6px 0 4px">Reason it out — don't cram it in</h3>
@@ -2768,7 +2797,7 @@ function loadLangState(l){
   state=MASTER[l];
   if(!state.srs)state.srs={}; if(!state.chunks)state.chunks=[]; if(state.bestQuiz===undefined)state.bestQuiz=null;
   const rev=CONTENT_REV[l]||1;
-  if((state.contentRev||1)!==rev){ state.done=[]; state.srs={}; state.lastLesson=1; state.contentRev=rev; }
+  if((state.contentRev||1)!==rev){ state.done=[]; state.srs={}; state.lastLesson=1; delete state.pos; state.contentRev=rev; }
 }
 function save(){localStorage.setItem(KEY,JSON.stringify(MASTER));}
 
@@ -3620,28 +3649,66 @@ function celebrate(){ // confetti burst on completion milestones
     }
   }catch(e){}
 }
-// interactive 20-second "figure it out" demo (marketing hero)
+// One small Build Challenge, then a different sentence using the same frame.
 const DEMO={
-  spanish:{want:'quiero',coffee:'café',a:'Quiero café.'},
-  french:{want:'je veux',coffee:'un café',a:'Je veux un café.'},
-  italian:{want:'voglio',coffee:'un caffè',a:'Voglio un caffè.'},
-  portuguese:{want:'quero',coffee:'um café',a:'Quero um café.'},
-  german:{want:'ich will',coffee:'einen Kaffee',a:'Ich will einen Kaffee.'},
-  mandarin:{want:'我要',coffee:'咖啡',a:'我要咖啡。'},
-  arabic:{want:'أريد',coffee:'قهوة',a:'أريد قهوة.'},
-  tr:{want:'bir ... istiyorum',coffee:'kahve',a:'Bir kahve istiyorum.'}
+  spanish:{tag:"es",want:"quiero",coffee:"café",tea:"té",a:["Quiero café.","Quiero té."],why:"Quiero already means “I want”. Put the drink after it; you don't need to add yo."},
+  french:{tag:"fr",want:"je veux",coffee:"un café",tea:"du thé",a:["Je veux un café.","Je veux du thé."],why:"Je veux means “I want”. Keep the drink phrase together after it: un café or du thé."},
+  italian:{tag:"it",want:"voglio",coffee:"un caffè",tea:"del tè",a:["Voglio un caffè.","Voglio del tè."],why:"Voglio already means “I want”. Follow it with the whole drink phrase: un caffè or del tè."},
+  portuguese:{tag:"pt",want:"quero",coffee:"um café",tea:"chá",a:["Quero um café.","Quero chá."],why:"Quero already means “I want”. Follow it with um café for a coffee or chá for tea."},
+  german:{tag:"de",want:"ich will",coffee:"einen Kaffee",tea:"Tee",a:["Ich will einen Kaffee.","Ich will Tee."],why:"Ich will means “I want”. Put the drink phrase after it. Keep einen Kaffee together."},
+  mandarin:{tag:"zh",want:"我要",coffee:"咖啡",tea:"茶",pr:["wǒ yào","kāfēi","chá"],a:["我要咖啡。","我要茶。"],why:"我 means “I”; 要 means “want”. Put the drink directly after 我要."},
+  arabic:{tag:"ar",want:"أريد",coffee:"قهوة",tea:"شايًا",pr:["urīdu","qahwa","shāyan"],a:["أريد قهوة.","أريد شايًا."],why:"أريد already means “I want”. Say the drink next: قهوة for coffee or شايًا for tea."},
+  tr:{tag:"tr",want:"… istiyorum",coffee:"bir kahve",tea:"çay",a:["Bir kahve istiyorum.","Çay istiyorum."],why:"In this Turkish pattern, the drink comes first. Keep istiyorum (“I want”) at the end."}
 };
-function demoFor(lang){ return DEMO[lang]||DEMO.spanish; }
-function setDemo(lang){ const d=demoFor(lang); const w=document.getElementById('demoWant'),c=document.getElementById('demoCoffee'),a=document.getElementById('demoA');
-  if(w)w.textContent=d.want; if(c)c.textContent=d.coffee;
-  if(a){ a.style.display='none'; a.textContent=''; a.className='demo-a'; }
-  const r=document.getElementById('demoRevealBtn'),n=document.getElementById('demoNextBtn'); if(r)r.style.display=''; if(n)n.style.display='none';
-  const nm=(PACKS[lang]&&PACKS[lang].name)||"this language";
-  const lead=document.getElementById("demoLead"); if(lead) lead.textContent="You already know two "+nm+" words. Can you construct a brand-new sentence from them?";
-  const cta=document.getElementById("demoStartBtn"); if(cta){ cta.textContent="Start "+nm+" free →"; cta.setAttribute("onclick","switchLang('"+lang+"');go('lessons')"); }
+let demoLang="mandarin", demoRound=0;
+function demoNode(id){ return document.getElementById(id); }
+function demoFill(id,value,tag){ const node=demoNode(id); if(node){ node.textContent=value; if(tag)node.setAttribute("lang",tag); } }
+function demoCta(label,primary){
+  const c=demoNode("demoStartBtn"); if(c){c.textContent=label;c.classList.toggle("ghost",!primary);}
 }
-function demoReveal(){ const a=document.getElementById('demoA'); if(a){ a.textContent=demoFor(activeLang).a; a.style.display='block'; } const r=document.getElementById('demoRevealBtn'),n=document.getElementById('demoNextBtn'); if(r)r.style.display='none'; if(n)n.style.display=''; }
-function demoNext(){ setDemo(activeLang); }
+function setDemo(lang,round=0){
+  if(!demoNode("heroDemo"))return;
+  demoLang=Object.hasOwn(DEMO,lang)?lang:"spanish"; demoRound=round===1?1:0;
+  const d=DEMO[demoLang], p=PACKS[lang], shown=PACKS[demoLang].name;
+  const item=demoRound?"tea":"coffee";
+  const object=!demoRound&&["french","italian","portuguese","german","tr"].includes(demoLang)?"a coffee":item;
+  demoFill("demoLead","Build Challenge · "+shown+(demoRound?" · Variation":" · 30 seconds"));
+  demoFill("demoTitle",demoRound?"Build a different sentence":(hasLessonHistory(lang)?"Quick sentence warm-up":"Build your first sentence"));
+  demoFill("demoPrompt","Say or think: “I want "+object+".”");
+  demoFill("demoWant",d.want,d.tag);demoFill("demoCoffee",d[item],d.tag);
+  demoFill("demoWantPr",d.pr?d.pr[0]:"");demoFill("demoItemPr",d.pr?d.pr[demoRound+1]:"");
+  demoFill("demoItem",object); demoFill("demoAnswer","",d.tag);demoFill("demoWhy","");
+  demoNode("demoA").hidden=true;demoNode("demoNextBtn").hidden=true;demoNode("demoRevealBtn").hidden=false;
+  demoCta("Skip to "+p.name+" lessons",false);
+}
+function demoReveal(){
+  const d=DEMO[demoLang];
+  demoFill("demoAnswer",d.a[demoRound],d.tag);demoFill("demoWhy",d.why);
+  demoNode("demoA").hidden=false;demoNode("demoNextBtn").hidden=demoRound===1;
+  demoCta((demoRound?"Continue to ":"Start ")+PACKS[activeLang].name+" lessons",demoRound===1);
+  demoNode("demoA").focus();demoNode("demoRevealBtn").hidden=true;
+}
+function demoNext(){setDemo(activeLang,1);demoNode("demoPrompt").focus();}
+function hasLessonHistory(l){
+  const p=PACKS[l], st=MASTER[l];
+  if(!p||!st||(st.contentRev||1)!==(CONTENT_REV[l]||1))return false;
+  return (Array.isArray(st.done)&&st.done.length>0)||Boolean(st.pos&&Number.isInteger(st.pos.lesson)&&Number.isInteger(st.pos.step)&&st.pos.step>=0);
+}
+function lastWorkedLanguage(){
+  const last=(MASTER.__meta||{}).lessonLang;
+  if(last&&hasLessonHistory(last))return last;
+  return LANG_ORDER.find(hasLessonHistory)||"";
+}
+function renderHomeContinue(){
+  const box=demoNode("homeResume");if(!box)return;
+  const returning=hasLessonHistory(activeLang);
+  box.hidden=!returning;
+  if(!returning)return;
+  const nm=PACKS[activeLang].name;
+  const next=resumeLessonChoice();
+  demoFill("homeResumeBtn","Continue "+nm);
+  demoFill("homeResumeNote",next?"Lesson "+next.id+" · on this device":"Saved progress on this device");
+}
 function lpPop(){ const pref=['spanish','french','german','japanese','mandarin','korean','arabic','italian','portuguese','tr','hindi','dutch','russian','farsi'];
   const extra=LANG_ORDER.filter(l=>!pref.includes(l)); return pref.concat(extra).filter(l=>PACKS[l]).slice(0,12); }
 function lpLangBtn(l,cls){ const p=PACKS[l]; return '<button class="'+cls+'" data-l="'+l+'" onclick="switchLang(this.dataset.l)"><span class="fl">'+p.flag+'</span><b>'+p.name+'</b>'+(NATIVE&&NATIVE[l]&&NATIVE[l]!==p.name?'<small>'+NATIVE[l]+'</small>':'')+'</button>'; }
@@ -4900,7 +4967,7 @@ function renderHome(){
   const p=PACKS[activeLang];
   const hn=document.getElementById("heroName"); if(hn)hn.textContent=p.name;
   const hl=document.getElementById("heroLangs"); if(hl){ const n=LANG_ORDER.filter(l=>PACKS[l]&&!PACKS[l].ai).length; hl.textContent=n; }
-  renderHeroChips(); setDemo(activeLang);
+  renderHeroChips(); setDemo(activeLang); renderHomeContinue();
   const tp=document.getElementById("todayPath"); if(tp)tp.innerHTML=todayPathHtml();
   const vhub=document.getElementById("voyageHub"); if(vhub) vhub.innerHTML=pathFeatureCard();
   const mhub=document.getElementById("mapHub"); if(mhub) mhub.innerHTML=`<div class="card" style="margin-top:10px"><span class="pill" style="color:var(--gold);font-weight:800;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Languages map</span><h3 style="margin:6px 0 4px">Click a country. Start the language.</h3><p style="color:var(--muted);font-size:13px;margin:0 0 10px">A world map of courses we actually teach — not a booking map, and not Path.</p><button class="btn" onclick="go('map')">Open the languages map</button></div>`;
@@ -4925,10 +4992,9 @@ function renderHome(){
   const anyProg=LANG_ORDER.some(l=>{const st=MASTER[l];return st&&((st.done&&st.done.length)||st.built||Object.keys(st.srs||{}).length);});
   const vc=document.getElementById("voiceCard"); if(vc)vc.style.display=anyProg?"":"none";
   const sg=document.querySelector(".stat-grid"); if(sg)sg.style.display=anyProg?"":"none";
-  // Returning-user default: put Today's Path ABOVE the acquisition hero (kept in-DOM for crawlers);
-  // fresh visitors see the marketing hero first.
-  const vh=document.getElementById("view-home"), tpEl=document.getElementById("todayPath");
-  if(vh && tpEl){ const hero=vh.querySelector(".hero"); if(hero){ if(anyProg){ if(tpEl.nextElementSibling!==hero) vh.insertBefore(tpEl,hero); } else { if(vh.firstElementChild!==hero) vh.insertBefore(hero,vh.firstElementChild); } } const lpS=["lpPopular","lpAdTop","lpTravel"].map(i=>document.getElementById(i)).filter(Boolean); if(hero&&lpS.length&&hero.nextElementSibling!==lpS[0]) hero.after(...lpS); }
+  // One explicit continuation first. The multi-step Today path stays further down.
+  const vh=document.getElementById("view-home");
+  if(vh){ const hero=vh.querySelector(".hero"); const lpS=["lpPopular","lpAdTop","lpTravel"].map(i=>document.getElementById(i)).filter(Boolean); if(hero&&lpS.length&&hero.nextElementSibling!==lpS[0]) hero.after(...lpS); }
   document.getElementById("methodIntro").innerHTML=`<b>${p.name}</b> — ${courseIntro(p)}`;
   document.getElementById("retentionBanner").innerHTML=retentionBannerHtml();
   const _known=getKnown().trim();
@@ -4997,7 +5063,24 @@ function lessonListHtml(lessons){
 }
 const VOICE_SAMPLES={tr:"Merhaba, ben senin öğretmeninim",mandarin:"你好，我是你的老师",german:"Hallo, ich bin dein Lehrer",arabic:"مرحبا، أنا معلمك",portuguese:"Olá, eu sou o teu professor",telugu:"నమస్కారం, నేను మీ ఉపాధ్యాయుడిని",farsi:"سلام، من معلم شما هستم",french:"Bonjour, je suis votre professeur",spanish:"Hola, soy tu profesor"};
 function testVoice(){ speak(VOICE_SAMPLES[activeLang]||"Hello"); }
-function resumeOrStart(){const next=LESSONS.find(L=>!state.done.includes(L.id))||LESSONS[LESSONS.length-1];openLesson(next.id);}
+function resumeLessonChoice(){
+  const saved=state.pos;
+  if(saved&&Number.isInteger(saved.lesson)&&Number.isInteger(saved.step)&&saved.step>=0&&!state.done.includes(saved.lesson)){
+    const active=LESSONS.find(l=>l.id===saved.lesson);
+    if(active&&saved.step<active.steps.length)return active;
+  }
+  return LESSONS.find(l=>!state.done.includes(l.id))||LESSONS[LESSONS.length-1];
+}
+function resumeOrStart(focusPlayer=false){
+  const launch=()=>{
+    const next=resumeLessonChoice();
+    if(!next){ go("lessons"); return; }
+    openLesson(next.id);
+    if(focusPlayer){ const player=document.getElementById("player"); if(player){player.setAttribute("tabindex","-1");player.focus({preventScroll:true});} }
+  };
+  if(PACKS[activeLang]._lazy)activateLang(activeLang,launch);
+  else launch();
+}
 
 /* ============ LESSON LIST ============ */
 function renderLessonList(){document.getElementById("lessonList").innerHTML=lessonListHtml(LESSONS);}
@@ -5006,10 +5089,14 @@ function renderLessonList(){document.getElementById("lessonList").innerHTML=less
 let curL=null,sIdx=0,revealed={},stepScore={};
 // Remember exactly where you were in a lesson (not just which lesson) so closing the app mid-lesson
 // and coming back — very common at 10min/day — resumes at the right step instead of step 1 again.
-function savePos(){ if(curL) state.pos={lesson:curL.id,step:sIdx}; }
+function savePos(){
+  if(!curL)return;
+  state.pos={lesson:curL.id,step:sIdx};
+  (MASTER.__meta||(MASTER.__meta={streak:0,last:null})).lessonLang=activeLang;
+}
 function openLesson(id){
   curL=LESSONS.find(L=>L.id===id);revealed={};stepScore={};
-  sIdx=(state.pos&&state.pos.lesson===id&&!state.done.includes(id)&&state.pos.step<curL.steps.length)?state.pos.step:0;
+  sIdx=(state.pos&&state.pos.lesson===id&&!state.done.includes(id)&&Number.isInteger(state.pos.step)&&state.pos.step>=0&&state.pos.step<curL.steps.length)?state.pos.step:0;
   for(let i=0;i<sIdx;i++)revealed[i]=true; // every step before the resume point must already have been passed
   track("lesson_started",activeLang+"/"+id);
   go("lessons");
@@ -5128,7 +5215,7 @@ function prevStep(){if(sIdx>0){sIdx--;savePos();save();renderPlayer();}}
 const BONUS_ARC_FROM={mandarin:31,german:31,arabic:31};
 function finishLesson(){
   if(!state.done.includes(curL.id)){ state.done.push(curL.id); track("lesson_completed",activeLang+"/"+curL.id); }
-  state.lastLesson=Math.min(curL.id+1,LESSONS.length);save();
+  state.lastLesson=Math.min(curL.id+1,LESSONS.length);savePos();save();
   renderLessonDone();
 }
 function renderLessonDone(){
@@ -9134,8 +9221,8 @@ a11yObs.observe(document.documentElement,{childList:true,subtree:true});
 makeFocusable();
 
 /* ============ INIT ============ */
-// default to Mandarin. Repoint all data to it.
-const __r=parseRoute(); (function(){const code=__r.lang||"mandarin";const p=PACKS[code];activeLang=code;activeTTS=p.tts;activeDir=p.dir||"ltr";
+// Public root defaults to Mandarin; locally returning root visitors retain their course choice.
+const __r=parseRoute(); (function(){const code=__r.lang||(!__r.view&&lastWorkedLanguage())||"mandarin";const p=PACKS[code];activeLang=code;activeTTS=p.tts;activeDir=p.dir||"ltr";
  LESSONS=p.lessons;DIALOGUES=p.dialogues;POCKET=mergeEssentials(code,p.pocket);POCKET_CATS=(p.pocketCats||[]).slice(); if(DAILY_ESSENTIALS[code]&&POCKET_CATS.indexOf("Daily essentials")<0)POCKET_CATS.unshift("Daily essentials");CULTURE=p.culture;SOUNDS=p.sounds;RESOURCES=p.resources;})();
 loadLangState(activeLang); applyPackDir(); applyUserName();
 renderLangbar();
@@ -9150,7 +9237,7 @@ document.querySelectorAll("#nav button").forEach(b=>{b.setAttribute("role","tab"
 ["learn","practice","explore"].forEach(g=>{const el=document.getElementById("grp-"+g);if(el){el.classList.add("collapsed");const b=el.querySelector(".ng");if(b)b.setAttribute("aria-expanded","false");}});
 if(__r.topic)curTopic=__r.topic; try{ const _ret=LANG_ORDER.some(l=>{const st=MASTER[l];return st&&((st.done&&st.done.length)||st.built||Object.keys(st.srs||{}).length);}); if(_ret) track("return_session",activeLang); }catch(e){}
 if(PACKS[activeLang] && PACKS[activeLang]._lazy){
-  ensureCourses(()=>{ const p=PACKS[activeLang]; LESSONS=p.lessons;DIALOGUES=p.dialogues;POCKET=mergeEssentials(activeLang,p.pocket);POCKET_CATS=(p.pocketCats||[]).slice(); if(DAILY_ESSENTIALS[activeLang]&&POCKET_CATS.indexOf("Daily essentials")<0)POCKET_CATS.unshift("Daily essentials");CULTURE=p.culture;SOUNDS=p.sounds;RESOURCES=p.resources; buildChalIndex(); applyPackDir(); if(__r.view&&__r.view!=="home"){go(__r.view);}else{pushRoute("home");} }, activeLang);
+  ensureCourses(()=>{ const p=PACKS[activeLang]; LESSONS=p.lessons;DIALOGUES=p.dialogues;POCKET=mergeEssentials(activeLang,p.pocket);POCKET_CATS=(p.pocketCats||[]).slice(); if(DAILY_ESSENTIALS[activeLang]&&POCKET_CATS.indexOf("Daily essentials")<0)POCKET_CATS.unshift("Daily essentials");CULTURE=p.culture;SOUNDS=p.sounds;RESOURCES=p.resources; buildChalIndex(); applyPackDir(); if(__r.view&&__r.view!=="home"){go(__r.view);}else{pushRoute("home");renderHomeContinue();} }, activeLang);
 } else if(__r.view && __r.view!=="home"){ go(__r.view); } else { pushRoute("home"); }
 
 </script>
